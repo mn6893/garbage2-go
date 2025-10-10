@@ -119,9 +119,9 @@
                                 <h5 class="card-title">Commercial Services</h5>
                                 <ul class="list-unstyled">
                                     <li><a href="<?= base_url('services/office-junk-removal') ?>">Office Junk Removal</a></li>
-                                    <li><a href="<?= base_url('services/retail-merchandise-rubbish-removal') ?>">Retail Merchandise Removal</a></li>
+                                    <li><a href="<?= base_url('services/retail-merchandise-junk-removal') ?>">Retail Merchandise Removal</a></li>
                                     <li><a href="<?= base_url('services/worksite-junk-removal') ?>">Worksite Junk Removal</a></li>
-                                    <li><a href="<?= base_url('services/renovation-rubbish-removal') ?>">Renovation Cleanup</a></li>
+                                    <li><a href="<?= base_url('services/renovation-junk-removal') ?>">Renovation Cleanup</a></li>
                                 </ul>
                             </div>
                         </div>

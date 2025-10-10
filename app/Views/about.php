@@ -3,7 +3,7 @@
     <div class="wrapper image-wrapper bg-image page-title-wrapper inverse-text" data-image-src="style/images/art/bg9.jpg">
       <div class="container inner text-center">
         <div class="space90"></div>
-        <h1 class="page-title">We are Garbage2Go</h1>
+        <h1 class="page-title">We are GarbageToGo</h1>
         <p class="lead">Canada's trusted partner for efficient waste removal and eco-friendly disposal solutions.</p>
       </div>
       <!-- /.container -->
@@ -18,10 +18,10 @@
           <!--/column -->
           <div class="space30 d-none d-md-block d-lg-none"></div>
           <div class="col-lg-6 pl-60 pl-md-15">
-            <h2 class="title-color color-gray">About Garbage2Go</h2>
+            <h2 class="title-color color-gray">About GarbageToGo</h2>
             <h3 class="display-3">We are Canada's leading waste removal company that believes in sustainable solutions and exceptional service.</h3>
             <div class="space20"></div>
-            <p>Founded with a mission to make waste removal simple, efficient, and environmentally responsible, Garbage2Go has been serving Canadian communities for over a decade. We specialize in residential, commercial, and construction waste removal, ensuring that up to 80% of collected materials are recycled or donated rather than sent to landfills.</p>
+            <p>Founded with a mission to make waste removal simple, efficient, and environmentally responsible, GarbageToGo has been serving Canadian communities for over a decade. We specialize in residential, commercial, and construction waste removal, ensuring that up to 80% of collected materials are recycled or donated rather than sent to landfills.</p>
             <div class="space20"></div>
             <div class="row counter">
               <div class="col-md-4">
@@ -73,7 +73,7 @@
           <!--/column -->
           <div class="space30 d-none d-md-block d-lg-none"></div>
           <div class="col-lg-4">
-            <h4>Why Choose Garbage2Go?</h4>
+            <h4>Why Choose GarbageToGo?</h4>
             <p>We're more than just a junk removal service. We're your partners in creating cleaner, safer spaces while protecting the environment for future generations.</p>
             <p>Our team is fully licensed, insured, and trained to handle all types of waste safely and efficiently. We pride ourselves on transparent pricing and exceptional customer service.</p>
             <ul class="unordered-list">
@@ -214,7 +214,7 @@
               <div class="item-inner">
                 <div class="box bg-white shadow">
                   <blockquote>
-                    <p>"Garbage2Go made our office renovation so much easier! They arrived on time, worked efficiently, and even donated our old furniture to local charities. Excellent service!"</p>
+                    <p>"GarbageToGo made our office renovation so much easier! They arrived on time, worked efficiently, and even donated our old furniture to local charities. Excellent service!"</p>
                     <div class="blockquote-details">
                       <div class="img-blob blob1"><img src="style/images/art/t1.jpg" alt="" /></div>
                       <div class="info">

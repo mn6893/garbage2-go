@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-lg-8 offset-lg-2 text-center">
                 <h1 class="page-title">Our Service Locations</h1>
-                <p class="lead">We provide professional rubbish removal services across multiple locations in Ontario, Canada</p>
+                <p class="lead">We provide professional junk removal services across multiple locations in Ontario, Canada</p>
             </div>
         </div>
     </div>
@@ -19,8 +19,8 @@
                 <div class="row">
                     <div class="col-md-4 mb-4">
                         <div class="service-box text-center">
-                            <h4><a href="<?= base_url('rubbish-removal-toronto') ?>">Toronto</a></h4>
-                            <p>Canada's largest city - comprehensive rubbish removal services across all boroughs</p>
+                            <h4><a href="<?= base_url('junk-removal-toronto') ?>">Toronto</a></h4>
+                            <p>Canada's largest city - comprehensive junk removal services across all boroughs</p>
                         </div>
                     </div>
                     <div class="col-md-4 mb-4">

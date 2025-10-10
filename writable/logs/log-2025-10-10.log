@@ -1,0 +1,222 @@
+CRITICAL - 2025-10-10 15:48:20 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "services/household_junk_removal.php"
+[Method: GET, Route: services/household-junk-removal]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('services/household_junk_removal.php')
+ 2 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('services/household_junk_removal', [], true)
+ 3 APPPATH\Controllers\Services.php(15): view('services/household_junk_removal', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Services->householdJunkRemoval()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Services))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('D:\\Projects\\Nadheem\\learn\\junk-col\\public\\index.php')
+ERROR - 2025-10-10 17:56:43 --> Error connecting to the database: mysqli_sql_exception: Access denied for user ''@'localhost' (using password: NO) in D:\Projects\Nadheem\learn\junk-col\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 D:\Projects\Nadheem\learn\junk-col\system\Database\MySQLi\Connection.php(201): mysqli->real_connect('localhost', '', Object(SensitiveParameterValue), '', 3306, '', 0)
+#1 D:\Projects\Nadheem\learn\junk-col\system\Database\BaseConnection.php(419): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 D:\Projects\Nadheem\learn\junk-col\system\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+#3 D:\Projects\Nadheem\learn\junk-col\system\Database\BaseConnection.php(1525): CodeIgniter\Database\BaseConnection->query('SHOW TABLES FRO...')
+#4 D:\Projects\Nadheem\learn\junk-col\system\Database\BaseConnection.php(1545): CodeIgniter\Database\BaseConnection->listTables()
+#5 D:\Projects\Nadheem\learn\junk-col\system\Database\MigrationRunner.php(768): CodeIgniter\Database\BaseConnection->tableExists('migrations')
+#6 D:\Projects\Nadheem\learn\junk-col\system\Database\MigrationRunner.php(162): CodeIgniter\Database\MigrationRunner->ensureTable()
+#7 D:\Projects\Nadheem\learn\junk-col\system\Commands\Database\Migrate.php(85): CodeIgniter\Database\MigrationRunner->latest(NULL)
+#8 D:\Projects\Nadheem\learn\junk-col\system\CLI\Commands.php(74): CodeIgniter\Commands\Database\Migrate->run(Array)
+#9 D:\Projects\Nadheem\learn\junk-col\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('migrate', Array)
+#10 D:\Projects\Nadheem\learn\junk-col\system\Boot.php(388): CodeIgniter\CLI\Console->run()
+#11 D:\Projects\Nadheem\learn\junk-col\system\Boot.php(133): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#12 D:\Projects\Nadheem\learn\junk-col\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#13 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Access denied for user ''@'localhost' (using password: NO) in D:\Projects\Nadheem\learn\junk-col\system\Database\MySQLi\Connection.php:246
+Stack trace:
+#0 D:\Projects\Nadheem\learn\junk-col\system\Database\BaseConnection.php(419): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 D:\Projects\Nadheem\learn\junk-col\system\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+#2 D:\Projects\Nadheem\learn\junk-col\system\Database\BaseConnection.php(1525): CodeIgniter\Database\BaseConnection->query('SHOW TABLES FRO...')
+#3 D:\Projects\Nadheem\learn\junk-col\system\Database\BaseConnection.php(1545): CodeIgniter\Database\BaseConnection->listTables()
+#4 D:\Projects\Nadheem\learn\junk-col\system\Database\MigrationRunner.php(768): CodeIgniter\Database\BaseConnection->tableExists('migrations')
+#5 D:\Projects\Nadheem\learn\junk-col\system\Database\MigrationRunner.php(162): CodeIgniter\Database\MigrationRunner->ensureTable()
+#6 D:\Projects\Nadheem\learn\junk-col\system\Commands\Database\Migrate.php(85): CodeIgniter\Database\MigrationRunner->latest(NULL)
+#7 D:\Projects\Nadheem\learn\junk-col\system\CLI\Commands.php(74): CodeIgniter\Commands\Database\Migrate->run(Array)
+#8 D:\Projects\Nadheem\learn\junk-col\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('migrate', Array)
+#9 D:\Projects\Nadheem\learn\junk-col\system\Boot.php(388): CodeIgniter\CLI\Console->run()
+#10 D:\Projects\Nadheem\learn\junk-col\system\Boot.php(133): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#11 D:\Projects\Nadheem\learn\junk-col\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#12 {main}
+ERROR - 2025-10-10 17:58:06 --> Email: sendWithMail throwed ErrorException: mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set() in D:\Projects\Nadheem\learn\junk-col\system\Email\Email.php:1771
+Stack trace:
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'mail(): Failed ...', 'D:\\Projects\\Nad...', 1771)
+#1 D:\Projects\Nadheem\learn\junk-col\system\Email\Email.php(1771): mail('info@garbagetog...', '=?UTF-8?Q?New=2...', '\r\n        <h3>N...', 'Date: Fri, 10 O...', '-f noreply@garb...')
+#2 D:\Projects\Nadheem\learn\junk-col\system\Email\Email.php(1703): CodeIgniter\Email\Email->sendWithMail()
+#3 D:\Projects\Nadheem\learn\junk-col\system\Email\Email.php(1597): CodeIgniter\Email\Email->spoolEmail()
+#4 D:\Projects\Nadheem\learn\junk-col\app\Controllers\Home.php(161): CodeIgniter\Email\Email->send()
+#5 D:\Projects\Nadheem\learn\junk-col\app\Controllers\Home.php(113): App\Controllers\Home->sendContactEmail(Array)
+#6 D:\Projects\Nadheem\learn\junk-col\system\CodeIgniter.php(933): App\Controllers\Home->submitContact()
+#7 D:\Projects\Nadheem\learn\junk-col\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+#8 D:\Projects\Nadheem\learn\junk-col\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#9 D:\Projects\Nadheem\learn\junk-col\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#10 D:\Projects\Nadheem\learn\junk-col\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#11 D:\Projects\Nadheem\learn\junk-col\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#12 D:\Projects\Nadheem\learn\junk-col\system\rewrite.php(44): require_once('D:\\Projects\\Nad...')
+#13 {main}
+ERROR - 2025-10-10 17:58:06 --> Email: Unable to send email using PHP mail(). Your server might not be configured to send mail using this method.
+ERROR - 2025-10-10 17:58:06 --> 
+CRITICAL - 2025-10-10 18:10:43 --> ErrorException: Undefined property: App\Controllers\Admin::$router
+[Method: GET, Route: admin/login]
+in APPPATH\Controllers\Admin.php on line 259.
+ 1 APPPATH\Controllers\Admin.php(259): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: App\\Controllers\\Admin::$router', 'D:\\Projects\\Nadheem\\learn\\junk-col\\app\\Controllers\\Admin.php', 259)
+ 2 APPPATH\Controllers\Admin.php(14): App\Controllers\Admin->checkAdminAuth()
+ 3 SYSTEMPATH\CodeIgniter.php(903): App\Controllers\Admin->__construct()
+ 4 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 9 SYSTEMPATH\rewrite.php(44): require_once('D:\\Projects\\Nadheem\\learn\\junk-col\\public\\index.php')
+CRITICAL - 2025-10-10 18:10:57 --> ErrorException: Undefined property: App\Controllers\Admin::$router
+[Method: GET, Route: admin/login]
+in APPPATH\Controllers\Admin.php on line 259.
+ 1 APPPATH\Controllers\Admin.php(259): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: App\\Controllers\\Admin::$router', 'D:\\Projects\\Nadheem\\learn\\junk-col\\app\\Controllers\\Admin.php', 259)
+ 2 APPPATH\Controllers\Admin.php(14): App\Controllers\Admin->checkAdminAuth()
+ 3 SYSTEMPATH\CodeIgniter.php(903): App\Controllers\Admin->__construct()
+ 4 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 9 SYSTEMPATH\rewrite.php(44): require_once('D:\\Projects\\Nadheem\\learn\\junk-col\\public\\index.php')
+CRITICAL - 2025-10-10 18:12:08 --> ErrorException: Undefined property: CodeIgniter\View\View::$request
+[Method: GET, Route: admin/login]
+in APPPATH\Views\admin\login.php on line 41.
+ 1 APPPATH\Views\admin\login.php(41): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: CodeIgniter\\View\\View::$request', 'D:\\Projects\\Nadheem\\learn\\junk-col\\app\\Views\\admin\\login.php', 41)
+ 2 SYSTEMPATH\View\View.php(226): include('D:\\Projects\\Nadheem\\learn\\junk-col\\app\\Views\\admin\\login.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('admin/login', [], true)
+ 5 APPPATH\Controllers\Admin.php(27): view('admin/login')
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Admin->login()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('D:\\Projects\\Nadheem\\learn\\junk-col\\public\\index.php')
+CRITICAL - 2025-10-10 18:12:17 --> ErrorException: Undefined property: CodeIgniter\View\View::$request
+[Method: GET, Route: admin/login]
+in APPPATH\Views\admin\login.php on line 41.
+ 1 APPPATH\Views\admin\login.php(41): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: CodeIgniter\\View\\View::$request', 'D:\\Projects\\Nadheem\\learn\\junk-col\\app\\Views\\admin\\login.php', 41)
+ 2 SYSTEMPATH\View\View.php(226): include('D:\\Projects\\Nadheem\\learn\\junk-col\\app\\Views\\admin\\login.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('admin/login', [], true)
+ 5 APPPATH\Controllers\Admin.php(27): view('admin/login')
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Admin->login()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('D:\\Projects\\Nadheem\\learn\\junk-col\\public\\index.php')
+CRITICAL - 2025-10-10 18:12:18 --> ErrorException: Undefined property: CodeIgniter\View\View::$request
+[Method: GET, Route: admin/login]
+in APPPATH\Views\admin\login.php on line 41.
+ 1 APPPATH\Views\admin\login.php(41): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: CodeIgniter\\View\\View::$request', 'D:\\Projects\\Nadheem\\learn\\junk-col\\app\\Views\\admin\\login.php', 41)
+ 2 SYSTEMPATH\View\View.php(226): include('D:\\Projects\\Nadheem\\learn\\junk-col\\app\\Views\\admin\\login.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('admin/login', [], true)
+ 5 APPPATH\Controllers\Admin.php(27): view('admin/login')
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Admin->login()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('D:\\Projects\\Nadheem\\learn\\junk-col\\public\\index.php')
+CRITICAL - 2025-10-10 18:12:18 --> ErrorException: Undefined property: CodeIgniter\View\View::$request
+[Method: GET, Route: admin/login]
+in APPPATH\Views\admin\login.php on line 41.
+ 1 APPPATH\Views\admin\login.php(41): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: CodeIgniter\\View\\View::$request', 'D:\\Projects\\Nadheem\\learn\\junk-col\\app\\Views\\admin\\login.php', 41)
+ 2 SYSTEMPATH\View\View.php(226): include('D:\\Projects\\Nadheem\\learn\\junk-col\\app\\Views\\admin\\login.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('admin/login', [], true)
+ 5 APPPATH\Controllers\Admin.php(27): view('admin/login')
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Admin->login()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('D:\\Projects\\Nadheem\\learn\\junk-col\\public\\index.php')
+CRITICAL - 2025-10-10 18:12:25 --> ErrorException: Undefined property: CodeIgniter\View\View::$request
+[Method: GET, Route: admin/login]
+in APPPATH\Views\admin\login.php on line 41.
+ 1 APPPATH\Views\admin\login.php(41): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: CodeIgniter\\View\\View::$request', 'D:\\Projects\\Nadheem\\learn\\junk-col\\app\\Views\\admin\\login.php', 41)
+ 2 SYSTEMPATH\View\View.php(226): include('D:\\Projects\\Nadheem\\learn\\junk-col\\app\\Views\\admin\\login.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('admin/login', [], true)
+ 5 APPPATH\Controllers\Admin.php(27): view('admin/login')
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Admin->login()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('D:\\Projects\\Nadheem\\learn\\junk-col\\public\\index.php')
+CRITICAL - 2025-10-10 18:12:44 --> ErrorException: Undefined property: CodeIgniter\View\View::$request
+[Method: GET, Route: admin/login]
+in APPPATH\Views\admin\login.php on line 41.
+ 1 APPPATH\Views\admin\login.php(41): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: CodeIgniter\\View\\View::$request', 'D:\\Projects\\Nadheem\\learn\\junk-col\\app\\Views\\admin\\login.php', 41)
+ 2 SYSTEMPATH\View\View.php(226): include('D:\\Projects\\Nadheem\\learn\\junk-col\\app\\Views\\admin\\login.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('admin/login', [], true)
+ 5 APPPATH\Controllers\Admin.php(27): view('admin/login')
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Admin->login()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('D:\\Projects\\Nadheem\\learn\\junk-col\\public\\index.php')
+CRITICAL - 2025-10-10 18:13:51 --> ErrorException: Undefined array key "contacted"
+[Method: GET, Route: admin/dashboard]
+in APPPATH\Views\admin\dashboard.php on line 95.
+ 1 APPPATH\Views\admin\dashboard.php(95): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array key "contacted"', 'D:\\Projects\\Nadheem\\learn\\junk-col\\app\\Views\\admin\\dashboard.php', 95)
+ 2 SYSTEMPATH\View\View.php(226): include('D:\\Projects\\Nadheem\\learn\\junk-col\\app\\Views\\admin\\dashboard.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('admin/dashboard', [], true)
+ 5 APPPATH\Controllers\Admin.php(97): view('admin/dashboard', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Admin->dashboard()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('D:\\Projects\\Nadheem\\learn\\junk-col\\public\\index.php')
+CRITICAL - 2025-10-10 18:14:51 --> ErrorException: Undefined array key "subject"
+[Method: GET, Route: admin/contacts]
+in APPPATH\Views\admin\contacts.php on line 100.
+ 1 APPPATH\Views\admin\contacts.php(100): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array key "subject"', 'D:\\Projects\\Nadheem\\learn\\junk-col\\app\\Views\\admin\\contacts.php', 100)
+ 2 SYSTEMPATH\View\View.php(226): include('D:\\Projects\\Nadheem\\learn\\junk-col\\app\\Views\\admin\\contacts.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('admin/contacts', [], true)
+ 5 APPPATH\Controllers\Admin.php(208): view('admin/contacts', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Admin->contacts()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('D:\\Projects\\Nadheem\\learn\\junk-col\\public\\index.php')
+CRITICAL - 2025-10-10 18:14:59 --> ErrorException: Undefined array key "subject"
+[Method: GET, Route: admin/contacts]
+in APPPATH\Views\admin\contacts.php on line 100.
+ 1 APPPATH\Views\admin\contacts.php(100): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array key "subject"', 'D:\\Projects\\Nadheem\\learn\\junk-col\\app\\Views\\admin\\contacts.php', 100)
+ 2 SYSTEMPATH\View\View.php(226): include('D:\\Projects\\Nadheem\\learn\\junk-col\\app\\Views\\admin\\contacts.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('admin/contacts', [], true)
+ 5 APPPATH\Controllers\Admin.php(208): view('admin/contacts', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Admin->contacts()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('D:\\Projects\\Nadheem\\learn\\junk-col\\public\\index.php')

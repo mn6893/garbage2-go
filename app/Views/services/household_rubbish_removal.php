@@ -5,15 +5,15 @@
     <div class="container">
         <div class="row align-items-center min-vh-50">
             <div class="col-lg-6">
-                <h1 class="service-hero-title">Household Rubbish Removal</h1>
-                <p class="lead service-hero-subtitle">Professional household rubbish removal services for your home</p>
+                <h1 class="service-hero-title">Household Junk Removal</h1>
+                <p class="lead service-hero-subtitle">Professional household junk removal services for your home</p>
                 <div class="mt-4">
                     <a href="<?= base_url('contact') ?>" class="btn btn-primary btn-lg me-3">Get Free Quote</a>
                     <a href="tel:+1-800-GARBAGE" class="btn btn-secondary btn-lg">Call Now</a>
                 </div>
             </div>
             <div class="col-lg-6">
-                <img src="<?= base_url('style/images/services/household-rubbish.jpg') ?>" alt="Household Rubbish Removal" class="img-fluid service-image">
+                <img src="<?= base_url('style/images/services/household-junk.jpg') ?>" alt="Household Junk Removal" class="img-fluid service-image">
             </div>
         </div>
     </div>
@@ -25,8 +25,8 @@
         <div class="row">
             <div class="col-lg-8">
                 <div class="service-content">
-                    <h2 class="h3 mb-4">Professional Household Rubbish Removal Services</h2>
-                    <p class="lead">Clear out your home with our comprehensive household rubbish removal service. From single items to complete house cleanouts, we handle it all with care and professionalism.</p>
+                    <h2 class="h3 mb-4">Professional Household Junk Removal Services</h2>
+                    <p class="lead">Clear out your home with our comprehensive household junk removal service. From single items to complete house cleanouts, we handle it all with care and professionalism.</p>
                     
                     <div class="service-features mb-5">
                         <h3 class="h4 mb-3">What We Remove:</h3>
@@ -64,7 +64,7 @@
                     </div>
 
                     <div class="mb-5">
-                        <h3 class="h4 mb-3">Why Choose Garbage2Go for Household Rubbish Removal?</h3>
+                        <h3 class="h4 mb-3">Why Choose Garbage2Go for Household Junk Removal?</h3>
                         <p>Our experienced team understands that your home is your sanctuary. We treat your property with respect and ensure a thorough, efficient removal process that leaves your space ready for whatever comes next.</p>
                         
                         <ul class="icon-list bullet-default">
@@ -97,10 +97,10 @@
                             <div class="card-body">
                                 <h5 class="card-title">Related Services</h5>
                                 <ul class="list-unstyled">
-                                    <li><a href="<?= base_url('services/garage-rubbish-removal') ?>">Garage Junk Removal</a></li>
-                                    <li><a href="<?= base_url('services/backyard-clean-up-and-rubbish-removal') ?>">Backyard Clean-up</a></li>
+                                    <li><a href="<?= base_url('services/garage-junk-removal') ?>">Garage Junk Removal</a></li>
+                                    <li><a href="<?= base_url('services/backyard-clean-up-and-junk-removal') ?>">Backyard Clean-up</a></li>
                                     <li><a href="<?= base_url('services/mattress-recycling-melbourne') ?>">Mattress Recycling</a></li>
-                                    <li><a href="<?= base_url('services/end-of-lease-rubbish-removal') ?>">End of Lease Cleanup</a></li>
+                                    <li><a href="<?= base_url('services/end-of-lease-junk-removal') ?>">End of Lease Cleanup</a></li>
                                 </ul>
                             </div>
                         </div>

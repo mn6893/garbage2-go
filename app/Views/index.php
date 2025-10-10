@@ -4,7 +4,7 @@
     <div class="wrapper image-wrapper bg-image page-title-wrapper inverse-text" data-image-src="style/images/art/bg32.jpg">
       <div class="container inner text-center">
         <div class="space140"></div>
-         <h1 class="display-1">Garbage2Go - We <span class="typer color-default" id="typer" data-delay="100" data-delim=":" data-words="remove junk:clear debris:dispose appliances:handle cleanouts:manage waste:recycle responsibly"></span><span class="cursor color-default" data-owner="typer"></span></h1>
+         <h1 class="display-1">GarbageToGo - We <span class="typer color-default" id="typer" data-delay="100" data-delim=":" data-words="remove junk:clear debris:dispose appliances:handle cleanouts:manage waste:recycle responsibly"></span><span class="cursor color-default" data-owner="typer"></span></h1>
          <p class="lead larger text-center mt-20">Professional Junk Removal Services | Residential Cleanouts | Commercial Waste Management | Construction Debris Removal | Appliance Disposal</p>
         <!-- <h1 class="display-1">We love to clear your junk <br class="d-none d-lg-block" />and make your space beautiful</h1> -->
         <div class="space20"></div>
@@ -29,10 +29,10 @@
               <div class="row mb-40">
           <div class="col-lg-12">
             <ul class="icon-list bullet-bg bullet-bg-dark">
-              <li><i class="jam jam-check" style="background-color: #003366; color: white; border-radius: 50%; padding: 2px; font-size: 16px;"></i> <span style="font-size: 16px;"> We do all the Loading, Lifting, Moving & Clearing</span></li>
-              <li><i class="jam jam-check" style="background-color: #003366; color: white; border-radius: 50%; padding: 2px; font-size: 16px;"></i> <span style="font-size: 16px;"> Garbage2Go trucks from 2m³ to 77m³</span></li>
-              <li><i class="jam jam-check" style="background-color: #003366; color: white; border-radius: 50%; padding: 2px; font-size: 16px;"></i> <span style="font-size: 16px;"> Up to 50% cheaper per cubic metre than our competitors</span></li>
-              <li><i class="jam jam-check" style="background-color: #003366; color: white; border-radius: 50%; padding: 2px; font-size: 16px;"></i> <span style="font-size: 16px;"> We service most areas of Ontario including Toronto, Ottawa, Hamilton, London & surrounding regions</span></li>
+                <li><i class="jam jam-check" style="background-color: #003366; color: white; border-radius: 50%; padding: 2px; font-size: 16px;"></i> <span style="font-size: 16px;"> We do all the Loading, Lifting, Moving & Clearing</span></li>
+                <li><i class="jam jam-check" style="background-color: #003366; color: white; border-radius: 50%; padding: 2px; font-size: 16px;"></i> <span style="font-size: 16px;"> From single mattress to 40 feet container load</span></li>
+                <li><i class="jam jam-check" style="background-color: #003366; color: white; border-radius: 50%; padding: 2px; font-size: 16px;"></i> <span style="font-size: 16px;"> Up to 50% cheaper than our competitors</span></li>
+              <li><i class="jam jam-check" style="background-color: #003366; color: white; border-radius: 50%; padding: 2px; font-size: 16px;"></i> <span style="font-size: 16px;"> We service most areas of Ontario including GTA, Ottawa, Hamilton, London & surrounding regions</span></li>
             </ul>
           </div>
               </div>
@@ -54,18 +54,47 @@
             </div>
           </div></br>
               
-              <form>
+              <form method="post" action="<?= site_url('quote/submit') ?>" enctype="multipart/form-data">
+          <?= csrf_field() ?>
+          
+          <?php if (session()->getFlashdata('error')): ?>
+              <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                  <?= session()->getFlashdata('error') ?>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+          <?php endif; ?>
+          
+          <?php if (isset($validation)): ?>
+              <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                  <h5>Please correct the following errors:</h5>
+                  <ul class="mb-0">
+                      <?php foreach ($validation->getErrors() as $error): ?>
+                          <li><?= esc($error) ?></li>
+                      <?php endforeach; ?>
+                  </ul>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+          <?php endif; ?>
+          
           <div class="row">
             <div class="col-md-6">
               <div class="mb-3">
           <label for="fullname" class="form-label">Full Name *</label>
-          <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Your Full Name" required>
+          <input type="text" class="form-control" id="fullname" name="name" placeholder="Your Full Name" 
+                 value="<?= old('name', isset($input['name']) ? esc($input['name']) : '') ?>" required>
+          <?php if (isset($validation) && $validation->hasError('name')): ?>
+              <div class="text-danger small mt-1"><?= $validation->getError('name') ?></div>
+          <?php endif; ?>
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
           <label for="email" class="form-label">Email Address *</label>
-          <input type="email" class="form-control" id="email" name="email" placeholder="Your Email" required>
+          <input type="email" class="form-control" id="email" name="email" placeholder="Your Email" 
+                 value="<?= old('email', isset($input['email']) ? esc($input['email']) : '') ?>" required>
+          <?php if (isset($validation) && $validation->hasError('email')): ?>
+              <div class="text-danger small mt-1"><?= $validation->getError('email') ?></div>
+          <?php endif; ?>
               </div>
             </div>
           </div>
@@ -74,25 +103,36 @@
             <div class="col-md-6">
               <div class="mb-3">
           <label for="phone" class="form-label">Phone Number *</label>
-          <input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone Number" required>
+          <input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone Number" 
+                 value="<?= old('phone', isset($input['phone']) ? esc($input['phone']) : '') ?>" required>
+          <?php if (isset($validation) && $validation->hasError('phone')): ?>
+              <div class="text-danger small mt-1"><?= $validation->getError('phone') ?></div>
+          <?php endif; ?>
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
           <label for="suburb" class="form-label">Suburb/City</label>
-          <input type="text" class="form-control" id="suburb" name="suburb" placeholder="Suburb/City">
+          <input type="text" class="form-control" id="suburb" name="city" placeholder="Suburb/City"
+                 value="<?= old('city', isset($input['city']) ? esc($input['city']) : '') ?>">
               </div>
             </div>
           </div>
           
           <div class="mb-3">
             <label for="address" class="form-label">Complete Address *</label>
-            <textarea class="form-control" id="address" name="address" placeholder="Your Address" style="height: 80px" required></textarea>
+            <textarea class="form-control" id="address" name="address" placeholder="Your Address" style="height: 80px" required><?= old('address', isset($input['address']) ? esc($input['address']) : '') ?></textarea>
+            <?php if (isset($validation) && $validation->hasError('address')): ?>
+                <div class="text-danger small mt-1"><?= $validation->getError('address') ?></div>
+            <?php endif; ?>
           </div>
           
           <div class="mb-3">
             <label for="junk_description" class="form-label">Tell us about your Junk *</label>
-            <textarea class="form-control" id="junk_description" name="junk_description" placeholder="Tell us about your junk" style="height: 120px" required></textarea>
+            <textarea class="form-control" id="junk_description" name="description" placeholder="Tell us about your junk" style="height: 120px" required><?= old('description', isset($input['description']) ? esc($input['description']) : '') ?></textarea>
+            <?php if (isset($validation) && $validation->hasError('description')): ?>
+                <div class="text-danger small mt-1"><?= $validation->getError('description') ?></div>
+            <?php endif; ?>
           </div>
 
       <script>
@@ -178,7 +218,7 @@
       <div class="row align-items-center">
         <div class="col-lg-6 order-lg-2 text-center">
         <div>
-          <figure><img src="style/images/art/junk-removal-truck.png" alt="Garbage2Go Junk Removal Truck" /></figure>
+          <figure><img src="style/images/art/junk-removal-truck.png" alt="GarbageToGo Junk Removal Truck" /></figure>
           <div class="row counter counter-s position-absolute" style="top: 45%; right: 8%;">
           <div class="col-md-10 text-center">
             <div class="box bg-white shadow">
@@ -284,7 +324,7 @@
           <li><i class="jam jam-arrow-right" style="color: #003366;"></i>We clean up and dispose responsibly.</li>
         </ul>
         <div class="space10"></div>
-        <a href="#portfolio" class="btn mb-0" style="background: #003366; color: white;">Get Free Quote</a>
+        <a href="<?= site_url('quote') ?>" class="btn mb-0" style="background: #003366; color: white;">Get Free Quote</a>
         </div>
         <!--/column -->
       </div>

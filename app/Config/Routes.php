@@ -9,35 +9,56 @@ $routes->get('/', 'Home::index');
 $routes->get('about', 'Home::about');
 $routes->get('services', 'Home::services');
 $routes->get('contact', 'Home::contact');
+$routes->post('contact/submit', 'Home::submitContact');
 
-// Household Rubbish Removal Services
-$routes->get('services/household-rubbish-removal', 'Services::householdRubbishRemoval');
-$routes->get('services/garage-rubbish-removal', 'Services::garageRubbishRemoval');
-$routes->get('services/backyard-clean-up-and-rubbish-removal', 'Services::backyardCleanUp');
-$routes->get('services/mattress-recycling-melbourne', 'Services::mattressRecycling');
-$routes->get('rubbish-removal-melbourne', 'Services::rubbishRemovalMelbourne');
+// Household Junk Removal Services
+$routes->get('services/household-junk-removal', 'Services::householdJunkRemoval');
+$routes->get('services/garage-junk-removal', 'Services::garageJunkRemoval');
+$routes->get('services/backyard-clean-up-and-junk-removal', 'Services::backyardCleanUp');
+$routes->get('services/mattress-recycling-canada', 'Services::mattressRecycling');
+$routes->get('junk-removal-canada', 'Services::junkRemovalCanada');
 
 // Commercial Junk Removal Services
 $routes->get('services/commercial-junk-removal', 'Services::commercialJunkRemoval');
 $routes->get('services/real-estate-junk-removal', 'Services::realEstateJunkRemoval');
-$routes->get('services/end-of-lease-rubbish-removal', 'Services::endOfLeaseRubbishRemoval');
+$routes->get('services/end-of-lease-junk-removal', 'Services::endOfLeaseJunkRemoval');
 $routes->get('services/office-junk-removal', 'Services::officeJunkRemoval');
-$routes->get('services/renovation-rubbish-removal', 'Services::renovationRubbishRemoval');
-$routes->get('services/retail-merchandise-rubbish-removal', 'Services::retailMerchandiseRubbishRemoval');
+$routes->get('services/renovation-junk-removal', 'Services::renovationJunkRemoval');
+$routes->get('services/retail-merchandise-junk-removal', 'Services::retailMerchandiseJunkRemoval');
 $routes->get('services/worksite-junk-removal', 'Services::worksiteJunkRemoval');
 
 // Other Services
-$routes->get('services/deceased-estate-rubbish-removal', 'Services::deceasedEstateRubbishRemoval');
+$routes->get('services/deceased-estate-junk-removal', 'Services::deceasedEstateJunkRemoval');
 $routes->get('services/green-waste-removal', 'Services::greenWasteRemoval');
+
+// Quote Routes
+$routes->get('quote', 'Quote::index');
+$routes->post('quote/submit', 'Quote::submit');
+$routes->get('quote/success', 'Quote::success');
+$routes->get('quote/image/(:any)', 'Quote::serveImage/$1');
 
 // Location Routes
 $routes->get('location', 'Locations::index');
-$routes->get('rubbish-removal-toronto', 'Locations::toronto');
-$routes->get('rubbish-removal-ottawa', 'Locations::ottawa');
-$routes->get('rubbish-removal-mississauga', 'Locations::mississauga');
-$routes->get('rubbish-removal-brampton', 'Locations::brampton');
-$routes->get('rubbish-removal-hamilton', 'Locations::hamilton');
-$routes->get('rubbish-removal-london', 'Locations::london');
-$routes->get('rubbish-removal-markham', 'Locations::markham');
-$routes->get('rubbish-removal-vaughan', 'Locations::vaughan');
-$routes->get('rubbish-removal-kitchener', 'Locations::kitchener');
+$routes->get('junk-removal-toronto', 'Locations::toronto');
+$routes->get('junk-removal-ottawa', 'Locations::ottawa');
+$routes->get('junk-removal-mississauga', 'Locations::mississauga');
+$routes->get('junk-removal-brampton', 'Locations::brampton');
+$routes->get('junk-removal-hamilton', 'Locations::hamilton');
+$routes->get('junk-removal-london', 'Locations::london');
+$routes->get('junk-removal-markham', 'Locations::markham');
+$routes->get('junk-removal-vaughan', 'Locations::vaughan');
+$routes->get('junk-removal-kitchener', 'Locations::kitchener');
+
+// Admin Routes
+$routes->group('admin', function($routes) {
+    $routes->get('login', 'Admin::login');
+    $routes->post('authenticate', 'Admin::authenticate');
+    $routes->get('logout', 'Admin::logout');
+    $routes->get('dashboard', 'Admin::dashboard');
+    $routes->get('quotes', 'Admin::quotes');
+    $routes->get('quote/(:num)', 'Admin::quote/$1');
+    $routes->post('quote/update-status', 'Admin::updateQuoteStatus');
+    $routes->get('contacts', 'Admin::contacts');
+    $routes->get('contact/(:num)', 'Admin::contact/$1');
+    $routes->post('contact/update-status', 'Admin::updateContactStatus');
+});

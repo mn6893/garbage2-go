@@ -3,7 +3,7 @@
     <div class="wrapper image-wrapper bg-image page-title-wrapper inverse-text" data-image-src="style/images/art/bg3.jpg">
       <div class="container inner text-center">
         <div class="space90"></div>
-        <h1 class="page-title">Contact Garbage2Go</h1>
+        <h1 class="page-title">Contact GarbageToGo</h1>
         <p class="lead">Ready to schedule your waste removal service? We're here to help!</p>
       </div>
       <!-- /.container -->
@@ -14,69 +14,126 @@
         <h2 class="section-title">Get Your Free Quote Today</h2>
         <p class="lead larger">Need garbage removal services? Contact us for a free estimate and let us handle your waste management needs efficiently and affordably.</p>
         <div class="space40"></div>
+        
+        <?php if (session()->getFlashdata('success')): ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert" id="contact-success">
+                <i class="icofont-check-circled mr-10"></i>
+                <?= session()->getFlashdata('success') ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+        
+        <?php if (session()->getFlashdata('error')): ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <?= session()->getFlashdata('error') ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+        
+        <?php if (isset($validation)): ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <h5>Please correct the following errors:</h5>
+                <ul class="mb-0">
+                    <?php foreach ($validation->getErrors() as $error): ?>
+                        <li><?= esc($error) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+        
         <div class="row">
           <div class="col-lg-7">
-            <form id="contact-form" class="fields-white" method="post" action="contact/contact.php">
-              <div class="messages"></div>
+            <form id="contact-form" class="fields-white" method="post" action="<?= site_url('contact/submit') ?>">
+              <?= csrf_field() ?>
               <div class="controls">
                 <div class="form-row">
                   <div class="col-lg-12 col-xl-6">
                     <div class="form-group">
-                      <input id="form_name" type="text" name="name" class="form-control" placeholder="First Name *" required="required" data-error="First Name is required.">
-                      <div class="help-block with-errors"></div>
+                      <input id="form_name" type="text" name="name" class="form-control" 
+                             placeholder="First Name *" 
+                             value="<?= old('name', isset($input['name']) ? esc($input['name']) : '') ?>" 
+                             required>
+                      <?php if (isset($validation) && $validation->hasError('name')): ?>
+                          <div class="text-danger small mt-1"><?= $validation->getError('name') ?></div>
+                      <?php endif; ?>
                     </div>
                   </div>
                   <div class="col-lg-12 col-xl-6">
                     <div class="form-group">
-                      <input id="form_lastname" type="text" name="surname" class="form-control" placeholder="Last Name *" required="required" data-error="Last Name is required.">
-                      <div class="help-block with-errors"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-row">
-                  <div class="col-lg-12 col-xl-6">
-                    <div class="form-group">
-                      <input id="form_email" type="email" name="email" class="form-control" placeholder="Email *" required="required" data-error="Valid email is required.">
-                      <div class="help-block with-errors"></div>
-                    </div>
-                  </div>
-                  <div class="col-lg-12 col-xl-6">
-                    <div class="form-group">
-                      <input id="form_phone" type="tel" name="phone" class="form-control" placeholder="Phone">
-                      <div class="help-block with-errors"></div>
+                      <input id="form_lastname" type="text" name="surname" class="form-control" 
+                             placeholder="Last Name *" 
+                             value="<?= old('surname', isset($input['surname']) ? esc($input['surname']) : '') ?>" 
+                             required>
+                      <?php if (isset($validation) && $validation->hasError('surname')): ?>
+                          <div class="text-danger small mt-1"><?= $validation->getError('surname') ?></div>
+                      <?php endif; ?>
                     </div>
                   </div>
                 </div>
                 <div class="form-row">
                   <div class="col-lg-12 col-xl-6">
                     <div class="form-group">
-                      <input id="form_location" type="text" name="location" class="form-control" placeholder="Service Location (City, Province)">
-                      <div class="help-block with-errors"></div>
+                      <input id="form_email" type="email" name="email" class="form-control" 
+                             placeholder="Email *" 
+                             value="<?= old('email', isset($input['email']) ? esc($input['email']) : '') ?>" 
+                             required>
+                      <?php if (isset($validation) && $validation->hasError('email')): ?>
+                          <div class="text-danger small mt-1"><?= $validation->getError('email') ?></div>
+                      <?php endif; ?>
+                    </div>
+                  </div>
+                  <div class="col-lg-12 col-xl-6">
+                    <div class="form-group">
+                      <input id="form_phone" type="tel" name="phone" class="form-control" 
+                             placeholder="Phone" 
+                             value="<?= old('phone', isset($input['phone']) ? esc($input['phone']) : '') ?>">
+                      <?php if (isset($validation) && $validation->hasError('phone')): ?>
+                          <div class="text-danger small mt-1"><?= $validation->getError('phone') ?></div>
+                      <?php endif; ?>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="col-lg-12 col-xl-6">
+                    <div class="form-group">
+                      <input id="form_location" type="text" name="location" class="form-control" 
+                             placeholder="Service Location (City, Province)" 
+                             value="<?= old('location', isset($input['location']) ? esc($input['location']) : '') ?>">
+                      <?php if (isset($validation) && $validation->hasError('location')): ?>
+                          <div class="text-danger small mt-1"><?= $validation->getError('location') ?></div>
+                      <?php endif; ?>
                     </div>
                   </div>
                   <div class="col-lg-12 col-xl-6">
                     <div class="form-group">
                       <select id="form_service" name="service_type" class="form-control">
                         <option value="">Select Service Type</option>
-                        <option value="household">Household Junk Removal</option>
-                        <option value="commercial">Commercial Cleanout</option>
-                        <option value="construction">Construction Debris</option>
-                        <option value="estate">Estate Cleanout</option>
-                        <option value="furniture">Furniture Removal</option>
-                        <option value="appliance">Appliance Removal</option>
-                        <option value="yard">Yard Waste</option>
-                        <option value="emergency">Emergency Service</option>
-                        <option value="other">Other</option>
+                        <option value="household" <?= old('service_type', isset($input['service_type']) ? $input['service_type'] : '') === 'household' ? 'selected' : '' ?>>Household Junk Removal</option>
+                        <option value="commercial" <?= old('service_type', isset($input['service_type']) ? $input['service_type'] : '') === 'commercial' ? 'selected' : '' ?>>Commercial Cleanout</option>
+                        <option value="construction" <?= old('service_type', isset($input['service_type']) ? $input['service_type'] : '') === 'construction' ? 'selected' : '' ?>>Construction Debris</option>
+                        <option value="estate" <?= old('service_type', isset($input['service_type']) ? $input['service_type'] : '') === 'estate' ? 'selected' : '' ?>>Estate Cleanout</option>
+                        <option value="furniture" <?= old('service_type', isset($input['service_type']) ? $input['service_type'] : '') === 'furniture' ? 'selected' : '' ?>>Furniture Removal</option>
+                        <option value="appliance" <?= old('service_type', isset($input['service_type']) ? $input['service_type'] : '') === 'appliance' ? 'selected' : '' ?>>Appliance Removal</option>
+                        <option value="yard" <?= old('service_type', isset($input['service_type']) ? $input['service_type'] : '') === 'yard' ? 'selected' : '' ?>>Yard Waste</option>
+                        <option value="emergency" <?= old('service_type', isset($input['service_type']) ? $input['service_type'] : '') === 'emergency' ? 'selected' : '' ?>>Emergency Service</option>
+                        <option value="other" <?= old('service_type', isset($input['service_type']) ? $input['service_type'] : '') === 'other' ? 'selected' : '' ?>>Other</option>
                       </select>
-                      <div class="help-block with-errors"></div>
+                      <?php if (isset($validation) && $validation->hasError('service_type')): ?>
+                          <div class="text-danger small mt-1"><?= $validation->getError('service_type') ?></div>
+                      <?php endif; ?>
                     </div>
                   </div>
                 </div>
                 <div class="form-row">
                   <div class="col-md-12">
                     <div class="form-group">
-                      <textarea id="form_message" name="message" class="form-control" placeholder="Describe your junk removal needs (type of items, quantity, access details) *" rows="4" required="required" data-error="Message is required."></textarea>
-                      <div class="help-block with-errors"></div>
+                      <textarea id="form_message" name="message" class="form-control" 
+                                placeholder="Describe your junk removal needs (type of items, quantity, access details) *" 
+                                rows="4" required><?= old('message', isset($input['message']) ? esc($input['message']) : '') ?></textarea>
+                      <?php if (isset($validation) && $validation->hasError('message')): ?>
+                          <div class="text-danger small mt-1"><?= $validation->getError('message') ?></div>
+                      <?php endif; ?>
                     </div>
                   </div>
                   <div class="col-md-12">
@@ -119,7 +176,7 @@
               </div>
               <div>
                 <h6 class="mb-5">E-mail</h6>
-                <p><a href="mailto:info@garbage2go.com" class="nocolor">info@garbage2go.com</a> <br class="d-none d-md-block" /><a href="mailto:support@garbage2go.com" class="nocolor">support@garbage2go.com</a></p>
+                <p><a href="mailto:info@garbagetogo.com" class="nocolor">info@garbagetogo.com</a> <br class="d-none d-md-block" /><a href="mailto:support@garbagetogo.com" class="nocolor">support@garbagetogo.com</a></p>
               </div>
             </div>
           </div>
@@ -161,7 +218,7 @@
               </div>
               <h5>Email Us</h5>
               <p>Send us details about your project and we'll respond within 2 hours.</p>
-              <a href="mailto:info@garbage2go.com" class="btn btn-sm btn-outline-default">info@garbage2go.com</a>
+              <a href="mailto:info@garbagetogo.com" class="btn btn-sm btn-outline-default">info@garbagetogo.com</a>
             </div>
           </div>
 
@@ -172,7 +229,7 @@
               </div>
               <h5>Book Online</h5>
               <p>Schedule your pickup at your convenience through our online system.</p>
-              <a href="/" class="btn btn-sm btn-outline-default">Book Now</a>
+              <a href="<?= site_url('quote') ?>" class="btn btn-sm btn-outline-default">Book Now</a>
             </div>
           </div>
         </div>

@@ -23,7 +23,7 @@
         <div class="row">
             <div class="col-lg-8">
                 <h2>Professional Rubbish Removal Services in <?= $location_name ?></h2>
-                <p class="lead">Garbage2Go provides comprehensive rubbish removal services throughout <?= $location_name ?>, <?= $province ?>. Our experienced team is ready to help with all your junk removal needs.</p>
+                <p class="lead">GarbageToGo provides comprehensive rubbish removal services throughout <?= $location_name ?>, <?= $province ?>. Our experienced team is ready to help with all your junk removal needs.</p>
                 
                 <div class="service-features mb-5">
                     <h3>Services Available in <?= $location_name ?>:</h3>
@@ -61,7 +61,7 @@
                 </div>
 
                 <div class="mb-5">
-                    <h3>Why Choose Garbage2Go in <?= $location_name ?>?</h3>
+                    <h3>Why Choose GarbageToGo in <?= $location_name ?>?</h3>
                     <ul class="icon-list bullet-default">
                         <li><i class="jam jam-arrow-right"></i>Local <?= $location_name ?> team</li>
                         <li><i class="jam jam-arrow-right"></i>Licensed and insured</li>

@@ -19,7 +19,7 @@
               <div class="icon icon-svg mb-20"><i class="icofont-home" style="font-size: 48px; color: #001f3f;"></i></div>
               <h5>Household Junk Removal</h5>
               <p>Complete home cleanouts including furniture, appliances, electronics, and general household items. We handle everything from single items to entire home clearances.</p>
-              <a href="<?= base_url('services/household-rubbish-removal') ?>" class="btn btn-sm btn-outline-primary">Learn More</a>
+              <a href="<?= base_url('services/household-junk-removal') ?>" class="btn btn-sm btn-outline-primary">Learn More</a>
             </div>
             <!--/.box -->
           </div>
@@ -203,7 +203,7 @@
     <!-- /.wrapper -->
     <div class="wrapper light-wrapper">
       <div class="container inner pt-40 pb-0">
-        <h2 class="display-2 text-center">Think efficient, go green. <br class="d-none d-lg-block" />Make a difference with Garbage2Go.</h2>
+        <h2 class="display-2 text-center">Think efficient, go green. <br class="d-none d-lg-block" />Make a difference with GarbageToGo.</h2>
         <div class="space40"></div>
         <div class="row">
           <div class="col-lg-10 offset-lg-1">
@@ -249,7 +249,7 @@
         <div class="row">
           <div class="col-lg-8 offset-lg-2 text-center">
             <h2 class="display-3 mb-30">Ready to Get Started?</h2>
-            <p class="lead mb-40">Contact Garbage2Go today for professional, reliable, and eco-friendly junk removal services. We're here to make your cleanup project simple and stress-free.</p>
+            <p class="lead mb-40">Contact GarbageToGo today for professional, reliable, and eco-friendly junk removal services. We're here to make your cleanup project simple and stress-free.</p>
             
             <div class="row">
               <div class="col-md-4 mb-30">
@@ -270,7 +270,7 @@
                   </div>
                   <h6>Email Quote</h6>
                   <p class="mb-15">Send us details for a detailed estimate</p>
-                  <a href="mailto:info@garbage2go.com" class="btn btn-sm btn-outline-primary">Send Email</a>
+                  <a href="mailto:info@garbagetogo.com" class="btn btn-sm btn-outline-primary">Send Email</a>
                 </div>
               </div>
               

@@ -3,15 +3,15 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6">
-                <h1>Rubbish Removal Melbourne</h1>
-                <p class="lead">Complete rubbish removal services across Melbourne and surrounding areas</p>
+                <h1>Junk Removal Canada</h1>
+                <p class="lead">Complete junk removal services across Canada and surrounding areas</p>
                 <div class="mt-4">
                     <a href="<?= base_url('contact') ?>" class="btn btn-primary btn-lg me-3">Get Free Quote</a>
                     <a href="tel:+1-800-GARBAGE" class="btn btn-secondary btn-lg">Call Now</a>
                 </div>
             </div>
             <div class="col-lg-6">
-                <img src="<?= base_url('style/images/services/rubbish-removal.jpg') ?>" alt="Rubbish Removal Melbourne" class="img-fluid service-image">
+                <img src="<?= base_url('style/images/services/junk-removal.jpg') ?>" alt="Junk Removal Canada" class="img-fluid service-image">
             </div>
         </div>
     </div>
@@ -20,8 +20,8 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8">
-                <h2>Melbourne's Leading Rubbish Removal Service</h2>
-                <p class="lead">Serving all of Melbourne with professional, reliable rubbish removal services for homes and businesses.</p>
+                <h2>Canada's Leading Junk Removal Service</h2>
+                <p class="lead">Serving all of Canada with professional, reliable junk removal services for homes and businesses.</p>
                 <div class="service-features mb-5">
                     <h3>Areas We Serve:</h3>
                     <ul><li>Melbourne CBD</li><li>Inner suburbs</li><li>Outer suburbs</li><li>Bayside areas</li><li>Northern suburbs</li><li>Western suburbs</li><li>Eastern suburbs</li><li>Southern suburbs</li></ul>
