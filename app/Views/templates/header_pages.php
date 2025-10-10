@@ -12,7 +12,7 @@
   <link rel="stylesheet" type="text/css" href="<?= base_url('style/revolution/css/navigation.css') ?>">
   <link rel="stylesheet" type="text/css" href="<?= base_url('style/type/type.css') ?>">
   <link rel="stylesheet" type="text/css" href="<?= base_url('style/css/style.css') ?>">
-  <link rel="stylesheet" type="text/css" href="<?= base_url('style/css/color/modern-garbage2go.css') ?>">
+  <link rel="stylesheet" type="text/css" href="<?= base_url('style/css/color/purple.css') ?>">
 </head>
 <body>
   <div class="content-wrapper">
@@ -71,7 +71,7 @@
               </ul>
             </li>
              <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="<?= base_url('location') ?>" data-toggle="dropdown">Locations</a>
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown">Locations</a>
               <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="<?= base_url('rubbish-removal-toronto') ?>">Toronto</a></li>
               <li><a class="dropdown-item" href="<?= base_url('rubbish-removal-ottawa') ?>">Ottawa</a></li>

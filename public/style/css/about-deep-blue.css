@@ -1,0 +1,183 @@
+/* About Page Deep Blue Theme - Garbage2Go */
+
+/* Page title wrapper with deep blue background */
+.page-title-wrapper {
+    background: #001f3f !important;
+}
+
+/* Section titles with deep blue color */
+.title-color.color-gray {
+    color: #001f3f !important;
+}
+
+/* Deep blue accents for headers */
+.display-3 {
+    color: #001f3f !important;
+}
+
+/* Progress bars with deep blue theme */
+.progressbar.line.blue .bar {
+    background: #001f3f !important;
+}
+
+/* Icon blobs with deep blue variations */
+.icon-blob-purple {
+    background: rgba(0, 31, 63, 0.1) !important;
+}
+
+.icon-blob-purple .step {
+    background: #001f3f !important;
+}
+
+.color-purple {
+    color: #001f3f !important;
+}
+
+/* Yellow step styling for 4th process step */
+.icon-blob-yellow {
+    background: rgba(255, 193, 7, 0.1) !important;
+}
+
+.icon-blob-yellow .step {
+    background: #ffc107 !important;
+}
+
+.step.bg-yellow {
+    background: #ffc107 !important;
+}
+
+.color-yellow {
+    color: #ffc107 !important;
+}
+
+/* Counter values with deep blue */
+.counter .value {
+    color: #001f3f !important;
+}
+
+/* Button styles with deep blue */
+.btn-default {
+    background: #001f3f !important;
+    border-color: #001f3f !important;
+    color: white !important;
+}
+
+.btn-default:hover {
+    background: rgba(0, 31, 63, 0.8) !important;
+    border-color: rgba(0, 31, 63, 0.8) !important;
+}
+
+/* Link hover effects */
+a:hover {
+    color: #001f3f !important;
+}
+
+/* Process step numbers */
+.step.bg-purple {
+    background: #001f3f !important;
+}
+
+/* Icon colors for contact section */
+.icon.color-default {
+    color: #001f3f !important;
+}
+
+/* Team section social icons */
+.social a:hover {
+    background: #001f3f !important;
+}
+
+/* Testimonial box shadow with deep blue accent */
+.box.shadow {
+    border-left: 4px solid #001f3f !important;
+}
+
+/* Process wrapper deep blue styling */
+.process-wrapper .icon {
+    background: rgba(0, 31, 63, 0.1) !important;
+}
+
+/* Progress list styling */
+.progress-list li p {
+    color: #001f3f !important;
+    font-weight: 600;
+}
+
+/* Deep blue for unordered list icons */
+.unordered-list li:before {
+    color: #001f3f !important;
+}
+
+/* Client logos section background */
+.clients .item img {
+    filter: brightness(0) saturate(100%) invert(9%) sepia(85%) saturate(4447%) hue-rotate(212deg) brightness(96%) contrast(105%);
+    opacity: 0.6;
+}
+
+.clients .item:hover img {
+    filter: none;
+    opacity: 1;
+}
+
+/* Meta text styling */
+.meta {
+    color: #001f3f !important;
+    font-weight: 500;
+}
+
+/* Header adjustments for deep blue */
+h4, h5, h6 {
+    color: #001f3f !important;
+}
+
+/* Special styling for stats section */
+.counter p {
+    color: #666 !important;
+}
+
+/* Progress bar container styling */
+.progress-list {
+    padding: 20px 0;
+}
+
+/* Deep blue accent for blockquote details */
+.blockquote-details .info h6 {
+    color: #001f3f !important;
+}
+
+/* Video player section overlay */
+.wrapper.image-wrapper.inverse-text {
+    background: linear-gradient(rgba(0, 31, 63, 0.7), rgba(0, 31, 63, 0.7)), url('style/images/art/bg9.jpg') !important;
+}
+
+/* Alert boxes styling */
+.alert-primary {
+    background-color: rgba(0, 31, 63, 0.1) !important;
+    border-color: #001f3f !important;
+}
+
+.alert-primary .alert-content h6 {
+    color: #001f3f !important;
+}
+
+.alert-success {
+    background-color: rgba(40, 167, 69, 0.1) !important;
+    border-color: #28a745 !important;
+}
+
+/* Process steps detailed styling */
+.process-wrapper .col-lg-3 {
+    margin-bottom: 40px;
+}
+
+.process-wrapper small.text-muted {
+    color: #666 !important;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+/* Service guarantee section */
+.alert-icon i {
+    color: #001f3f !important;
+    font-size: 24px;
+}

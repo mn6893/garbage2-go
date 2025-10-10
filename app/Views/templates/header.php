@@ -72,7 +72,7 @@
               </ul>
             </li>
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="<?= base_url('location') ?>" data-toggle="dropdown">Locations</a>
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown">Locations</a>
               <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="<?= base_url('rubbish-removal-toronto') ?>">Toronto</a></li>
               <li><a class="dropdown-item" href="<?= base_url('rubbish-removal-ottawa') ?>">Ottawa</a></li>

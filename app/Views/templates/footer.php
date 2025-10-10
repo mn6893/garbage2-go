@@ -8,19 +8,19 @@
                 <div class="contact-item">
                   <div class="contact-icon"><i class="jam jam-map-marker"></i></div>
                   <div class="contact-details">
-                    <span>Moonshine St. 14/05 Light City</span>
+                    <span>1250 Bay Street, Suite 200<br>Toronto, ON M5R 2A4</span>
                   </div>
                 </div>
                 <div class="contact-item">
                   <div class="contact-icon"><i class="jam jam-phone"></i></div>
                   <div class="contact-details">
-                    <span>00 (123) 456 78 90</span>
+                    <span>+1 (416) 555-JUNK</span>
                   </div>
                 </div>
                 <div class="contact-item">
                   <div class="contact-icon"><i class="jam jam-email"></i></div>
                   <div class="contact-details">
-                    <span><a href="mailto:sandbox@email.com">sandbox@email.com</a></span>
+                    <span><a href="mailto:info@garbage2go.com">info@garbage2go.com</a></span>
                   </div>
                 </div>
               </div>
@@ -31,13 +31,13 @@
           <!-- /column -->
           <div class="col-md-4 col-lg-3">
             <div class="widget">
-              <h3 class="widget-title">Learn More</h3>
+              <h3 class="widget-title">Quick Links</h3>
               <ul class="list-unstyled">
                 <li><a href="<?= base_url('about') ?>">About Us</a></li>
-                <li><a href="<?= base_url('services') ?>">Our Story</a></li>
-                <li><a href="<?= base_url('contact') ?>">Projects</a></li>
-                <li><a href="#">Terms of Use</a></li>
-                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="<?= base_url('services') ?>">Our Services</a></li>
+                <li><a href="<?= base_url('contact') ?>">Get Quote</a></li>
+                <li><a href="<?= base_url('services/emergency-junk-removal') ?>">Emergency Service</a></li>
+                <li><a href="#">Service Areas</a></li>
               </ul>
             </div>
             <!-- /.widget -->
@@ -45,13 +45,13 @@
           <!-- /column -->
           <div class="col-md-4 col-lg-3">
             <div class="widget">
-              <h3 class="widget-title">Get in Touch</h3>
-              <p>Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum.</p>
+              <h3 class="widget-title">Follow Us</h3>
+              <p>Stay connected for updates and eco-friendly waste removal tips.</p>
               <div class="social social-mute social-s ml-auto">
                 <a href="#"><i class="jam jam-twitter"></i></a>
                 <a href="#"><i class="jam jam-facebook"></i></a>
                 <a href="#"><i class="jam jam-instagram"></i></a>
-                <a href="#"><i class="jam jam-vimeo"></i></a>
+                <a href="#"><i class="jam jam-linkedin"></i></a>
                 <a href="#"><i class="jam jam-youtube"></i></a>
               </div>
             </div>
@@ -60,30 +60,20 @@
           <!-- /column -->
           <div class="col-md-12 col-lg-3">
             <div class="widget">
-              <h3 class="widget-title">Our Newsletter</h3>
-              <p>Subscribe to our newsletter to get our news & deals delivered to you.</p>
-              <div class="newsletter-wrapper">
-                <!-- Begin MailChimp Signup Form -->
-                <div id="mc_embed_signup2">
-                  <form action="https://elemisfreebies.us20.list-manage.com/subscribe/post?u=aa4947f70a475ce162057838d&amp;id=b49ef47a9a" method="post" id="mc-embedded-subscribe-form2" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-                    <div id="mc_embed_signup_scroll2">
-                      <div class="mc-field-group input-group form-floating">
-                        <input type="email" value="" name="EMAIL" class="required email form-control" placeholder="Email Address" id="mce-EMAIL2">
-                        <input type="submit" value="Join" name="subscribe" id="mc-embedded-subscribe2" class="btn btn-primary">
-                      </div>
-                      <div id="mce-responses2" class="clear">
-                        <div class="response" id="mce-error-response2" style="display:none"></div>
-                        <div class="response" id="mce-success-response2" style="display:none"></div>
-                      </div>
-                      <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-                      <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_ddc180777a163e0f9f66ee014_4b1bcfa0bc" tabindex="-1" value=""></div>
-                      <div class="clear"></div>
-                    </div>
-                  </form>
-                </div>
-                <!--End mc_embed_signup-->
+              <h3 class="widget-title">Our Promise</h3>
+              <p>Professional, eco-friendly waste removal with 80% recycling rate and same-day service.</p>
+              <div class="d-flex align-items-center mb-15">
+                <i class="jam jam-check-circle mr-10" style="color: #00EC01;"></i>
+                <span style="font-size: 14px;">Free Estimates</span>
               </div>
-              <!-- /.newsletter-wrapper -->
+              <div class="d-flex align-items-center mb-15">
+                <i class="jam jam-check-circle mr-10" style="color: #00EC01;"></i>
+                <span style="font-size: 14px;">Licensed & Insured</span>
+              </div>
+              <div class="d-flex align-items-center">
+                <i class="jam jam-check-circle mr-10" style="color: #00EC01;"></i>
+                <span style="font-size: 14px;">24/7 Emergency Service</span>
+              </div>
             </div>
             <!-- /.widget -->
           </div>
@@ -97,8 +87,8 @@
             <a href="#"><i class="jam jam-twitter"></i></a>
             <a href="#"><i class="jam jam-facebook"></i></a>
             <a href="#"><i class="jam jam-instagram"></i></a>
+            <a href="#"><i class="jam jam-linkedin"></i></a>
             <a href="#"><i class="jam jam-youtube"></i></a>
-            <a href="#"><i class="jam jam-vimeo"></i></a>
           </nav>
           <!-- /.social -->
         </div>
