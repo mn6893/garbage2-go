@@ -1,49 +1,14 @@
 <?= $this->include('templates/header'); ?>
-    <!-- /.navbar -->
-    <div class="offcanvas-info inverse-text">
-      <button class="plain offcanvas-close offcanvas-info-close"><i class="jam jam-close"></i></button>
-      <a href="index.html"><img src="#" srcset="style/images/logo-light.png 1x, style/images/logo-light@2x.png 2x" alt="" /></a>
-      <div class="space30"></div>
-      <p>Snowlake is a multi-concept and powerful site template contains rich layouts with possibility of unlimited combinations & beautiful elements.</p>
-      <div class="space20"></div>
-      <div class="widget">
-        <h5 class="widget-title">Contact Info</h5>
-        <address> Moonshine St. 14/05 <br /> Light City, London <div class="space20"></div>
-          <a href="mailto:first.last@email.com" class="nocolor">info@email.com</a><br /> +00 (123) 456 78 90 </address>
-      </div>
-      <!-- /.widget -->
-      <div class="widget">
-        <h3 class="widget-title">Learn More</h3>
-        <ul class="list-unstyled">
-          <li><a href="#" class="nocolor">Our Story</a></li>
-          <li><a href="#" class="nocolor">Terms of Use</a></li>
-          <li><a href="#" class="nocolor">Privacy Policy</a></li>
-          <li><a href="#" class="nocolor">Contact Us</a></li>
-        </ul>
-      </div>
-      <!-- /.widget -->
-      <div class="widget">
-        <h3 class="widget-title">Follow Us</h3>
-        <ul class="social social-mute social-s ml-auto">
-          <li><a href="#"><i class="jam jam-twitter"></i></a></li>
-          <li><a href="#"><i class="jam jam-facebook"></i></a></li>
-          <li><a href="#"><i class="jam jam-instagram"></i></a></li>
-          <li><a href="#"><i class="jam jam-vimeo"></i></a></li>
-          <li><a href="#"><i class="jam jam-youtube"></i></a></li>
-        </ul>
-      </div>
-      <!-- /.widget -->
-    </div>
-    <!-- /.offcanvas-info -->
           
     <!-- /section -->
     <div class="wrapper image-wrapper bg-image page-title-wrapper inverse-text" data-image-src="style/images/art/bg32.jpg">
       <div class="container inner text-center">
         <div class="space140"></div>
-         <h1 class="display-1">We are <span class="typer color-default" id="typer" data-delay="100" data-delim=":" data-words="reliable:efficient:eco-friendly"></span><span class="cursor color-default" data-owner="typer"></span></h1>
+         <h1 class="display-1">Garbage2Go - We <span class="typer color-default" id="typer" data-delay="100" data-delim=":" data-words="remove junk:clear debris:dispose appliances:handle cleanouts:manage waste:recycle responsibly"></span><span class="cursor color-default" data-owner="typer"></span></h1>
+         <p class="lead larger text-center mt-20">Professional Junk Removal Services | Residential Cleanouts | Commercial Waste Management | Construction Debris Removal | Appliance Disposal</p>
         <h1 class="display-1">We love to clear your junk <br class="d-none d-lg-block" />and make your space beautiful</h1>
         <div class="space20"></div>
-        <a href="#portfolio" class="btn btn-l btn-default scroll">Request a Quote </a>
+        <a href="#portfolio" class="btn btn-l btn-default scroll" style="color: #003366 !important;">Request a Quote </a>
       </div>
       <!-- /.container -->
       <div class="divider"><svg xmlns="http://www.w3.org/2000/svg" class="fill-light-wrapper" preserveAspectRatio="none" viewBox="0 0 1070 20.98">
@@ -64,10 +29,10 @@
               <div class="row mb-40">
           <div class="col-lg-12">
             <ul class="icon-list bullet-bg bullet-bg-dark">
-              <li><i class="jam jam-check"></i>Same-day pickup available across Canada</li>
-              <li><i class="jam jam-check"></i>No hidden fees - transparent pricing</li>
-              <li><i class="jam jam-check"></i>Eco-friendly disposal and recycling</li>
-              <li><i class="jam jam-check"></i>Fully licensed and insured service</li>
+              <li><i class="jam jam-check" style="background-color: #003366; color: white; border-radius: 50%; padding: 2px; font-size: 16px;"></i> <span style="font-size: 16px;"> We do all the Loading, Lifting, Moving & Clearing</span></li>
+              <li><i class="jam jam-check" style="background-color: #003366; color: white; border-radius: 50%; padding: 2px; font-size: 16px;"></i> <span style="font-size: 16px;"> Garbage2Go trucks from 2m³ to 77m³</span></li>
+              <li><i class="jam jam-check" style="background-color: #003366; color: white; border-radius: 50%; padding: 2px; font-size: 16px;"></i> <span style="font-size: 16px;"> Up to 50% cheaper per cubic metre than our competitors</span></li>
+              <li><i class="jam jam-check" style="background-color: #003366; color: white; border-radius: 50%; padding: 2px; font-size: 16px;"></i> <span style="font-size: 16px;"> We service most areas of Ontario including Toronto, Ottawa, Hamilton, London & surrounding regions</span></li>
             </ul>
           </div>
               </div>

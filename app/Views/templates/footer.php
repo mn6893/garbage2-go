@@ -92,7 +92,7 @@
         <!--/.row -->
         <hr class="mt-50 mb-30" />
         <div class="d-md-flex align-items-center justify-content-between">
-          <p class="mb-2 mb-lg-0">&copy; <?= date('Y') ?> Snowlake. All rights reserved.</p>
+          <p class="mb-2 mb-lg-0">&copy; <?= date('Y') ?> Garbage2Go. All rights reserved.</p>
           <nav class="nav social social-mute">
             <a href="#"><i class="jam jam-twitter"></i></a>
             <a href="#"><i class="jam jam-facebook"></i></a>

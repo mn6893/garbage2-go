@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" href="<?= base_url('style/images/favicon.png') ?>">
-  <title><?= isset($title) ? $title : 'Snowlake' ?></title>
+  <title><?= isset($title) ? $title : 'Garbage2Go' ?></title>
   <link rel="stylesheet" type="text/css" href="<?= base_url('style/css/bootstrap.min.css') ?>">
   <link rel="stylesheet" type="text/css" href="<?= base_url('style/css/plugins.css') ?>">
   <link rel="stylesheet" type="text/css" href="<?= base_url('style/revolution/css/settings.css') ?>">
@@ -12,7 +12,7 @@
   <link rel="stylesheet" type="text/css" href="<?= base_url('style/revolution/css/navigation.css') ?>">
   <link rel="stylesheet" type="text/css" href="<?= base_url('style/type/type.css') ?>">
   <link rel="stylesheet" type="text/css" href="<?= base_url('style/css/style.css') ?>">
-  <link rel="stylesheet" type="text/css" href="<?= base_url('style/css/color/purple.css') ?>">
+  <link rel="stylesheet" type="text/css" href="<?= base_url('style/css/color/modern-garbage2go.css') ?>">
 </head>
 <body>
   <div class="content-wrapper">
@@ -43,7 +43,47 @@
           <ul class="navbar-nav ml-auto">
             <li class="nav-item"><a class="nav-link" href="<?= base_url() ?>">Home</a></li>
             <li class="nav-item"><a class="nav-link" href="<?= base_url('about') ?>">About</a></li>
-            <li class="nav-item"><a class="nav-link" href="<?= base_url('services') ?>">Services</a></li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="<?= base_url('services') ?>" data-toggle="dropdown">Services</a>
+              <ul class="dropdown-menu">
+              <li class="dropdown-item dropdown">
+                <a class="dropdown-link dropdown-toggle" href="<?= base_url('services/household-rubbish-removal') ?>">Household Rubbish Removal</a>
+                <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="<?= base_url('services/garage-rubbish-removal') ?>">Garage Junk Removal</a></li>
+                <li><a class="dropdown-item" href="<?= base_url('services/backyard-clean-up-and-rubbish-removal') ?>">Backyard Clean-up</a></li>
+                <li><a class="dropdown-item" href="<?= base_url('services/mattress-recycling-melbourne') ?>">Mattress Recycling</a></li>
+                <li><a class="dropdown-item" href="<?= base_url('rubbish-removal-melbourne') ?>">Rubbish Removal</a></li>
+                </ul>
+              </li>
+              <li class="dropdown-item dropdown">
+                <a class="dropdown-link dropdown-toggle" href="<?= base_url('services/commercial-junk-removal') ?>">Commercial Junk Removal</a>
+                <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="<?= base_url('services/real-estate-junk-removal') ?>">Real Estate Junk Removal</a></li>
+                <li><a class="dropdown-item" href="<?= base_url('services/end-of-lease-rubbish-removal') ?>">End of Lease Rubbish Removal</a></li>
+                <li><a class="dropdown-item" href="<?= base_url('services/office-junk-removal') ?>">Office Junk Removal</a></li>
+                <li><a class="dropdown-item" href="<?= base_url('services/renovation-rubbish-removal') ?>">Renovation Rubbish Removal</a></li>
+                <li><a class="dropdown-item" href="<?= base_url('services/retail-merchandise-rubbish-removal') ?>">Retail Merchandise Rubbish Removal</a></li>
+                <li><a class="dropdown-item" href="<?= base_url('services/worksite-junk-removal') ?>">Worksite Junk Removal</a></li>
+                </ul>
+              </li>
+              <li><a class="dropdown-item" href="<?= base_url('services/deceased-estate-rubbish-removal') ?>">Deceased Estate Rubbish Removal</a></li>
+              <li><a class="dropdown-item" href="<?= base_url('services/green-waste-removal') ?>">Green Waste Removal</a></li>
+              </ul>
+            </li>
+             <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="<?= base_url('location') ?>" data-toggle="dropdown">Locations</a>
+              <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="<?= base_url('rubbish-removal-toronto') ?>">Toronto</a></li>
+              <li><a class="dropdown-item" href="<?= base_url('rubbish-removal-ottawa') ?>">Ottawa</a></li>
+              <li><a class="dropdown-item" href="<?= base_url('rubbish-removal-mississauga') ?>">Mississauga</a></li>
+              <li><a class="dropdown-item" href="<?= base_url('rubbish-removal-brampton') ?>">Brampton</a></li>
+              <li><a class="dropdown-item" href="<?= base_url('rubbish-removal-hamilton') ?>">Hamilton</a></li>
+              <li><a class="dropdown-item" href="<?= base_url('rubbish-removal-london') ?>">London</a></li>
+              <li><a class="dropdown-item" href="<?= base_url('rubbish-removal-markham') ?>">Markham</a></li>
+              <li><a class="dropdown-item" href="<?= base_url('rubbish-removal-vaughan') ?>">Vaughan</a></li>
+              <li><a class="dropdown-item" href="<?= base_url('rubbish-removal-kitchener') ?>">Kitchener</a></li>
+              </ul>
+            </li>
             <li class="nav-item"><a class="nav-link" href="<?= base_url('contact') ?>">Contact</a></li>
           </ul>
           <!-- /.navbar-nav -->
@@ -71,6 +111,45 @@
           <li><a href="#" class="sublink">Terms of Use</a></li>
           <li><a href="#" class="sublink">Privacy Policy</a></li>
           <li><a href="#" class="sublink">Contact Us</a></li>
+        </ul>
+      </div>
+      <!-- /.widget -->
+    </div>
+    <!-- /.offcanvas-info -->
+     <div class="offcanvas-info inverse-text">
+      <button class="plain offcanvas-close offcanvas-info-close"><i class="jam jam-close"></i></button>
+      <a href="<?= base_url() ?>">
+        <span class="logo-text" style="font-size: 1.5rem; font-weight: bold; font-style: italic; color: white;">
+          garbage<span style="color: #003366; font-weight: bold; font-style: italic;">2go</span>
+        </span>
+      </a>
+      <div class="space30"></div>
+      <p>Garbage2Go is a trusted garbage removal service providing efficient waste collection solutions for homes and businesses across Canada.</p>
+      <div class="space20"></div>
+      <div class="widget">
+        <h5 class="widget-title">Contact Info</h5>
+        <address> Moonshine St. 14/05 <br /> Light City, London <div class="space20"></div>
+          <a href="mailto:first.last@email.com" class="nocolor">info@email.com</a><br /> +00 (123) 456 78 90 </address>
+      </div>
+      <!-- /.widget -->
+      <div class="widget">
+        <h3 class="widget-title">Learn More</h3>
+        <ul class="list-unstyled">
+          <li><a href="#" class="nocolor">Our Story</a></li>
+          <li><a href="#" class="nocolor">Terms of Use</a></li>
+          <li><a href="#" class="nocolor">Privacy Policy</a></li>
+          <li><a href="#" class="nocolor">Contact Us</a></li>
+        </ul>
+      </div>
+      <!-- /.widget -->
+      <div class="widget">
+        <h3 class="widget-title">Follow Us</h3>
+        <ul class="social social-mute social-s ml-auto">
+          <li><a href="#"><i class="jam jam-twitter"></i></a></li>
+          <li><a href="#"><i class="jam jam-facebook"></i></a></li>
+          <li><a href="#"><i class="jam jam-instagram"></i></a></li>
+          <li><a href="#"><i class="jam jam-vimeo"></i></a></li>
+          <li><a href="#"><i class="jam jam-youtube"></i></a></li>
         </ul>
       </div>
       <!-- /.widget -->
