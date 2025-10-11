@@ -96,8 +96,8 @@
             <div class="space40"></div>
             
             <div class="text-center">
-              <a href="<?= site_url('/') ?>" class="btn btn-purple mr-15">Return to Home</a>
-              <a href="<?= site_url('quote') ?>" class="btn btn-outline-purple">Submit Another Quote</a>
+              <a href="<?= base_url('/') ?>" class="btn btn-purple mr-15">Return to Home</a>
+              <a href="<?= base_url('quote') ?>" class="btn btn-outline-purple">Submit Another Quote</a>
             </div>
             
           </div>

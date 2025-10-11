@@ -16,7 +16,7 @@
     <!-- Admin Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
       <div class="container-fluid">
-        <a class="navbar-brand" href="<?= site_url('admin/dashboard') ?>">
+        <a class="navbar-brand" href="<?= base_url('admin/dashboard') ?>">
           <i class="icofont-dashboard mr-10"></i>
           <strong>GarbageToGo Admin</strong>
         </a>
@@ -28,20 +28,20 @@
         <div class="collapse navbar-collapse" id="adminNav">
           <ul class="navbar-nav me-auto">
             <li class="nav-item">
-              <a class="nav-link <?= (current_url() == site_url('admin/dashboard')) ? 'active' : '' ?>" 
-                 href="<?= site_url('admin/dashboard') ?>">
+              <a class="nav-link <?= (current_url() == base_url('admin/dashboard')) ? 'active' : '' ?>" 
+                 href="<?= base_url('admin/dashboard') ?>">
                 <i class="icofont-dashboard mr-5"></i> Dashboard
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link <?= (strpos(current_url(), 'admin/quotes') !== false) ? 'active' : '' ?>" 
-                 href="<?= site_url('admin/quotes') ?>">
+                 href="<?= base_url('admin/quotes') ?>">
                 <i class="icofont-file-document mr-5"></i> Quotes
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link <?= (strpos(current_url(), 'admin/contacts') !== false) ? 'active' : '' ?>" 
-                 href="<?= site_url('admin/contacts') ?>">
+                 href="<?= base_url('admin/contacts') ?>">
                 <i class="icofont-envelope mr-5"></i> Contacts
               </a>
             </li>
@@ -53,11 +53,11 @@
                 <i class="icofont-user-alt-4 mr-5"></i> <?= session()->get('admin_username') ?>
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="<?= site_url('/') ?>" target="_blank">
+                <li><a class="dropdown-item" href="<?= base_url('/') ?>" target="_blank">
                   <i class="icofont-external-link mr-5"></i> View Website
                 </a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="<?= site_url('admin/logout') ?>">
+                <li><a class="dropdown-item" href="<?= base_url('admin/logout') ?>">
                   <i class="icofont-logout mr-5"></i> Logout
                 </a></li>
               </ul>

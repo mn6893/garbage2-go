@@ -8,8 +8,8 @@
           <h2 class="section-title mb-0">Quote Details #<?= $quote['id'] ?></h2>
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="<?= site_url('admin/dashboard') ?>">Dashboard</a></li>
-              <li class="breadcrumb-item"><a href="<?= site_url('admin/quotes') ?>">Quotes</a></li>
+              <li class="breadcrumb-item"><a href="<?= base_url('admin/dashboard') ?>">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="<?= base_url('admin/quotes') ?>">Quotes</a></li>
               <li class="breadcrumb-item active">Quote #<?= $quote['id'] ?></li>
             </ol>
           </nav>
@@ -59,7 +59,7 @@
                 <h5 class="card-title mb-0">Status & Timeline</h5>
               </div>
               <div class="card-body">
-                <form method="post" action="<?= site_url('admin/quote/update-status') ?>">
+                <form method="post" action="<?= base_url('admin/quote/update-status') ?>">
                   <?= csrf_field() ?>
                   <input type="hidden" name="id" value="<?= $quote['id'] ?>">
                   
@@ -67,8 +67,12 @@
                     <label class="form-label">Current Status</label>
                     <select name="status" class="form-control">
                       <option value="pending" <?= $quote['status'] === 'pending' ? 'selected' : '' ?>>Pending</option>
+                      <option value="ai_queued" <?= $quote['status'] === 'ai_queued' ? 'selected' : '' ?>>AI Queued</option>
+                      <option value="ai_processing" <?= $quote['status'] === 'ai_processing' ? 'selected' : '' ?>>AI Processing</option>
+                      <option value="ai_quoted" <?= $quote['status'] === 'ai_quoted' ? 'selected' : '' ?>>AI Quoted</option>
+                      <option value="ai_error" <?= $quote['status'] === 'ai_error' ? 'selected' : '' ?>>AI Error</option>
                       <option value="contacted" <?= $quote['status'] === 'contacted' ? 'selected' : '' ?>>Contacted</option>
-                      <option value="quoted" <?= $quote['status'] === 'quoted' ? 'selected' : '' ?>>Quoted</option>
+                      <option value="quoted" <?= $quote['status'] === 'quoted' ? 'selected' : '' ?>>Manual Quote</option>
                       <option value="accepted" <?= $quote['status'] === 'accepted' ? 'selected' : '' ?>>Accepted</option>
                       <option value="rejected" <?= $quote['status'] === 'rejected' ? 'selected' : '' ?>>Rejected</option>
                       <option value="completed" <?= $quote['status'] === 'completed' ? 'selected' : '' ?>>Completed</option>
@@ -83,6 +87,12 @@
                 <p><strong>Submitted:</strong><br>
                   <?= date('F j, Y \a\t g:i A', strtotime($quote['created_at'])) ?>
                 </p>
+                
+                <?php if ($quote['ai_processed_at']): ?>
+                <p><strong>AI Processed:</strong><br>
+                  <?= date('F j, Y \a\t g:i A', strtotime($quote['ai_processed_at'])) ?>
+                </p>
+                <?php endif; ?>
                 
                 <?php if ($quote['updated_at'] && $quote['updated_at'] !== $quote['created_at']): ?>
                 <p><strong>Last Updated:</strong><br>
@@ -117,6 +127,206 @@
           </div>
         </div>
         
+        <!-- AI Analysis Results -->
+        <?php if (!empty($quote['ai_analysis']) || !empty($quote['generated_quote'])): ?>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card mb-20">
+              <div class="card-header">
+                <h5 class="card-title mb-0">AI Analysis Results</h5>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  
+                  <!-- AI Generated Quote -->
+                  <?php if (!empty($quote['generated_quote'])): ?>
+                    <?php $generatedQuote = json_decode($quote['generated_quote'], true); ?>
+                    <div class="col-md-6">
+                      <h6>Generated Quote</h6>
+                      <?php if (isset($generatedQuote['quote'])): ?>
+                        <div class="bg-light p-15 rounded mb-15">
+                          <table class="table table-sm mb-0">
+                            <tr>
+                              <td><strong>Total Estimate:</strong></td>
+                              <td class="text-end"><strong class="text-success">$<?= number_format($generatedQuote['quote']['total_amount'] ?? 0, 2) ?></strong></td>
+                            </tr>
+                            <tr>
+                              <td>Base Cost:</td>
+                              <td class="text-end">$<?= number_format($generatedQuote['quote']['base_cost'] ?? 0, 2) ?></td>
+                            </tr>
+                            <?php if (!empty($generatedQuote['quote']['volume_cost'])): ?>
+                            <tr>
+                              <td>Volume Cost:</td>
+                              <td class="text-end">$<?= number_format($generatedQuote['quote']['volume_cost'], 2) ?></td>
+                            </tr>
+                            <?php endif; ?>
+                            <?php if (!empty($generatedQuote['quote']['special_fees'])): ?>
+                            <tr>
+                              <td>Special Fees:</td>
+                              <td class="text-end">$<?= number_format($generatedQuote['quote']['special_fees'], 2) ?></td>
+                            </tr>
+                            <?php endif; ?>
+                            <?php if (!empty($generatedQuote['quote']['taxes'])): ?>
+                            <tr>
+                              <td>Taxes:</td>
+                              <td class="text-end">$<?= number_format($generatedQuote['quote']['taxes'], 2) ?></td>
+                            </tr>
+                            <?php endif; ?>
+                          </table>
+                        </div>
+                      <?php endif; ?>
+                      
+                      <?php if (!empty($quote['ai_confidence_score'])): ?>
+                        <p><strong>AI Confidence:</strong> <?= round($quote['ai_confidence_score'] * 100) ?>%</p>
+                      <?php endif; ?>
+                    </div>
+                  <?php endif; ?>
+                  
+                  <!-- AI Vision Analysis -->
+                  <?php if (!empty($quote['ai_analysis'])): ?>
+                    <?php $aiAnalysis = json_decode($quote['ai_analysis'], true); ?>
+                    <div class="col-md-6">
+                      <h6>Waste Analysis</h6>
+                      <?php if (isset($aiAnalysis['wasteType'])): ?>
+                        <p><strong>Waste Type:</strong> <?= esc($aiAnalysis['wasteType']) ?></p>
+                      <?php endif; ?>
+                      
+                      <?php if (isset($aiAnalysis['volumeEstimate'])): ?>
+                        <p><strong>Volume Estimate:</strong> 
+                          <?= $aiAnalysis['volumeEstimate']['min'] ?> - <?= $aiAnalysis['volumeEstimate']['max'] ?> 
+                          <?= $aiAnalysis['volumeEstimate']['unit'] ?>
+                        </p>
+                      <?php endif; ?>
+                      
+                      <?php if (!empty($aiAnalysis['wasteTypes'])): ?>
+                        <p><strong>Detected Items:</strong></p>
+                        <ul class="list-unstyled">
+                          <?php foreach (array_slice($aiAnalysis['wasteTypes'], 0, 5) as $item): ?>
+                            <li>• <?= esc($item) ?></li>
+                          <?php endforeach; ?>
+                        </ul>
+                      <?php endif; ?>
+                      
+                      <?php if (!empty($aiAnalysis['hazardousItems'])): ?>
+                        <p><strong class="text-warning">Hazardous Items Detected:</strong></p>
+                        <ul class="list-unstyled text-warning">
+                          <?php foreach ($aiAnalysis['hazardousItems'] as $item): ?>
+                            <li>⚠️ <?= esc($item) ?></li>
+                          <?php endforeach; ?>
+                        </ul>
+                      <?php endif; ?>
+                    </div>
+                  <?php endif; ?>
+                  
+                </div>
+                
+                <!-- AI Recommendations -->
+                <?php if (!empty($generatedQuote['recommendations'])): ?>
+                <hr>
+                <div class="row">
+                  <div class="col-12">
+                    <h6>AI Recommendations</h6>
+                    <div class="bg-info-light p-15 rounded">
+                      <?php foreach ($generatedQuote['recommendations'] as $recommendation): ?>
+                        <p class="mb-5">• <?= esc($recommendation) ?></p>
+                      <?php endforeach; ?>
+                    </div>
+                  </div>
+                </div>
+                <?php endif; ?>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+        <?php endif; ?>
+        
+        <!-- Email Status Section -->
+        <?php if ($quote['status'] === 'ai_quoted' || !empty($quote['generated_quote'])): ?>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card mb-20">
+              <div class="card-header">
+                <h5 class="card-title mb-0">Email Delivery Status</h5>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Customer Email</h6>
+                    <div class="d-flex align-items-center mb-10">
+                      <?php if ($quote['email_sent_to_customer']): ?>
+                        <span class="badge bg-success me-2">✓ Sent Successfully</span>
+                      <?php else: ?>
+                        <span class="badge bg-danger me-2">✗ Not Sent</span>
+                      <?php endif; ?>
+                      <small class="text-muted">
+                        Attempts: <?= $quote['customer_email_attempts'] ?? 0 ?>
+                      </small>
+                    </div>
+                    
+                    <?php if (!empty($quote['customer_email_error'])): ?>
+                      <div class="alert alert-danger alert-sm">
+                        <strong>Last Error:</strong> <?= esc($quote['customer_email_error']) ?>
+                      </div>
+                    <?php endif; ?>
+                    
+                    <?php if (!$quote['email_sent_to_customer'] && ($quote['customer_email_attempts'] ?? 0) < 3): ?>
+                      <form method="post" action="<?= base_url('admin/retry-quote-emails/' . $quote['id']) ?>" class="d-inline">
+                        <input type="hidden" name="email_type" value="customer">
+                        <button type="submit" class="btn btn-sm btn-warning">Retry Customer Email</button>
+                      </form>
+                    <?php endif; ?>
+                  </div>
+                  
+                  <div class="col-md-6">
+                    <h6>Admin Notification</h6>
+                    <div class="d-flex align-items-center mb-10">
+                      <?php if ($quote['email_sent_to_admin']): ?>
+                        <span class="badge bg-success me-2">✓ Sent Successfully</span>
+                      <?php else: ?>
+                        <span class="badge bg-danger me-2">✗ Not Sent</span>
+                      <?php endif; ?>
+                      <small class="text-muted">
+                        Attempts: <?= $quote['admin_email_attempts'] ?? 0 ?>
+                      </small>
+                    </div>
+                    
+                    <?php if (!empty($quote['admin_email_error'])): ?>
+                      <div class="alert alert-danger alert-sm">
+                        <strong>Last Error:</strong> <?= esc($quote['admin_email_error']) ?>
+                      </div>
+                    <?php endif; ?>
+                    
+                    <?php if (!$quote['email_sent_to_admin'] && ($quote['admin_email_attempts'] ?? 0) < 3): ?>
+                      <form method="post" action="<?= base_url('admin/retry-quote-emails/' . $quote['id']) ?>" class="d-inline">
+                        <input type="hidden" name="email_type" value="admin">
+                        <button type="submit" class="btn btn-sm btn-warning">Retry Admin Email</button>
+                      </form>
+                    <?php endif; ?>
+                  </div>
+                </div>
+                
+                <?php if (!empty($quote['last_email_attempt'])): ?>
+                  <hr>
+                  <small class="text-muted">
+                    Last Email Attempt: <?= date('F j, Y \a\t g:i A', strtotime($quote['last_email_attempt'])) ?>
+                  </small>
+                <?php endif; ?>
+                
+                <?php if ((!$quote['email_sent_to_customer'] || !$quote['email_sent_to_admin']) && 
+                          (($quote['customer_email_attempts'] ?? 0) < 3 || ($quote['admin_email_attempts'] ?? 0) < 3)): ?>
+                  <hr>
+                  <form method="post" action="<?= base_url('admin/retry-quote-emails/' . $quote['id']) ?>" class="d-inline">
+                    <input type="hidden" name="email_type" value="both">
+                    <button type="submit" class="btn btn-sm btn-primary">Retry Both Emails</button>
+                  </form>
+                <?php endif; ?>
+              </div>
+            </div>
+          </div>
+        </div>
+        <?php endif; ?>
+        
         <!-- Images -->
         <?php if (!empty($quote['images'])): ?>
         <div class="row">
@@ -130,18 +340,26 @@
                   <?php 
                   $images = json_decode($quote['images'], true);
                   if (is_array($images)):
-                    foreach ($images as $image): 
-                      $imagePath = '/uploads/quotes/' . $image;
+                    foreach ($images as $index => $image): 
                   ?>
                     <div class="col-md-3 col-sm-6 mb-15">
                       <div class="image-container">
-                        <img src="<?= $imagePath ?>" alt="Quote Image" class="img-fluid rounded" 
+                        <img src="<?= base_url('admin/quote/image/' . $quote['id'] . '/' . $index) ?>" 
+                             alt="Quote Image" class="img-fluid rounded" 
                              style="width: 100%; height: 200px; object-fit: cover; cursor: pointer;"
-                             onclick="openImageModal('<?= $imagePath ?>')">
-                        <div class="mt-10">
-                          <a href="<?= $imagePath ?>" download class="btn btn-sm btn-outline-default">
-                            <i class="icofont-download mr-5"></i> Download
+                             onclick="openImageModal('<?= base_url('admin/quote/image/' . $quote['id'] . '/' . $index) ?>')">
+                        <div class="mt-10 text-center">
+                          <button type="button" class="btn btn-sm btn-outline-primary me-1" 
+                                  onclick="openImageModal('<?= base_url('admin/quote/image/' . $quote['id'] . '/' . $index) ?>')">
+                            <i class="icofont-eye"></i> View
+                          </button>
+                          <a href="<?= base_url('admin/quote/download/' . $quote['id'] . '/' . $index) ?>" 
+                             class="btn btn-sm btn-outline-success" target="_blank">
+                            <i class="icofont-download"></i> Download
                           </a>
+                        </div>
+                        <div class="mt-5 text-center">
+                          <small class="text-muted"><?= esc($image) ?></small>
                         </div>
                       </div>
                     </div>
@@ -156,14 +374,24 @@
         </div>
         <?php endif; ?>
         
-        <!-- Action Buttons -->
+                <!-- Action Buttons -->
         <div class="row">
           <div class="col-12">
             <div class="card">
               <div class="card-body text-center">
-                <a href="<?= site_url('admin/quotes') ?>" class="btn btn-outline-default">
+                <a href="<?= base_url('admin/quotes') ?>" class="btn btn-outline-default">
                   <i class="icofont-arrow-left mr-5"></i> Back to Quotes
                 </a>
+                
+                <?php if (!empty($quote['images']) && empty($quote['ai_processed_at'])): ?>
+                <form method="post" action="<?= base_url('admin/quote/' . $quote['id'] . '/process-ai') ?>" class="d-inline">
+                  <?= csrf_field() ?>
+                  <button type="submit" class="btn btn-info" onclick="return confirm('Trigger AI processing for this quote?')">
+                    <i class="icofont-robot mr-5"></i> Process with AI
+                  </button>
+                </form>
+                <?php endif; ?>
+                
                 <a href="mailto:<?= esc($quote['email']) ?>?subject=Quote Request #<?= $quote['id'] ?>&body=Dear <?= esc($quote['name']) ?>,%0D%0A%0D%0AThank you for your quote request.%0D%0A%0D%0ABest regards,%0D%0AJunk Collection Team" 
                    class="btn btn-purple">
                   <i class="icofont-envelope mr-5"></i> Send Email
@@ -174,9 +402,7 @@
               </div>
             </div>
           </div>
-        </div>
-        
-      </div>
+        </div>      </div>
     </div>
   </div>
 </div>
@@ -186,11 +412,16 @@
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Image Preview</h5>
+        <h5 class="modal-title">Image Preview - <span id="modalImageName">Quote Image</span></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body text-center">
-        <img id="modalImage" src="" alt="Full Size Image" class="img-fluid">
+        <img id="modalImage" src="" alt="Full Size Image" class="img-fluid rounded shadow">
+        <div class="mt-15">
+          <a id="modalDownloadBtn" href="" class="btn btn-success" target="_blank">
+            <i class="icofont-download"></i> Download Image
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -199,6 +430,18 @@
 <script>
 function openImageModal(imageSrc) {
     document.getElementById('modalImage').src = imageSrc;
+    
+    // Extract image info from the URL for better modal title
+    const urlParts = imageSrc.split('/');
+    const quoteId = urlParts[urlParts.length - 2];
+    const imageIndex = urlParts[urlParts.length - 1];
+    
+    document.getElementById('modalImageName').textContent = `Quote #${quoteId} - Image ${parseInt(imageIndex) + 1}`;
+    
+    // Set download button
+    const downloadUrl = imageSrc.replace('/image/', '/download/');
+    document.getElementById('modalDownloadBtn').href = downloadUrl;
+    
     new bootstrap.Modal(document.getElementById('imageModal')).show();
 }
 </script>

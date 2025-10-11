@@ -44,7 +44,7 @@
         
         <div class="row">
           <div class="col-lg-7">
-            <form id="contact-form" class="fields-white" method="post" action="<?= site_url('contact/submit') ?>">
+            <form id="contact-form" class="fields-white" method="post" action="<?= base_url('contact/submit') ?>">
               <?= csrf_field() ?>
               <div class="controls">
                 <div class="form-row">
@@ -229,7 +229,7 @@
               </div>
               <h5>Book Online</h5>
               <p>Schedule your pickup at your convenience through our online system.</p>
-              <a href="<?= site_url('quote') ?>" class="btn btn-sm btn-outline-default">Book Now</a>
+              <a href="<?= base_url('quote') ?>" class="btn btn-sm btn-outline-default">Book Now</a>
             </div>
           </div>
         </div>

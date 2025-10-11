@@ -58,6 +58,11 @@ $routes->group('admin', function($routes) {
     $routes->get('quotes', 'Admin::quotes');
     $routes->get('quote/(:num)', 'Admin::quote/$1');
     $routes->post('quote/update-status', 'Admin::updateQuoteStatus');
+    $routes->post('quote/(:num)/process-ai', 'Admin::processQuoteAI/$1');
+    $routes->post('retry-quote-emails/(:num)', 'Admin::retryQuoteEmails/$1');
+    $routes->post('bulk-retry-emails', 'Admin::bulkRetryEmails');
+    $routes->get('quote/image/(:num)/(:num)', 'Admin::viewQuoteImage/$1/$2');
+    $routes->get('quote/download/(:num)/(:num)', 'Admin::downloadQuoteImage/$1/$2');
     $routes->get('contacts', 'Admin::contacts');
     $routes->get('contact/(:num)', 'Admin::contact/$1');
     $routes->post('contact/update-status', 'Admin::updateContactStatus');

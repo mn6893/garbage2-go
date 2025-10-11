@@ -1,0 +1,9 @@
+CRITICAL - 2025-10-11 02:22:35 --> TypeError: App\Commands\RetryFailedEmails::getQuotesWithFailedEmails(): Argument #4 ($emailType) must be of type string, null given, called in D:\Projects\Nadheem\learn\junk-col\app\Commands\RetryFailedEmails.php on line 46
+[Method: CLI, Route: email:retry-failed]
+in APPPATH\Commands\RetryFailedEmails.php on line 105.
+ 1 APPPATH\Commands\RetryFailedEmails.php(46): App\Commands\RetryFailedEmails->getQuotesWithFailedEmails(Object(App\Models\QuoteModel), 0, 0, null, null)
+ 2 SYSTEMPATH\CLI\Commands.php(74): App\Commands\RetryFailedEmails->run([...])
+ 3 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('email:retry-failed', [...])
+ 4 SYSTEMPATH\Boot.php(388): CodeIgniter\CLI\Console->run()
+ 5 SYSTEMPATH\Boot.php(133): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+ 6 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))

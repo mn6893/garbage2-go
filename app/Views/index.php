@@ -50,12 +50,21 @@
               <small class="text-muted">Supports: JPG, JPEG, PNG (Max 5MB each)</small>
             </div>
             <div class="uploaded-files mt-20" id="uploadedFiles" style="display: none;">
+              <div class="d-flex justify-content-between align-items-center mb-15">
+                <small class="text-muted">Uploaded Images:</small>
+                <button type="button" class="btn btn-sm btn-outline-danger" onclick="clearAllFiles()">
+                  <i class="jam jam-trash"></i> Clear All
+                </button>
+              </div>
               <div class="row" id="filePreview"></div>
             </div>
           </div></br>
               
-              <form method="post" action="<?= site_url('quote/submit') ?>" enctype="multipart/form-data">
+              <form id="home-quote-form" method="post" action="<?= base_url('quote/submit') ?>" enctype="multipart/form-data">
           <?= csrf_field() ?>
+          
+          <!-- Success/Error Messages -->
+          <div id="form-messages" style="display: none;"></div>
           
           <?php if (session()->getFlashdata('error')): ?>
               <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -141,63 +150,240 @@
           const fileInput = document.getElementById('junk_images');
           const filePreview = document.getElementById('filePreview');
           const uploadedFiles = document.getElementById('uploadedFiles');
+          let selectedFiles = []; // Array to track selected files
+          let supportsDataTransfer = false;
+
+          // Check if DataTransfer is supported
+          try {
+              new DataTransfer();
+              supportsDataTransfer = true;
+          } catch (e) {
+              console.log('DataTransfer not supported, using fallback method');
+          }
 
           // Drag and drop events
           uploadArea.addEventListener('dragover', function(e) {
-        e.preventDefault();
-        uploadArea.style.borderColor = '#007bff';
-        uploadArea.style.background = '#f8f9ff';
+            e.preventDefault();
+            uploadArea.style.borderColor = '#007bff';
+            uploadArea.style.background = '#f8f9ff';
           });
 
           uploadArea.addEventListener('dragleave', function(e) {
-        e.preventDefault();
-        uploadArea.style.borderColor = '#e5e5e5';
-        uploadArea.style.background = '#fafafa';
+            e.preventDefault();
+            uploadArea.style.borderColor = '#e5e5e5';
+            uploadArea.style.background = '#fafafa';
           });
 
           uploadArea.addEventListener('drop', function(e) {
-        e.preventDefault();
-        uploadArea.style.borderColor = '#e5e5e5';
-        uploadArea.style.background = '#fafafa';
-        const files = e.dataTransfer.files;
-        handleFiles(files);
+            e.preventDefault();
+            uploadArea.style.borderColor = '#e5e5e5';
+            uploadArea.style.background = '#fafafa';
+            const files = e.dataTransfer.files;
+            addFiles(files);
           });
 
           fileInput.addEventListener('change', function() {
-        handleFiles(this.files);
+            addFiles(this.files);
           });
 
-          function handleFiles(files) {
-        filePreview.innerHTML = '';
-        if (files.length > 0) {
-            uploadedFiles.style.display = 'block';
+          function addFiles(files) {
             Array.from(files).forEach(file => {
-          if (file.type.startsWith('image/')) {
-              const reader = new FileReader();
-              reader.onload = function(e) {
-            const col = document.createElement('div');
-            col.className = 'col-md-3 mb-15';
-            col.innerHTML = `
-                <div class="position-relative">
-              <img src="${e.target.result}" class="img-fluid rounded shadow-sm" style="height: 100px; width: 100%; object-fit: cover;">
-              <button type="button" class="btn btn-sm btn-danger position-absolute" style="top: 5px; right: 5px; width: 25px; height: 25px; padding: 0; font-size: 12px;" onclick="this.closest('.col-md-3').remove();">&times;</button>
-              <small class="d-block text-center mt-5 text-truncate">${file.name}</small>
-                </div>
-            `;
-            filePreview.appendChild(col);
-              };
-              reader.readAsDataURL(file);
-          }
+              if (file.type.startsWith('image/')) {
+                if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                  showMessage(`File "${file.name}" is too large. Maximum size is 5MB.`, 'danger');
+                  return;
+                }
+                
+                // Check if file is already added
+                const exists = selectedFiles.some(f => f.name === file.name && f.size === file.size);
+                if (!exists) {
+                  selectedFiles.push(file);
+                  console.log(`Added file: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
+                } else {
+                  console.log(`File "${file.name}" is already selected.`);
+                }
+              } else {
+                showMessage(`File "${file.name}" is not a valid image file. Please upload JPG, PNG, or GIF files.`, 'danger');
+              }
             });
-        } else {
-            uploadedFiles.style.display = 'none';
-        }
+            updateFileInput();
+            renderPreviews();
           }
+
+          function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            updateFileInput();
+            renderPreviews();
+          }
+
+          function updateFileInput() {
+            if (selectedFiles.length === 0) {
+              fileInput.value = '';
+              return;
+            }
+
+            if (supportsDataTransfer) {
+              try {
+                // Create new DataTransfer object to update file input
+                const dt = new DataTransfer();
+                selectedFiles.forEach(file => {
+                  dt.items.add(file);
+                });
+                fileInput.files = dt.files;
+              } catch (error) {
+                console.error('Error updating file input:', error);
+                supportsDataTransfer = false;
+              }
+            }
+            
+            if (!supportsDataTransfer) {
+              // For browsers that don't support DataTransfer, we'll handle this on form submit
+              console.log('Using fallback file handling for', selectedFiles.length, 'files');
+            }
+          }
+
+          function renderPreviews() {
+            filePreview.innerHTML = '';
+            if (selectedFiles.length > 0) {
+              uploadedFiles.style.display = 'block';
+              selectedFiles.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                  const col = document.createElement('div');
+                  col.className = 'col-md-3 mb-15';
+                  col.innerHTML = `
+                    <div class="position-relative">
+                      <img src="${e.target.result}" class="img-fluid rounded shadow-sm" style="height: 100px; width: 100%; object-fit: cover;">
+                      <button type="button" class="btn btn-sm btn-danger position-absolute" style="top: 5px; right: 5px; width: 25px; height: 25px; padding: 0; font-size: 12px;" onclick="removeFileAtIndex(${index})">&times;</button>
+                      <small class="d-block text-center mt-5 text-truncate">${file.name}</small>
+                    </div>
+                  `;
+                  filePreview.appendChild(col);
+                };
+                reader.readAsDataURL(file);
+              });
+            } else {
+              uploadedFiles.style.display = 'none';
+            }
+          }
+
+          // Handle form submission with AJAX
+          document.getElementById('home-quote-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submit-btn');
+            const submitText = submitBtn.querySelector('.submit-text');
+            const loadingText = submitBtn.querySelector('.loading-text');
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitText.style.display = 'none';
+            loadingText.style.display = 'inline-block';
+            
+            // Clear previous messages
+            hideMessage();
+            
+            // Create FormData
+            const formData = new FormData(this);
+            
+            // Handle file uploads - remove existing and add selected files
+            formData.delete('junk_images[]');
+            selectedFiles.forEach(file => {
+              formData.append('junk_images[]', file);
+            });
+            
+            // Submit via fetch
+            fetch(this.action, {
+              method: 'POST',
+              body: formData,
+              headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+              }
+            })
+            .then(response => {
+              return response.json().catch(() => {
+                if (response.ok) {
+                  return { success: true, message: 'Quote submitted successfully!' };
+                } else {
+                  throw new Error('Server error occurred');
+                }
+              });
+            })
+            .then(data => {
+              if (data.success) {
+                showMessage(data.message || 'Your quote request has been submitted successfully! We will contact you soon.', 'success');
+                // Reset form
+                this.reset();
+                selectedFiles = [];
+                updateFileInput();
+                renderPreviews();
+              } else {
+                showMessage(data.message || 'Please correct the errors and try again.', 'danger');
+                if (data.errors) {
+                  const errorList = Object.values(data.errors).join('<br>');
+                  showMessage(errorList, 'danger');
+                }
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              showMessage('An error occurred while submitting your request. Please try again.', 'danger');
+            })
+            .finally(() => {
+              // Reset button state
+              submitBtn.disabled = false;
+              submitText.style.display = 'inline-block';
+              loadingText.style.display = 'none';
+            });
+          });
+
+          // Helper functions for showing messages
+          function showMessage(message, type = 'info') {
+            const messageDiv = document.getElementById('form-messages');
+            messageDiv.className = `alert alert-${type} alert-dismissible fade show`;
+            messageDiv.innerHTML = `
+              ${message}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            messageDiv.style.display = 'block';
+            
+            // Scroll to message
+            messageDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Auto-hide success messages after 5 seconds
+            if (type === 'success') {
+              setTimeout(() => {
+                hideMessage();
+              }, 5000);
+            }
+          }
+
+          function hideMessage() {
+            const messageDiv = document.getElementById('form-messages');
+            messageDiv.style.display = 'none';
+          }
+
+          // Make functions global so they can be called from onclick
+          window.removeFileAtIndex = function(index) {
+            removeFile(index);
+          };
+
+          // Clear all files function
+          window.clearAllFiles = function() {
+            selectedFiles = [];
+            updateFileInput();
+            renderPreviews();
+          };
       });
       </script>
           
           <div class="text-center">
-            <button type="submit" class="btn btn-l btn-default">Get Free Quote</button>
+            <button type="submit" class="btn btn-l btn-default" id="submit-btn">
+              <span class="submit-text">Get Free Quote</span>
+              <span class="loading-text" style="display: none;">
+                <i class="fas fa-spinner fa-spin"></i> Submitting...
+              </span>
+            </button>
           </div>
               </form>
             </div>
@@ -324,7 +510,7 @@
           <li><i class="jam jam-arrow-right" style="color: #003366;"></i>We clean up and dispose responsibly.</li>
         </ul>
         <div class="space10"></div>
-        <a href="<?= site_url('quote') ?>" class="btn mb-0" style="background: #003366; color: white;">Get Free Quote</a>
+        <a href="<?= base_url('quote') ?>" class="btn mb-0" style="background: #003366; color: white;">Get Free Quote</a>
         </div>
         <!--/column -->
       </div>

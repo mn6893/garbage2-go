@@ -8,7 +8,7 @@
           <h2 class="section-title mb-0">Quote Management</h2>
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="<?= site_url('admin/dashboard') ?>">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="<?= base_url('admin/dashboard') ?>">Dashboard</a></li>
               <li class="breadcrumb-item active">Quotes</li>
             </ol>
           </nav>
@@ -37,8 +37,12 @@
                 <select name="status" class="form-control">
                   <option value="">All Statuses</option>
                   <option value="pending" <?= $currentStatus === 'pending' ? 'selected' : '' ?>>Pending</option>
+                  <option value="ai_queued" <?= $currentStatus === 'ai_queued' ? 'selected' : '' ?>>AI Queued</option>
+                  <option value="ai_processing" <?= $currentStatus === 'ai_processing' ? 'selected' : '' ?>>AI Processing</option>
+                  <option value="ai_quoted" <?= $currentStatus === 'ai_quoted' ? 'selected' : '' ?>>AI Quoted</option>
+                  <option value="ai_error" <?= $currentStatus === 'ai_error' ? 'selected' : '' ?>>AI Error</option>
                   <option value="contacted" <?= $currentStatus === 'contacted' ? 'selected' : '' ?>>Contacted</option>
-                  <option value="quoted" <?= $currentStatus === 'quoted' ? 'selected' : '' ?>>Quoted</option>
+                  <option value="quoted" <?= $currentStatus === 'quoted' ? 'selected' : '' ?>>Manual Quote</option>
                   <option value="accepted" <?= $currentStatus === 'accepted' ? 'selected' : '' ?>>Accepted</option>
                   <option value="rejected" <?= $currentStatus === 'rejected' ? 'selected' : '' ?>>Rejected</option>
                   <option value="completed" <?= $currentStatus === 'completed' ? 'selected' : '' ?>>Completed</option>
@@ -54,7 +58,7 @@
                 <button type="submit" class="btn btn-purple">
                   <i class="icofont-search mr-5"></i> Filter
                 </button>
-                <a href="<?= site_url('admin/quotes') ?>" class="btn btn-outline-default">
+                <a href="<?= base_url('admin/quotes') ?>" class="btn btn-outline-default">
                   <i class="icofont-refresh mr-5"></i> Reset
                 </a>
               </div>
@@ -83,6 +87,8 @@
                         <th>Customer Details</th>
                         <th>Address</th>
                         <th>Description</th>
+                        <th>Images</th>
+                        <th>AI Estimate</th>
                         <th>Status</th>
                         <th>Date</th>
                         <th>Actions</th>
@@ -109,13 +115,49 @@
                           <small><?= esc(substr($quote['description'], 0, 60)) ?><?= strlen($quote['description']) > 60 ? '...' : '' ?></small>
                         </td>
                         <td>
-                          <form method="post" action="<?= site_url('admin/quote/update-status') ?>" class="d-inline">
+                          <?php 
+                          $images = !empty($quote['images']) ? json_decode($quote['images'], true) : [];
+                          if (is_array($images) && count($images) > 0): 
+                          ?>
+                            <div class="d-flex flex-wrap">
+                              <?php foreach (array_slice($images, 0, 2) as $index => $image): ?>
+                                <img src="<?= base_url('admin/quote/image/' . $quote['id'] . '/' . $index) ?>" 
+                                     alt="Thumbnail" 
+                                     class="rounded me-1 mb-1" 
+                                     style="width: 30px; height: 30px; object-fit: cover; cursor: pointer;"
+                                     onclick="window.open('<?= base_url('admin/quote/' . $quote['id']) ?>', '_blank')"
+                                     title="Click to view full details">
+                              <?php endforeach; ?>
+                              <?php if (count($images) > 2): ?>
+                                <small class="text-muted">+<?= count($images) - 2 ?> more</small>
+                              <?php endif; ?>
+                            </div>
+                          <?php else: ?>
+                            <small class="text-muted">No images</small>
+                          <?php endif; ?>
+                        </td>
+                        <td>
+                          <?php if (!empty($quote['estimated_amount'])): ?>
+                            <strong class="text-success">$<?= number_format($quote['estimated_amount'], 2) ?></strong>
+                            <?php if (!empty($quote['ai_confidence_score'])): ?>
+                              <br><small class="text-muted">Confidence: <?= round($quote['ai_confidence_score'] * 100) ?>%</small>
+                            <?php endif; ?>
+                          <?php else: ?>
+                            <small class="text-muted">No estimate</small>
+                          <?php endif; ?>
+                        </td>
+                        <td>
+                          <form method="post" action="<?= base_url('admin/quote/update-status') ?>" class="d-inline">
                             <?= csrf_field() ?>
                             <input type="hidden" name="id" value="<?= $quote['id'] ?>">
                             <select name="status" class="form-control form-control-sm status-update" onchange="this.form.submit()">
                               <option value="pending" <?= $quote['status'] === 'pending' ? 'selected' : '' ?>>Pending</option>
+                              <option value="ai_queued" <?= $quote['status'] === 'ai_queued' ? 'selected' : '' ?>>AI Queued</option>
+                              <option value="ai_processing" <?= $quote['status'] === 'ai_processing' ? 'selected' : '' ?>>AI Processing</option>
+                              <option value="ai_quoted" <?= $quote['status'] === 'ai_quoted' ? 'selected' : '' ?>>AI Quoted</option>
+                              <option value="ai_error" <?= $quote['status'] === 'ai_error' ? 'selected' : '' ?>>AI Error</option>
                               <option value="contacted" <?= $quote['status'] === 'contacted' ? 'selected' : '' ?>>Contacted</option>
-                              <option value="quoted" <?= $quote['status'] === 'quoted' ? 'selected' : '' ?>>Quoted</option>
+                              <option value="quoted" <?= $quote['status'] === 'quoted' ? 'selected' : '' ?>>Manual Quote</option>
                               <option value="accepted" <?= $quote['status'] === 'accepted' ? 'selected' : '' ?>>Accepted</option>
                               <option value="rejected" <?= $quote['status'] === 'rejected' ? 'selected' : '' ?>>Rejected</option>
                               <option value="completed" <?= $quote['status'] === 'completed' ? 'selected' : '' ?>>Completed</option>
@@ -129,7 +171,7 @@
                           </small>
                         </td>
                         <td>
-                          <a href="<?= site_url('admin/quote/' . $quote['id']) ?>" 
+                          <a href="<?= base_url('admin/quote/' . $quote['id']) ?>" 
                              class="btn btn-sm btn-outline-default" title="View Details">
                             <i class="icofont-eye"></i>
                           </a>

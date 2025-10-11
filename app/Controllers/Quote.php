@@ -85,6 +85,15 @@ class Quote extends BaseController
 
         // Validate the input
         if (!$this->validate($validationRules)) {
+            // Check if this is an AJAX request
+            if ($this->request->isAJAX()) {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Please correct the errors below.',
+                    'errors' => $this->validator->getErrors()
+                ]);
+            }
+            
             // Return to the form that was submitted from
             $referer = $this->request->getHeaderLine('Referer');
             $isFromHome = strpos($referer, 'index') !== false || strpos($referer, '/') === strlen($referer) - 1;
@@ -106,6 +115,9 @@ class Quote extends BaseController
         $uploadedImages = [];
         $files = $this->request->getFiles();
         
+        // Debug: Log file information
+        log_message('info', 'Files received: ' . print_r($files, true));
+        
         if (isset($files['junk_images'])) {
             $uploadPath = WRITEPATH . 'uploads/quote_images/';
             
@@ -114,14 +126,30 @@ class Quote extends BaseController
                 mkdir($uploadPath, 0755, true);
             }
             
-            foreach ($files['junk_images'] as $file) {
+            // Check if it's a single file or array of files
+            $imageFiles = $files['junk_images'];
+            if (!is_array($imageFiles)) {
+                $imageFiles = [$imageFiles];
+            }
+            
+            foreach ($imageFiles as $file) {
                 if ($file->isValid() && !$file->hasMoved()) {
                     // Generate unique filename
                     $newName = $file->getRandomName();
-                    $file->move($uploadPath, $newName);
-                    $uploadedImages[] = $newName;
+                    
+                    try {
+                        $file->move($uploadPath, $newName);
+                        $uploadedImages[] = $newName;
+                        log_message('info', 'Successfully uploaded file: ' . $newName);
+                    } catch (\Exception $e) {
+                        log_message('error', 'Error uploading file: ' . $e->getMessage());
+                    }
+                } else {
+                    log_message('error', 'Invalid file or already moved: ' . ($file->getError() ?? 'Unknown error'));
                 }
             }
+        } else {
+            log_message('info', 'No junk_images found in files array');
         }
 
         // Prepare data for insertion
@@ -140,13 +168,39 @@ class Quote extends BaseController
 
         // Save the quote request
         try {
-            $this->quoteModel->save($data);
+            $quoteId = $this->quoteModel->insert($data);
             
-            // Set success message
-            session()->setFlashdata('success', 'Your quote request has been submitted successfully! We will contact you soon.');
+            // Trigger AI processing if images were uploaded
+            if (!empty($uploadedImages)) {
+                $this->triggerAIProcessing($quoteId);
+                $successMessage = 'Your quote request has been submitted successfully! Our AI system is analyzing your images and you will receive a detailed quote via email within 15 minutes.';
+            } else {
+                $successMessage = 'Your quote request has been submitted successfully! We will contact you soon with a detailed quote.';
+            }
             
+            // Check if this is an AJAX request
+            if ($this->request->isAJAX()) {
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => $successMessage,
+                    'quote_id' => $quoteId
+                ]);
+            }
+            
+            session()->setFlashdata('success', $successMessage);
             return redirect()->to('/quote/success');
         } catch (\Exception $e) {
+            log_message('error', 'Quote submission error: ' . $e->getMessage());
+            
+            // Check if this is an AJAX request
+            if ($this->request->isAJAX()) {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'There was an error processing your request. Please try again.',
+                    'error' => $e->getMessage()
+                ]);
+            }
+            
             // Set error message
             session()->setFlashdata('error', 'There was an error processing your request. Please try again.');
             
@@ -193,5 +247,65 @@ class Quote extends BaseController
             ->setHeader('Content-Type', $mimeType)
             ->setHeader('Content-Length', filesize($imagePath))
             ->setBody(file_get_contents($imagePath));
+    }
+    
+    /**
+     * Trigger AI processing for a quote (can be immediate or queued)
+     */
+    private function triggerAIProcessing(int $quoteId): void
+    {
+        try {
+            // Option 1: Immediate processing (for real-time results)
+            if (ENVIRONMENT === 'development' || $this->shouldProcessImmediately()) {
+                // Run in background using exec (non-blocking)
+                if (function_exists('exec') && !$this->isWindows()) {
+                    $command = "cd " . ROOTPATH . " && php spark ai:process-quotes --limit=1 --force > /dev/null 2>&1 &";
+                    exec($command);
+                } else {
+                    // Fallback: process immediately (blocking) - for Windows or when exec is disabled
+                    $processor = new \App\Libraries\AIQuoteProcessor();
+                    $processor->processQuote($quoteId);
+                }
+            } else {
+                // Option 2: Add to queue for batch processing
+                $this->queueForProcessing($quoteId);
+            }
+        } catch (\Exception $e) {
+            // Log error but don't fail the quote submission
+            log_message('error', 'Failed to trigger AI processing for quote ' . $quoteId . ': ' . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Check if we should process immediately or queue for later
+     */
+    private function shouldProcessImmediately(): bool
+    {
+        // Process immediately during business hours or if queue is not available
+        $hour = (int) date('H');
+        return ($hour >= 8 && $hour <= 20); // 8 AM to 8 PM
+    }
+    
+    /**
+     * Queue quote for batch processing
+     */
+    private function queueForProcessing(int $quoteId): void
+    {
+        // Update quote status to indicate it's queued for AI processing
+        $this->quoteModel->update($quoteId, [
+            'status' => 'ai_queued',
+            'admin_notes' => 'Queued for AI analysis',
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
+        
+        log_message('info', "Quote {$quoteId} queued for AI processing");
+    }
+    
+    /**
+     * Check if running on Windows
+     */
+    private function isWindows(): bool
+    {
+        return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
     }
 }

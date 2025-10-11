@@ -46,17 +46,23 @@
                   </div>
                 </div>
                 <div class="row text-center border-top pt-15">
-                  <div class="col-3">
+                  <div class="col-2">
+                    <small class="text-muted">Pending: <strong><?= $quoteStats['pending'] ?></strong></small>
+                  </div>
+                  <div class="col-2">
+                    <small class="text-muted">AI Processing: <strong><?= $quoteStats['ai_processing'] ?></strong></small>
+                  </div>
+                  <div class="col-2">
+                    <small class="text-muted">AI Quoted: <strong><?= $quoteStats['ai_quoted'] ?></strong></small>
+                  </div>
+                  <div class="col-2">
                     <small class="text-muted">Contacted: <strong><?= $quoteStats['contacted'] ?></strong></small>
                   </div>
-                  <div class="col-3">
-                    <small class="text-muted">Quoted: <strong><?= $quoteStats['quoted'] ?></strong></small>
-                  </div>
-                  <div class="col-3">
+                  <div class="col-2">
                     <small class="text-muted">Completed: <strong><?= $quoteStats['completed'] ?></strong></small>
                   </div>
-                  <div class="col-3">
-                    <a href="<?= site_url('admin/quotes') ?>" class="btn btn-sm btn-outline-purple">Manage</a>
+                  <div class="col-2">
+                    <a href="<?= base_url('admin/quotes') ?>" class="btn btn-sm btn-outline-purple">Manage</a>
                   </div>
                 </div>
               </div>
@@ -101,7 +107,63 @@
                     <!-- Empty for spacing -->
                   </div>
                   <div class="col-3">
-                    <a href="<?= site_url('admin/contacts') ?>" class="btn btn-sm btn-outline-green">Manage</a>
+                    <a href="<?= base_url('admin/contacts') ?>" class="btn btn-sm btn-outline-green">Manage</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Email Statistics -->
+        <div class="row mb-40">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header bg-warning text-white">
+                <h5 class="mb-0"><i class="icofont-email mr-10"></i>Email Status Management</h5>
+              </div>
+              <div class="card-body">
+                <div class="row text-center">
+                  <div class="col-md-2">
+                    <div class="p-15">
+                      <h3 class="color-green"><?= $emailStats['customer_success'] ?></h3>
+                      <p class="mb-0">Customer Emails Sent</p>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="p-15">
+                      <h3 class="color-red"><?= $emailStats['customer_failed'] ?></h3>
+                      <p class="mb-0">Customer Failed</p>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="p-15">
+                      <h3 class="color-green"><?= $emailStats['admin_success'] ?></h3>
+                      <p class="mb-0">Admin Emails Sent</p>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="p-15">
+                      <h3 class="color-red"><?= $emailStats['admin_failed'] ?></h3>
+                      <p class="mb-0">Admin Failed</p>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="p-15">
+                      <h3 class="color-orange"><?= $emailStats['retry_needed'] ?></h3>
+                      <p class="mb-0">Need Retry</p>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="p-15">
+                      <?php if ($emailStats['retry_needed'] > 0): ?>
+                        <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#bulkRetryModal">
+                          Retry Failed
+                        </button>
+                      <?php else: ?>
+                        <span class="badge bg-success">All Good!</span>
+                      <?php endif; ?>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -147,7 +209,7 @@
                               <small><?= date('M j, Y', strtotime($quote['created_at'])) ?></small>
                             </td>
                             <td>
-                              <a href="<?= site_url('admin/quote/' . $quote['id']) ?>" 
+                              <a href="<?= base_url('admin/quote/' . $quote['id']) ?>" 
                                  class="btn btn-sm btn-outline-default">View</a>
                             </td>
                           </tr>
@@ -196,7 +258,7 @@
                               <small><?= date('M j, Y', strtotime($contact['created_at'])) ?></small>
                             </td>
                             <td>
-                              <a href="<?= site_url('admin/contact/' . $contact['id']) ?>" 
+                              <a href="<?= base_url('admin/contact/' . $contact['id']) ?>" 
                                  class="btn btn-sm btn-outline-default">View</a>
                             </td>
                           </tr>
@@ -211,6 +273,46 @@
         </div>
         
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bulk Email Retry Modal -->
+<div class="modal fade" id="bulkRetryModal" tabindex="-1" aria-labelledby="bulkRetryModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="bulkRetryModalLabel">Bulk Retry Failed Emails</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="<?= base_url('admin/bulk-retry-emails') ?>" method="post">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="email_type" class="form-label">Email Type to Retry</label>
+            <select class="form-select" id="email_type" name="email_type" required>
+              <option value="both">Both Customer & Admin</option>
+              <option value="customer">Customer Emails Only</option>
+              <option value="admin">Admin Emails Only</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="max_attempts" class="form-label">Maximum Retry Attempts</label>
+            <select class="form-select" id="max_attempts" name="max_attempts">
+              <option value="3">3 attempts</option>
+              <option value="5">5 attempts</option>
+              <option value="10">10 attempts</option>
+            </select>
+            <div class="form-text">Only quotes below this attempt threshold will be retried.</div>
+          </div>
+          <div class="alert alert-info">
+            <strong>Note:</strong> This will start a background process to retry failed emails. Check back in a few minutes for results.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-warning">Start Retry Process</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

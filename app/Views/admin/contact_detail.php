@@ -17,8 +17,8 @@
           <h2 class="section-title mb-0">Contact Details #<?= $contact['id'] ?></h2>
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="<?= site_url('admin/dashboard') ?>">Dashboard</a></li>
-              <li class="breadcrumb-item"><a href="<?= site_url('admin/contacts') ?>">Contacts</a></li>
+              <li class="breadcrumb-item"><a href="<?= base_url('admin/dashboard') ?>">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="<?= base_url('admin/contacts') ?>">Contacts</a></li>
               <li class="breadcrumb-item active">Contact #<?= $contact['id'] ?></li>
             </ol>
           </nav>
@@ -65,7 +65,7 @@
                 <h5 class="card-title mb-0">Status & Timeline</h5>
               </div>
               <div class="card-body">
-                <form method="post" action="<?= site_url('admin/contact/update-status') ?>">
+                <form method="post" action="<?= base_url('admin/contact/update-status') ?>">
                   <?= csrf_field() ?>
                   <input type="hidden" name="id" value="<?= $contact['id'] ?>">
                   
@@ -177,7 +177,7 @@ Junk Collection Team</textarea>
           <div class="col-12">
             <div class="card">
               <div class="card-body text-center">
-                <a href="<?= site_url('admin/contacts') ?>" class="btn btn-outline-default">
+                <a href="<?= base_url('admin/contacts') ?>" class="btn btn-outline-default">
                   <i class="icofont-arrow-left mr-5"></i> Back to Contacts
                 </a>
                 <a href="tel:<?= esc($contact['phone']) ?>" class="btn btn-green">

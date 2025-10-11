@@ -45,7 +45,7 @@
                     </div>
                 <?php endif; ?>
                 
-                <form method="post" action="<?= site_url('admin/authenticate') ?>">
+                <form method="post" action="<?= base_url('admin/authenticate') ?>">
                   <?= csrf_field() ?>
                   
                   <div class="form-group mb-20">
@@ -75,7 +75,7 @@
                 </div>
                 
                 <div class="text-center mt-20">
-                  <a href="<?= site_url('/') ?>" class="btn btn-sm btn-outline-default">
+                  <a href="<?= base_url('/') ?>" class="btn btn-sm btn-outline-default">
                     <i class="icofont-arrow-left mr-5"></i> Back to Website
                   </a>
                 </div>

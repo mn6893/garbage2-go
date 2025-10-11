@@ -8,7 +8,7 @@
           <h2 class="section-title mb-0">Contact Management</h2>
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="<?= site_url('admin/dashboard') ?>">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="<?= base_url('admin/dashboard') ?>">Dashboard</a></li>
               <li class="breadcrumb-item active">Contacts</li>
             </ol>
           </nav>
@@ -51,7 +51,7 @@
                 <button type="submit" class="btn btn-purple">
                   <i class="icofont-search mr-5"></i> Filter
                 </button>
-                <a href="<?= site_url('admin/contacts') ?>" class="btn btn-outline-default">
+                <a href="<?= base_url('admin/contacts') ?>" class="btn btn-outline-default">
                   <i class="icofont-refresh mr-5"></i> Reset
                 </a>
               </div>
@@ -103,7 +103,7 @@
                           <small><?= esc(substr($contact['message'], 0, 60)) ?><?= strlen($contact['message']) > 60 ? '...' : '' ?></small>
                         </td>
                         <td>
-                          <form method="post" action="<?= site_url('admin/contact/update-status') ?>" class="d-inline">
+                          <form method="post" action="<?= base_url('admin/contact/update-status') ?>" class="d-inline">
                             <?= csrf_field() ?>
                             <input type="hidden" name="id" value="<?= $contact['id'] ?>">
                             <select name="status" class="form-control form-control-sm status-update" onchange="this.form.submit()">
@@ -120,7 +120,7 @@
                           </small>
                         </td>
                         <td>
-                          <a href="<?= site_url('admin/contact/' . $contact['id']) ?>" 
+                          <a href="<?= base_url('admin/contact/' . $contact['id']) ?>" 
                              class="btn btn-sm btn-outline-default" title="View Details">
                             <i class="icofont-eye"></i>
                           </a>
