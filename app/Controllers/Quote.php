@@ -172,8 +172,7 @@ class Quote extends BaseController
             
             // Trigger AI processing if images were uploaded
             if (!empty($uploadedImages)) {
-                $this->triggerAIProcessing($quoteId);
-                $successMessage = 'Your quote request has been submitted successfully! Our AI system is analyzing your images and you will receive a detailed quote via email within 15 minutes.';
+                $successMessage = 'Your quote request with images has been submitted successfully! We will review your images and contact you soon with a detailed quote.';
             } else {
                 $successMessage = 'Your quote request has been submitted successfully! We will contact you soon with a detailed quote.';
             }
@@ -293,7 +292,7 @@ class Quote extends BaseController
     {
         // Update quote status to indicate it's queued for AI processing
         $this->quoteModel->update($quoteId, [
-            'status' => 'ai_queued',
+            'status' => 'pending',
             'admin_notes' => 'Queued for AI analysis',
             'updated_at' => date('Y-m-d H:i:s')
         ]);

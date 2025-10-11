@@ -28,10 +28,11 @@ class ProcessAIQuotes extends BaseCommand
     public function run(array $params)
     {
         $limit = (int) CLI::getOption('limit', 10);
-        $force = CLI::getOption('force', false);
+        $force = (bool) CLI::getOption('force', false);
         
         CLI::write('Starting AI Quote Processing...', 'green');
         CLI::write('Processing limit: ' . $limit);
+        CLI::write('Force mode: ' . ($force ? 'enabled' : 'disabled'));
         
         $quoteModel = new QuoteModel();
         $processor = new AIQuoteProcessor();
@@ -88,16 +89,17 @@ class ProcessAIQuotes extends BaseCommand
             // Process all quotes with images
             $builder->where('images IS NOT NULL')
                    ->where('images !=', '')
-                   ->where('images !=', '[]');
+                   ->where('images !=', '[]')
+                   ->where('status', 'pending');
         } else {
             // Only process quotes that haven't been AI processed yet and aren't currently processing
             $cutoffTime = date('Y-m-d H:i:s', time() - (30 * 60)); // 30 minutes ago
             
-            $builder->where('status', 'pending')
-                   ->where('images IS NOT NULL')
+            $builder->where('images IS NOT NULL')
                    ->where('images !=', '')
                    ->where('images !=', '[]')
-                   ->where('ai_processed_at IS NULL')
+                   ->where('status', 'pending')
+                   ->where('ai_processed_at IS NULL') // Not processed yet - this is the key filter
                    ->groupStart()
                        ->where('processing_lock IS NULL')
                        ->orWhere('ai_processing_started_at <', $cutoffTime)

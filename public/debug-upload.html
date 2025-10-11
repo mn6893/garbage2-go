@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Upload Debug</title>
+</head>
+<body>
+    <h1>File Upload Debug Test</h1>
+    
+    <form method="post" action="/quote/submit" enctype="multipart/form-data">
+        <div>
+            <label>Name:</label>
+            <input type="text" name="name" value="Test User" required>
+        </div>
+        <div>
+            <label>Email:</label>
+            <input type="email" name="email" value="test@example.com" required>
+        </div>
+        <div>
+            <label>Phone:</label>
+            <input type="tel" name="phone" value="1234567890" required>
+        </div>
+        <div>
+            <label>Address:</label>
+            <textarea name="address" required>123 Test Street, Test City</textarea>
+        </div>
+        <div>
+            <label>Description:</label>
+            <textarea name="description" required>Test description</textarea>
+        </div>
+        <div>
+            <label>Images:</label>
+            <input type="file" name="junk_images[]" multiple accept="image/*">
+        </div>
+        <button type="submit">Submit Test Quote</button>
+    </form>
+    
+    <script>
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const formData = new FormData(this);
+            console.log('Form data being submitted:');
+            for (let [key, value] of formData.entries()) {
+                console.log(key, value);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -18,16 +18,19 @@ class AIVisionService
 
     public function __construct()
     {
-        // Load configuration constants if not already loaded
-        if (!defined('OPENAI_API_KEY')) {
-            require_once APPPATH . 'Config/config.php';
-        }
-
+        // Constants are already loaded from app/Config/Constants.php
+        // No need to manually load config.php
+        
         $this->apiKey = OPENAI_API_KEY;
         $this->apiUrl = OPENAI_API_URL;
         $this->model = OPENAI_MODEL;
         $this->maxTokens = OPENAI_MAX_TOKENS;
         $this->temperature = OPENAI_TEMPERATURE;
+        
+        // Validate required configuration
+        if (empty($this->apiKey)) {
+            throw new \Exception('OpenAI API key is not configured. Please set OPENAI_API_KEY in your .env file.');
+        }
     }
 
     /**

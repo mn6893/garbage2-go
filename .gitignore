@@ -1,0 +1,122 @@
+# Environment configuration
+.env
+.env.*
+
+# CodeIgniter 4 specific files
+/writable/cache/*
+/writable/debugbar/*
+/writable/logs/*
+/writable/session/*
+/writable/uploads/*
+!/writable/cache/index.html
+!/writable/debugbar/index.html
+!/writable/logs/index.html
+!/writable/session/index.html
+!/writable/uploads/index.html
+
+# User uploads and generated files
+/public/uploads/
+/public/writable/
+/writable/uploads/quote_images/*
+!/writable/uploads/quote_images/index.html
+
+# Session files
+php_session*
+sess_*
+ci_session*
+
+# Composer
+/vendor/
+composer.lock
+
+# Node.js dependencies (if using)
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+
+# IDE and editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.atom/
+.brackets.json
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.tmp
+*.temp
+
+# Backup files
+*.bak
+*.backup
+*.old
+*~
+*.swp
+*.swo
+
+# Log files
+*.log
+error.log
+access.log
+
+# Database files
+*.sqlite
+*.sqlite3
+*.db
+
+# Configuration files with sensitive data
+/app/Config/Database.php.backup
+/app/Config/App.php.backup
+
+# Build and deployment files
+/build/
+/dist/
+*.zip
+*.tar.gz
+*.rar
+
+# PHP specific
+*.php~
+*.php.bak
+
+# Cache files
+.cache/
+cache/
+tmp/
+temp/
+
+# PHPUnit
+.phpunit.result.cache
+/phpunit.xml
+
+# Coverage reports
+/coverage/
+clover.xml
+coverage.clover
+
+# Deployment scripts
+deploy.php
+deploy.sh
+.deployer/
+
+# Local development files
+.htaccess.local
+robots.txt.local
+
+# AI and OpenAI related (if storing API responses locally)
+/ai_responses/
+/openai_cache/
+
+# Email templates cache
+/email_cache/
+
+# Image optimization cache
+/image_cache/

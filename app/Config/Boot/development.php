@@ -1,5 +1,4 @@
 <?php
-
 /*
  |--------------------------------------------------------------------------
  | ERROR DISPLAY
@@ -12,7 +11,10 @@
  */
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
-
+// Load custom constants
+if (file_exists(APPPATH . 'Config/Constants.php')) {
+    require_once APPPATH . 'Config/Constants.php';
+}
 /*
  |--------------------------------------------------------------------------
  | DEBUG BACKTRACES

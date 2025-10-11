@@ -1,4 +1,3 @@
-#--------------------------------------------------------------------
 # Example Environment Configuration file
 #
 # This file can be used as a starting point for your own
@@ -8,13 +7,14 @@
 # By default, all of the settings are commented out. If you want
 # to override the setting, you must un-comment it by removing the '#'
 # at the beginning of the line.
-#--------------------------------------------------------------------
 
 #--------------------------------------------------------------------
 # ENVIRONMENT
 #--------------------------------------------------------------------
 
+CI_ENVIRONMENT = production
 # CI_ENVIRONMENT = production
+# CI_ENVIRONMENT = testing
 
 #--------------------------------------------------------------------
 # APP
@@ -67,3 +67,22 @@ database.default.port = 3306
 #--------------------------------------------------------------------
 
 # logger.threshold = 4
+
+#--------------------------------------------------------------------
+# AI Services Configuration
+#--------------------------------------------------------------------
+
+# AI Processing Configuration
+AI_MAX_IMAGES = 5
+AI_PROCESSING_TIMEOUT = 120
+
+# Email Configuration (if using email features)
+email.protocol = smtp
+email.SMTPHost = smtp.gmail.com
+email.SMTPUser = your_email@example.com
+email.SMTPPass = your_app_password
+email.SMTPPort = 587
+email.SMTPCrypto = tls
+email.mailType = html
+email.charset = utf-8
+email.wordWrap = true

@@ -24,7 +24,25 @@ class QuoteModel extends Model
         'admin_notes',
         'quote_amount',
         'created_at',
-        'updated_at'
+        'updated_at',
+        // AI Processing fields
+        'ai_analysis',
+        'waste_assessment',
+        'generated_quote',
+        'estimated_amount',
+        'base_amount',
+        'additional_fees',
+        'ai_processed_at',
+        'ai_confidence_score',
+        'ai_processing_started_at',
+        'processing_lock',
+        'last_email_attempt',
+        'customer_email_attempts',
+        'admin_email_attempts',
+        'email_sent_to_customer',
+        'email_sent_to_admin',
+        'customer_email_error',
+        'admin_email_error'
     ];
 
     // Dates
@@ -242,5 +260,36 @@ class QuoteModel extends Model
         }
         
         return true;
+    }
+    
+    /**
+     * Update quote with AI processing results
+     * This method bypasses field protection for AI-specific updates
+     */
+    public function updateAIProcessingResults(int $id, array $aiData): bool
+    {
+        // Temporarily disable field protection to allow AI fields
+        $this->protect(false);
+        
+        // Ensure updated_at is set
+        $aiData['updated_at'] = date('Y-m-d H:i:s');
+        
+        $result = $this->update($id, $aiData);
+        
+        // Re-enable field protection
+        $this->protect(true);
+        
+        return $result;
+    }
+    
+    /**
+     * Get pending quotes for AI processing
+     */
+    public function getPendingQuotesForAI(): array
+    {
+        return $this->where('status', 'pending')
+                    ->where('ai_processed_at', null)
+                    ->orderBy('created_at', 'ASC')
+                    ->findAll();
     }
 }

@@ -14,7 +14,7 @@ use CodeIgniter\Email\Email;
  * AI Quote Processor
  * 
  * Handles background processing of quote requests using AI services
- * to analyze images, assess waste, and generate automated quotes.
+ * to analyze images, assess waste, a nd generate quotes.
  */
 class AIQuoteProcessor
 {
@@ -49,6 +49,16 @@ class AIQuoteProcessor
                 throw new \Exception("Quote not found: {$quoteId}");
             }
             
+            // Only process quotes with 'pending' status
+            if ($quote['status'] !== 'pending') {
+                return [
+                    'success' => false,
+                    'quote_id' => $quoteId,
+                    'error' => "Quote status is '{$quote['status']}'. Only 'pending' quotes can be processed.",
+                    'processing_time' => 0
+                ];
+            }
+            
             // Check if already processing or processed to prevent duplicates
             if ($this->isAlreadyProcessing($quote)) {
                 return [
@@ -67,35 +77,40 @@ class AIQuoteProcessor
             
             // Analyze images if available
             $aiAnalysis = $this->analyzeImages($quote);
+            log_message('info', "AI Analysis result: " . json_encode($aiAnalysis));
             
             // Perform waste assessment
             $wasteAssessment = $this->performWasteAssessment($aiAnalysis, $quote);
+            log_message('info', "Waste Assessment result: " . json_encode($wasteAssessment));
             
             // Generate quote
             $generatedQuote = $this->generateQuote($wasteAssessment, $quote);
+            log_message('info', "Generated Quote result: " . json_encode($generatedQuote));
+            
+            // Format quote according to standardized structure
+            $formattedQuote = $this->formatQuoteResult($quoteId, $generatedQuote, $wasteAssessment);
+            log_message('info', "Formatted Quote result: " . json_encode($formattedQuote));
             
             // Save results
             $this->saveQuoteResults($quoteId, $aiAnalysis, $wasteAssessment, $generatedQuote);
             
-            // Send email notifications with proper error handling
-            $emailResults = $this->sendQuoteNotifications($quote, $generatedQuote);
-            
-            // Update final status
-            $this->updateQuoteStatus($quoteId, 'ai_quoted', 'AI analysis completed and quote generated');
+            // Send email notifications with proper error handling (use formatted quote)
+            $emailResults = $this->sendQuoteNotifications($quote, $formattedQuote);
             
             // Clear processing lock
             $this->clearProcessingLock($quoteId);
             
             // Track analytics
             $processingTime = microtime(true) - $startTime;
-            $this->trackAnalytics($quoteId, 'success', $processingTime, $aiAnalysis, $generatedQuote);
+            $this->trackAnalytics($quoteId, 'success', $processingTime, $aiAnalysis, $formattedQuote);
             
             return [
                 'success' => true,
                 'quote_id' => $quoteId,
                 'processing_time' => $processingTime,
-                'quote_amount' => $generatedQuote['quote']['total_amount'],
-                'email_results' => $emailResults
+                'quote_amount' => $formattedQuote['breakdown']['total'] ?? $formattedQuote['estimatedCost']['max'] ?? 0,
+                'email_results' => $emailResults,
+                'formatted_quote' => $formattedQuote
             ];
             
         } catch (\Exception $e) {
@@ -143,7 +158,7 @@ class AIQuoteProcessor
         
         // Build full paths to images
         foreach ($images as $image) {
-            $imagePath = FCPATH . 'uploads/quotes/' . $image;
+            $imagePath = WRITEPATH . 'uploads/quote_images/' . $image;
             if (file_exists($imagePath)) {
                 $imagePaths[] = $imagePath;
             }
@@ -203,22 +218,93 @@ class AIQuoteProcessor
      */
     private function saveQuoteResults(int $quoteId, array $aiAnalysis, array $wasteAssessment, array $generatedQuote): void
     {
+        // Format the generated quote according to the new JSON structure
+        $formattedQuote = $this->formatQuoteResult($quoteId, $generatedQuote, $wasteAssessment);
+        
         $updateData = [
             'ai_analysis' => json_encode($aiAnalysis),
             'waste_assessment' => json_encode($wasteAssessment),
-            'generated_quote' => json_encode($generatedQuote),
+            'generated_quote' => json_encode($formattedQuote),
             'ai_processed_at' => date('Y-m-d H:i:s'),
+            'status' => 'quoted', // Update status to 'quoted' (valid status)
             'updated_at' => date('Y-m-d H:i:s')
         ];
         
-        // Add estimated amounts to main quote record for easy access
-        if (isset($generatedQuote['quote']['total_amount'])) {
-            $updateData['estimated_amount'] = $generatedQuote['quote']['total_amount'];
-            $updateData['base_amount'] = $generatedQuote['quote']['base_cost'] ?? 0;
-            $updateData['additional_fees'] = $generatedQuote['quote']['total_fees'] ?? 0;
+        // Extract and store confidence score from the new data structure
+        if (isset($formattedQuote['details']['confidence'])) {
+            $updateData['ai_confidence_score'] = $formattedQuote['details']['confidence'] / 100;
+        } elseif (isset($aiAnalysis['confidence'])) {
+            $updateData['ai_confidence_score'] = $aiAnalysis['confidence'] / 100;
+        } elseif (isset($wasteAssessment['confidence'])) {
+            $updateData['ai_confidence_score'] = $wasteAssessment['confidence'] / 100;
         }
         
-        $this->quoteModel->update($quoteId, $updateData);
+        // Add estimated amounts to main quote record for easy access - updated for new structure
+        if (isset($formattedQuote['breakdown']['total'])) {
+            $updateData['estimated_amount'] = $formattedQuote['breakdown']['total'];
+            $updateData['base_amount'] = $formattedQuote['breakdown']['baseCost'] ?? 0;
+            $updateData['additional_fees'] = ($formattedQuote['breakdown']['specialFees'] ?? 0) + 
+                                           ($formattedQuote['breakdown']['environmentalFee'] ?? 0) + 
+                                           ($formattedQuote['breakdown']['disposalFee'] ?? 0);
+        } elseif (isset($formattedQuote['estimatedCost']['max'])) {
+            // Fallback to estimated cost if breakdown not available
+            $updateData['estimated_amount'] = $formattedQuote['estimatedCost']['max'];
+            $updateData['base_amount'] = $formattedQuote['breakdown']['baseCost'] ?? 0;
+        }
+        
+        // Log before update for debugging
+        log_message('info', "Updating Quote #{$quoteId} with AI results. Status: quoted, Amount: $" . ($updateData['estimated_amount'] ?? 'N/A'));
+        log_message('debug', "Update data keys: " . implode(', ', array_keys($updateData)));
+        log_message('debug', "AI Analysis size: " . strlen($updateData['ai_analysis']) . " bytes");
+        log_message('debug', "Waste Assessment size: " . strlen($updateData['waste_assessment']) . " bytes");
+        log_message('debug', "Generated Quote size: " . strlen($updateData['generated_quote']) . " bytes");
+        
+        // Validate JSON before update
+        $aiAnalysisValid = json_decode($updateData['ai_analysis']) !== null;
+        $wasteAssessmentValid = json_decode($updateData['waste_assessment']) !== null;
+        $generatedQuoteValid = json_decode($updateData['generated_quote']) !== null;
+        
+        log_message('debug', "JSON validation - AI Analysis: " . ($aiAnalysisValid ? 'valid' : 'invalid'));
+        log_message('debug', "JSON validation - Waste Assessment: " . ($wasteAssessmentValid ? 'valid' : 'invalid'));
+        log_message('debug', "JSON validation - Generated Quote: " . ($generatedQuoteValid ? 'valid' : 'invalid'));
+        
+        // Perform database update with error handling
+        try {
+            log_message('debug', "Starting database update for Quote #{$quoteId}");
+            
+            // Use the specialized AI update method
+            $updateResult = $this->quoteModel->updateAIProcessingResults($quoteId, $updateData);
+            
+            log_message('debug', "Database update result: " . ($updateResult ? 'true' : 'false'));
+            
+            if ($updateResult) {
+                log_message('info', "Quote #{$quoteId} AI processing data saved successfully. Status updated to 'quoted'");
+                
+                // Verify the update by checking what was actually saved
+                $updatedQuote = $this->quoteModel->find($quoteId);
+                if ($updatedQuote) {
+                    log_message('debug', "Verification - Status: " . ($updatedQuote['status'] ?? 'null'));
+                    log_message('debug', "Verification - Estimated Amount: " . ($updatedQuote['estimated_amount'] ?? 'null'));
+                    log_message('debug', "Verification - AI Analysis saved: " . (!empty($updatedQuote['ai_analysis']) ? 'yes' : 'no'));
+                    log_message('debug', "Verification - Waste Assessment saved: " . (!empty($updatedQuote['waste_assessment']) ? 'yes' : 'no'));
+                    log_message('debug', "Verification - Generated Quote saved: " . (!empty($updatedQuote['generated_quote']) ? 'yes' : 'no'));
+                } else {
+                    log_message('error', "Could not retrieve updated quote for verification");
+                }
+            } else {
+                log_message('error', "Failed to update Quote #{$quoteId} with AI processing results - update returned false");
+                log_message('error', "Quote Model Errors: " . json_encode($this->quoteModel->errors()));
+                
+                // Log the specific update data that failed
+                log_message('debug', "Failed update data: " . json_encode($updateData, JSON_UNESCAPED_UNICODE));
+                
+                throw new \Exception("Database update failed for quote #{$quoteId}. Model errors: " . json_encode($this->quoteModel->errors()));
+            }
+        } catch (\Exception $e) {
+            log_message('error', "Database update exception for Quote #{$quoteId}: " . $e->getMessage());
+            log_message('error', "Exception trace: " . $e->getTraceAsString());
+            throw new \Exception("Database update failed for quote #{$quoteId}: " . $e->getMessage());
+        }
     }
     
     /**
@@ -226,6 +312,8 @@ class AIQuoteProcessor
      */
     private function sendQuoteNotifications(array $quote, array $generatedQuote): array
     {
+        log_message('info', "Starting email notifications for quote #{$quote['id']}");
+        
         $results = [
             'customer_email' => ['success' => false, 'error' => null],
             'admin_email' => ['success' => false, 'error' => null]
@@ -233,35 +321,59 @@ class AIQuoteProcessor
         
         // Send customer email
         try {
+            log_message('info', "Sending customer email to {$quote['email']} for quote #{$quote['id']}");
             $customerResult = $this->sendCustomerQuoteEmail($quote, $generatedQuote);
             $results['customer_email']['success'] = $customerResult;
             
-            // Update database tracking
-            $this->updateEmailTracking($quote['id'], 'customer', $customerResult, null);
+            // Update database tracking - always update even if method doesn't exist
+            try {
+                $this->updateEmailTracking($quote['id'], 'customer', $customerResult, null);
+            } catch (\Exception $trackingError) {
+                log_message('warning', "Failed to update customer email tracking: " . $trackingError->getMessage());
+            }
             
             if ($customerResult) {
                 log_message('info', "Quote email sent successfully to {$quote['email']} for quote #{$quote['id']}");
+            } else {
+                log_message('warning', "Quote email failed to send to {$quote['email']} for quote #{$quote['id']} - email service returned false");
+                $results['customer_email']['error'] = 'Email service returned false';
             }
         } catch (\Exception $e) {
             $results['customer_email']['error'] = $e->getMessage();
-            $this->updateEmailTracking($quote['id'], 'customer', false, $e->getMessage());
+            try {
+                $this->updateEmailTracking($quote['id'], 'customer', false, $e->getMessage());
+            } catch (\Exception $trackingError) {
+                log_message('warning', "Failed to update customer email tracking: " . $trackingError->getMessage());
+            }
             log_message('error', "Failed to send quote email to {$quote['email']} for quote #{$quote['id']}: " . $e->getMessage());
         }
         
         // Send admin notification email
         try {
+            log_message('info', "Sending admin notification for quote #{$quote['id']}");
             $adminResult = $this->sendAdminNotificationEmail($quote, $generatedQuote);
             $results['admin_email']['success'] = $adminResult;
             
-            // Update database tracking
-            $this->updateEmailTracking($quote['id'], 'admin', $adminResult, null);
+            // Update database tracking - always update even if method doesn't exist
+            try {
+                $this->updateEmailTracking($quote['id'], 'admin', $adminResult, null);
+            } catch (\Exception $trackingError) {
+                log_message('warning', "Failed to update admin email tracking: " . $trackingError->getMessage());
+            }
             
             if ($adminResult) {
                 log_message('info', "Admin notification sent successfully for quote #{$quote['id']}");
+            } else {
+                log_message('warning', "Admin notification failed to send for quote #{$quote['id']} - email service returned false");
+                $results['admin_email']['error'] = 'Email service returned false';
             }
         } catch (\Exception $e) {
             $results['admin_email']['error'] = $e->getMessage();
-            $this->updateEmailTracking($quote['id'], 'admin', false, $e->getMessage());
+            try {
+                $this->updateEmailTracking($quote['id'], 'admin', false, $e->getMessage());
+            } catch (\Exception $trackingError) {
+                log_message('warning', "Failed to update admin email tracking: " . $trackingError->getMessage());
+            }
             log_message('error', "Failed to send admin notification for quote #{$quote['id']}: " . $e->getMessage());
         }
         
@@ -309,8 +421,21 @@ class AIQuoteProcessor
      */
     private function generateQuoteEmailContent(array $quote, array $generatedQuote): string
     {
-        $quoteData = $generatedQuote['quote'];
-        $assessment = $generatedQuote['assessment'] ?? [];
+        // Handle the new quote data structure
+        $breakdown = $generatedQuote['breakdown'] ?? [];
+        $details = $generatedQuote['details'] ?? [];
+        $estimatedCost = $generatedQuote['estimatedCost'] ?? [];
+        
+        // Fallback values for missing data
+        $totalAmount = $breakdown['total'] ?? $estimatedCost['max'] ?? 0;
+        $baseCost = $breakdown['baseCost'] ?? 0;
+        $volumeCost = $breakdown['volumeCost'] ?? 0;
+        $specialFees = $breakdown['specialFees'] ?? 0;
+        $environmentalFee = $breakdown['environmentalFee'] ?? 0;
+        $disposalFee = $breakdown['disposalFee'] ?? 0;
+        $seasonalAdjustment = $breakdown['seasonalAdjustment'] ?? 0;
+        $gst = $breakdown['gst'] ?? 0;
+        $pst = $breakdown['pst'] ?? 0;
         
         $html = '
         <html>
@@ -344,13 +469,16 @@ class AIQuoteProcessor
                         <p><strong>Address:</strong> ' . htmlspecialchars($quote['address']) . '</p>
                         <p><strong>Description:</strong> ' . htmlspecialchars($quote['description']) . '</p>';
         
-        if (isset($assessment['wasteType'])) {
-            $html .= '<p><strong>Waste Type:</strong> ' . htmlspecialchars($assessment['wasteType']) . '</p>';
+        if (isset($details['wasteType'])) {
+            $html .= '<p><strong>Waste Type:</strong> ' . htmlspecialchars($details['wasteType']) . '</p>';
         }
         
-        if (isset($assessment['volumeEstimate'])) {
-            $volume = $assessment['volumeEstimate'];
-            $html .= '<p><strong>Estimated Volume:</strong> ' . $volume['min'] . ' - ' . $volume['max'] . ' ' . $volume['unit'] . '</p>';
+        if (isset($details['volume'])) {
+            $html .= '<p><strong>Estimated Volume:</strong> ' . htmlspecialchars($details['volume']) . '</p>';
+        }
+        
+        if (isset($details['confidence'])) {
+            $html .= '<p><strong>Assessment Confidence:</strong> ' . $details['confidence'] . '%</p>';
         }
         
         $html .= '
@@ -365,23 +493,35 @@ class AIQuoteProcessor
                             </tr>
                             <tr>
                                 <td>Base Service Cost</td>
-                                <td>$' . number_format($quoteData['base_cost'] ?? 0, 2) . '</td>
+                                <td>$' . number_format($baseCost, 2) . '</td>
                             </tr>';
         
-        if (isset($quoteData['volume_cost']) && $quoteData['volume_cost'] > 0) {
-            $html .= '<tr><td>Volume-based Pricing</td><td>$' . number_format($quoteData['volume_cost'], 2) . '</td></tr>';
+        if ($volumeCost > 0) {
+            $html .= '<tr><td>Volume-based Pricing</td><td>$' . number_format($volumeCost, 2) . '</td></tr>';
         }
         
-        if (isset($quoteData['special_fees']) && $quoteData['special_fees'] > 0) {
-            $html .= '<tr><td>Special Handling Fees</td><td>$' . number_format($quoteData['special_fees'], 2) . '</td></tr>';
+        if ($specialFees > 0) {
+            $html .= '<tr><td>Special Handling Fees</td><td>$' . number_format($specialFees, 2) . '</td></tr>';
         }
         
-        if (isset($quoteData['provincial_fees']) && $quoteData['provincial_fees'] > 0) {
-            $html .= '<tr><td>Environmental Fees</td><td>$' . number_format($quoteData['provincial_fees'], 2) . '</td></tr>';
+        if ($environmentalFee > 0) {
+            $html .= '<tr><td>Environmental Fee</td><td>$' . number_format($environmentalFee, 2) . '</td></tr>';
         }
         
-        if (isset($quoteData['taxes']) && $quoteData['taxes'] > 0) {
-            $html .= '<tr><td>Taxes</td><td>$' . number_format($quoteData['taxes'], 2) . '</td></tr>';
+        if ($disposalFee > 0) {
+            $html .= '<tr><td>Disposal Fee</td><td>$' . number_format($disposalFee, 2) . '</td></tr>';
+        }
+        
+        if ($seasonalAdjustment > 0) {
+            $html .= '<tr><td>Seasonal Adjustment</td><td>$' . number_format($seasonalAdjustment, 2) . '</td></tr>';
+        }
+        
+        if ($gst > 0) {
+            $html .= '<tr><td>GST</td><td>$' . number_format($gst, 2) . '</td></tr>';
+        }
+        
+        if ($pst > 0) {
+            $html .= '<tr><td>PST</td><td>$' . number_format($pst, 2) . '</td></tr>';
         }
         
         $html .= '
@@ -389,9 +529,17 @@ class AIQuoteProcessor
                     </div>
                     
                     <div class="total">
-                        Total Estimated Cost: $' . number_format($quoteData['total_amount'] ?? 0, 2) . '
-                    </div>
-                    
+                        Total Estimated Cost: $' . number_format($totalAmount, 2) . '
+                    </div>';
+        
+        if (isset($details['validUntil'])) {
+            $html .= '
+                    <div class="quote-details">
+                        <p><strong>Quote Valid Until:</strong> ' . date('F j, Y', strtotime($details['validUntil'])) . '</p>
+                    </div>';
+        }
+        
+        $html .= '
                     <div class="quote-details">
                         <h3>Next Steps</h3>
                         <p>This is an automated estimate based on image analysis. To proceed:</p>
@@ -565,8 +713,21 @@ class AIQuoteProcessor
      */
     private function generateAdminNotificationContent(array $quote, array $generatedQuote): string
     {
-        $quoteData = $generatedQuote['quote'];
-        $assessment = $generatedQuote['assessment'] ?? [];
+        // Handle the new quote data structure
+        $breakdown = $generatedQuote['breakdown'] ?? [];
+        $details = $generatedQuote['details'] ?? [];
+        $estimatedCost = $generatedQuote['estimatedCost'] ?? [];
+        
+        // Fallback values for missing data
+        $totalAmount = $breakdown['total'] ?? $estimatedCost['max'] ?? 0;
+        $baseCost = $breakdown['baseCost'] ?? 0;
+        $volumeCost = $breakdown['volumeCost'] ?? 0;
+        $specialFees = $breakdown['specialFees'] ?? 0;
+        $environmentalFee = $breakdown['environmentalFee'] ?? 0;
+        $disposalFee = $breakdown['disposalFee'] ?? 0;
+        $seasonalAdjustment = $breakdown['seasonalAdjustment'] ?? 0;
+        $gst = $breakdown['gst'] ?? 0;
+        $pst = $breakdown['pst'] ?? 0;
         
         $html = '
         <html>
@@ -603,42 +764,61 @@ class AIQuoteProcessor
                     <div class="info-box">
                         <h3>AI Analysis Results</h3>';
         
-        if (isset($assessment['wasteType'])) {
-            $html .= '<p><strong>Waste Type:</strong> ' . htmlspecialchars($assessment['wasteType']) . '</p>';
+        if (isset($details['wasteType'])) {
+            $html .= '<p><strong>Waste Type:</strong> ' . htmlspecialchars($details['wasteType']) . '</p>';
         }
         
-        if (isset($assessment['volumeEstimate'])) {
-            $volume = $assessment['volumeEstimate'];
-            $html .= '<p><strong>Volume Estimate:</strong> ' . $volume['min'] . ' - ' . $volume['max'] . ' ' . $volume['unit'] . '</p>';
+        if (isset($details['volume'])) {
+            $html .= '<p><strong>Volume Estimate:</strong> ' . htmlspecialchars($details['volume']) . '</p>';
         }
         
-        if (isset($assessment['confidence'])) {
-            $html .= '<p><strong>AI Confidence:</strong> ' . round($assessment['confidence'] * 100, 1) . '%</p>';
+        if (isset($details['confidence'])) {
+            $html .= '<p><strong>AI Confidence:</strong> ' . $details['confidence'] . '%</p>';
+        }
+        
+        if (isset($details['validUntil'])) {
+            $html .= '<p><strong>Quote Valid Until:</strong> ' . date('F j, Y', strtotime($details['validUntil'])) . '</p>';
         }
         
         $html .= '
                     </div>
                     
                     <div class="amount">
-                        Generated Quote Amount: $' . number_format($quoteData['total_amount'] ?? 0, 2) . '
+                        Generated Quote Amount: $' . number_format($totalAmount, 2) . '
                     </div>
                     
                     <div class="info-box">
                         <h3>Quote Breakdown</h3>
                         <table>
                             <tr><th>Service</th><th>Amount</th></tr>
-                            <tr><td>Base Cost</td><td>$' . number_format($quoteData['base_cost'] ?? 0, 2) . '</td></tr>';
+                            <tr><td>Base Cost</td><td>$' . number_format($baseCost, 2) . '</td></tr>';
         
-        if (isset($quoteData['volume_cost']) && $quoteData['volume_cost'] > 0) {
-            $html .= '<tr><td>Volume Cost</td><td>$' . number_format($quoteData['volume_cost'], 2) . '</td></tr>';
+        if ($volumeCost > 0) {
+            $html .= '<tr><td>Volume Cost</td><td>$' . number_format($volumeCost, 2) . '</td></tr>';
         }
         
-        if (isset($quoteData['special_fees']) && $quoteData['special_fees'] > 0) {
-            $html .= '<tr><td>Special Fees</td><td>$' . number_format($quoteData['special_fees'], 2) . '</td></tr>';
+        if ($specialFees > 0) {
+            $html .= '<tr><td>Special Fees</td><td>$' . number_format($specialFees, 2) . '</td></tr>';
         }
         
-        if (isset($quoteData['taxes']) && $quoteData['taxes'] > 0) {
-            $html .= '<tr><td>Taxes</td><td>$' . number_format($quoteData['taxes'], 2) . '</td></tr>';
+        if ($environmentalFee > 0) {
+            $html .= '<tr><td>Environmental Fee</td><td>$' . number_format($environmentalFee, 2) . '</td></tr>';
+        }
+        
+        if ($disposalFee > 0) {
+            $html .= '<tr><td>Disposal Fee</td><td>$' . number_format($disposalFee, 2) . '</td></tr>';
+        }
+        
+        if ($seasonalAdjustment > 0) {
+            $html .= '<tr><td>Seasonal Adjustment</td><td>$' . number_format($seasonalAdjustment, 2) . '</td></tr>';
+        }
+        
+        if ($gst > 0) {
+            $html .= '<tr><td>GST</td><td>$' . number_format($gst, 2) . '</td></tr>';
+        }
+        
+        if ($pst > 0) {
+            $html .= '<tr><td>PST</td><td>$' . number_format($pst, 2) . '</td></tr>';
         }
         
         $html .= '
@@ -652,5 +832,118 @@ class AIQuoteProcessor
         </html>';
         
         return $html;
+    }
+    
+    /**
+     * Format quote result according to the standardized JSON structure
+     */
+    private function formatQuoteResult(int $quoteId, array $generatedQuote, array $wasteAssessment): array
+    {
+        // Generate quote ID if not provided
+        $quoteReference = "GC-" . date('Ymd') . "-" . strtoupper(substr(md5($quoteId . time()), 0, 6));
+        
+        // Calculate cost breakdown
+        $baseCost = $generatedQuote['breakdown']['baseCost'] ?? $generatedQuote['base_cost'] ?? 50;
+        $volumeCost = $generatedQuote['breakdown']['volumeCost'] ?? $generatedQuote['volume_cost'] ?? 100;
+        $specialFees = $generatedQuote['breakdown']['specialFees'] ?? $generatedQuote['special_fees'] ?? 0;
+        $environmentalFee = $generatedQuote['breakdown']['environmentalFee'] ?? $generatedQuote['environmental_fee'] ?? 20;
+        $disposalFee = $generatedQuote['breakdown']['disposalFee'] ?? $generatedQuote['disposal_fee'] ?? 30;
+        $seasonalAdjustment = $generatedQuote['breakdown']['seasonalAdjustment'] ?? $generatedQuote['seasonal_adjustment'] ?? 0;
+        
+        $subtotal = $baseCost + $volumeCost + $specialFees + $environmentalFee + $disposalFee + $seasonalAdjustment;
+        
+        // Tax calculations (assuming Canadian rates)
+        $gst = $subtotal * 0.13; // 13% HST for Ontario, adjust as needed
+        $pst = 0; // PST varies by province
+        $totalTaxes = $gst + $pst;
+        $total = $subtotal + $totalTaxes;
+        
+        // Calculate estimated cost range (±15% variance)
+        $minCost = $total * 0.85;
+        $maxCost = $total * 1.15;
+        
+        return [
+            'success' => 1,
+            'quoteId' => $quoteReference,
+            'estimatedCost' => [
+                'min' => round($minCost, 2),
+                'max' => round($maxCost, 2),
+                'display' => '$' . number_format($minCost, 2) . '-' . number_format($maxCost, 2)
+            ],
+            'breakdown' => [
+                'baseCost' => $baseCost,
+                'volumeCost' => $volumeCost,
+                'specialFees' => $specialFees,
+                'environmentalFee' => $environmentalFee,
+                'disposalFee' => $disposalFee,
+                'seasonalAdjustment' => $seasonalAdjustment,
+                'subtotal' => round($subtotal, 2),
+                'gst' => round($gst, 2),
+                'pst' => round($pst, 2),
+                'totalTaxes' => round($totalTaxes, 2),
+                'total' => round($total, 2)
+            ],
+            'details' => [
+                'wasteType' => $wasteAssessment['waste_type'] ?? $generatedQuote['waste_type'] ?? 'General Junk',
+                'volume' => $wasteAssessment['volume'] ?? $generatedQuote['volume'] ?? 'Medium load',
+                'location' => $generatedQuote['location'] ?? 'ON',
+                'serviceType' => $generatedQuote['service_type'] ?? 'junk_removal',
+                'confidence' => $wasteAssessment['confidence'] ?? $generatedQuote['confidence'] ?? 80,
+                'validUntil' => date('Y-m-d', strtotime('+30 days'))
+            ],
+            'recommendations' => $generatedQuote['recommendations'] ?? [
+                'Book during off-peak months for potential discounts'
+            ],
+            'terms' => [
+                'validFor' => '30 days',
+                'paymentTerms' => 'Payment due upon completion of service',
+                'cancellationPolicy' => '24-hour notice required for cancellation',
+                'priceGuarantee' => 'Prices guaranteed for quoted volume and waste type',
+                'additionalFees' => 'Additional fees may apply for extra volume or different waste types'
+            ],
+            'generatedAt' => date('Y-m-d H:i:s')
+        ];
+    }
+    
+    /**
+     * Get quotes that are ready for AI processing
+     */
+    public function getQuotesReadyForProcessing(): array
+    {
+        return $this->quoteModel->getPendingQuotesForAI();
+    }
+    
+    /**
+     * Process multiple quotes in batch
+     */
+    public function processBatch(array $quoteIds = []): array
+    {
+        $results = [];
+        
+        // If no specific quote IDs provided, get all pending quotes
+        if (empty($quoteIds)) {
+            $pendingQuotes = $this->getQuotesReadyForProcessing();
+            $quoteIds = array_column($pendingQuotes, 'id');
+        }
+        
+        foreach ($quoteIds as $quoteId) {
+            try {
+                $result = $this->processQuote($quoteId);
+                $results[$quoteId] = $result;
+                
+                // Add small delay between processing to avoid overwhelming the system
+                usleep(500000); // 0.5 seconds
+                
+            } catch (\Exception $e) {
+                $results[$quoteId] = [
+                    'success' => false,
+                    'quote_id' => $quoteId,
+                    'error' => $e->getMessage()
+                ];
+                log_message('error', "Batch processing error for quote #{$quoteId}: " . $e->getMessage());
+            }
+        }
+        
+        return $results;
     }
 }

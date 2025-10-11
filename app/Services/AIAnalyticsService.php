@@ -440,6 +440,39 @@ class AIAnalyticsService
     }
 
     /**
+     * Track AI processing (alias for compatibility)
+     */
+    public function trackProcessing(array $data): bool
+    {
+        try {
+            // Normalize data structure for compatibility
+            $normalizedData = [
+                'quotation_id' => $data['quote_id'] ?? $data['quotation_id'] ?? 0,
+                'processing_time' => $data['processing_time'] ?? 0,
+                'confidence_score' => $data['confidence_score'] ?? 0,
+                'cost' => $data['cost'] ?? 0,
+                'status' => $data['status'] ?? 'unknown',
+                'error_message' => $data['error_message'] ?? null,
+                'tokens_used' => $data['tokens_used'] ?? 0,
+                'created_at' => $data['created_at'] ?? date('Y-m-d H:i:s')
+            ];
+
+            // Try to insert into ai_processing_logs table if it exists
+            try {
+                return $this->db->table('ai_processing_logs')->insert($normalizedData);
+            } catch (\Exception $e) {
+                // If table doesn't exist, log to file
+                $this->logger->info('AI Processing Tracked: ' . json_encode($normalizedData));
+                return true;
+            }
+
+        } catch (\Exception $e) {
+            $this->logger->error('Error tracking AI processing: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
      * Get confidence score distribution
      */
     public function getConfidenceDistribution(string $timeframe = '24h'): array

@@ -177,7 +177,15 @@
                       <?php endif; ?>
                       
                       <?php if (!empty($quote['ai_confidence_score'])): ?>
-                        <p><strong>AI Confidence:</strong> <?= round($quote['ai_confidence_score'] * 100) ?>%</p>
+                        <p><strong>AI Confidence:</strong> 
+                          <span class="badge badge-<?= $quote['ai_confidence_score'] >= 0.8 ? 'success' : ($quote['ai_confidence_score'] >= 0.6 ? 'warning' : 'danger') ?>">
+                            <?= round($quote['ai_confidence_score'] * 100) ?>%
+                          </span>
+                        </p>
+                      <?php endif; ?>
+                      
+                      <?php if (!empty($quote['ai_processed_at'])): ?>
+                        <p><strong>Processed At:</strong> <?= date('M j, Y g:i A', strtotime($quote['ai_processed_at'])) ?></p>
                       <?php endif; ?>
                     </div>
                   <?php endif; ?>
@@ -220,6 +228,158 @@
                   
                 </div>
                 
+                <!-- Detailed OpenAI Analysis -->
+                <?php if (!empty($quote['ai_analysis']) || !empty($quote['waste_assessment'])): ?>
+                <hr>
+                <div class="row">
+                  <div class="col-12">
+                    <h6>Detailed AI Analysis</h6>
+                    
+                    <!-- AI Analysis Details -->
+                    <?php if (!empty($quote['ai_analysis'])): ?>
+                      <?php $aiAnalysis = json_decode($quote['ai_analysis'], true); ?>
+                      <div class="card border-left-info mb-15">
+                        <div class="card-header bg-light">
+                          <h6 class="mb-0">OpenAI Vision Analysis</h6>
+                        </div>
+                        <div class="card-body">
+                          <div class="row">
+                            <?php if (isset($aiAnalysis['analysis'])): ?>
+                              <div class="col-md-6">
+                                <strong>Waste Classification:</strong>
+                                <ul class="list-unstyled mt-5">
+                                  <li><strong>Primary Type:</strong> <?= esc($aiAnalysis['analysis']['primaryWasteType'] ?? 'N/A') ?></li>
+                                  <li><strong>Category:</strong> <?= esc($aiAnalysis['analysis']['volumeEstimate']['category'] ?? 'N/A') ?></li>
+                                  <li><strong>Estimated Volume:</strong> <?= esc($aiAnalysis['analysis']['volumeEstimate']['description'] ?? 'N/A') ?></li>
+                                  <li><strong>Estimated Bags:</strong> <?= esc($aiAnalysis['analysis']['volumeEstimate']['bags'] ?? 'N/A') ?></li>
+                                  <li><strong>Cubic Yards:</strong> <?= esc($aiAnalysis['analysis']['volumeEstimate']['cubicYards'] ?? 'N/A') ?></li>
+                                </ul>
+                              </div>
+                              <div class="col-md-6">
+                                <strong>Safety & Compliance:</strong>
+                                <ul class="list-unstyled mt-5">
+                                  <?php if (!empty($aiAnalysis['analysis']['hazardousItems'])): ?>
+                                    <li><strong class="text-danger">Hazardous Items:</strong></li>
+                                    <?php foreach ($aiAnalysis['analysis']['hazardousItems'] as $item): ?>
+                                      <li class="text-danger ml-15">⚠️ <?= esc($item) ?></li>
+                                    <?php endforeach; ?>
+                                  <?php endif; ?>
+                                  
+                                  <?php if (!empty($aiAnalysis['analysis']['recyclableItems'])): ?>
+                                    <li><strong class="text-success">Recyclable Items:</strong></li>
+                                    <?php foreach (array_slice($aiAnalysis['analysis']['recyclableItems'], 0, 3) as $item): ?>
+                                      <li class="text-success ml-15">♻️ <?= esc($item) ?></li>
+                                    <?php endforeach; ?>
+                                    <?php if (count($aiAnalysis['analysis']['recyclableItems']) > 3): ?>
+                                      <li class="text-muted ml-15">... and <?= count($aiAnalysis['analysis']['recyclableItems']) - 3 ?> more</li>
+                                    <?php endif; ?>
+                                  <?php endif; ?>
+                                </ul>
+                              </div>
+                            <?php endif; ?>
+                          </div>
+                          
+                          <?php if (isset($aiAnalysis['processingTime'])): ?>
+                            <small class="text-muted">Processing Time: <?= round($aiAnalysis['processingTime'], 2) ?>s</small>
+                          <?php endif; ?>
+                        </div>
+                      </div>
+                    <?php endif; ?>
+                    
+                    <!-- Waste Assessment Details -->
+                    <?php if (!empty($quote['waste_assessment'])): ?>
+                      <?php $wasteAssessment = json_decode($quote['waste_assessment'], true); ?>
+                      <div class="card border-left-warning mb-15">
+                        <div class="card-header bg-light">
+                          <h6 class="mb-0">Waste Assessment & Business Rules</h6>
+                        </div>
+                        <div class="card-body">
+                          <div class="row">
+                            <div class="col-md-6">
+                              <strong>Assessment Results:</strong>
+                              <ul class="list-unstyled mt-5">
+                                <li><strong>Final Waste Type:</strong> <?= esc($wasteAssessment['wasteType'] ?? 'N/A') ?></li>
+                                <li><strong>Category:</strong> <?= esc($wasteAssessment['wasteCategory'] ?? 'N/A') ?></li>
+                                <?php if (!empty($wasteAssessment['wasteSubtypes'])): ?>
+                                  <li><strong>Subtypes:</strong> <?= esc(implode(', ', array_slice($wasteAssessment['wasteSubtypes'], 0, 3))) ?></li>
+                                <?php endif; ?>
+                                <li><strong>Final Confidence:</strong> <?= esc($wasteAssessment['confidence'] ?? 'N/A') ?>%</li>
+                              </ul>
+                            </div>
+                            <div class="col-md-6">
+                              <strong>Compliance Check:</strong>
+                              <?php if (!empty($wasteAssessment['complianceCheck'])): ?>
+                                <ul class="list-unstyled mt-5">
+                                  <li><strong>Status:</strong> 
+                                    <span class="badge badge-<?= $wasteAssessment['complianceCheck']['status'] === 'compliant' ? 'success' : 'danger' ?>">
+                                      <?= ucfirst($wasteAssessment['complianceCheck']['status'] ?? 'unknown') ?>
+                                    </span>
+                                  </li>
+                                  <?php if (!empty($wasteAssessment['complianceCheck']['specialRequirements'])): ?>
+                                    <li><strong>Special Requirements:</strong></li>
+                                    <?php foreach ($wasteAssessment['complianceCheck']['specialRequirements'] as $req): ?>
+                                      <li class="ml-15">• <?= esc($req) ?></li>
+                                    <?php endforeach; ?>
+                                  <?php endif; ?>
+                                </ul>
+                              <?php endif; ?>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    <?php endif; ?>
+                    
+                    <!-- Generated Quote Breakdown -->
+                    <?php if (!empty($quote['generated_quote'])): ?>
+                      <?php $generatedQuote = json_decode($quote['generated_quote'], true); ?>
+                      <?php if (isset($generatedQuote['breakdown'])): ?>
+                        <div class="card border-left-success">
+                          <div class="card-header bg-light">
+                            <h6 class="mb-0">Quote Breakdown Details</h6>
+                          </div>
+                          <div class="card-body">
+                            <div class="row">
+                              <div class="col-md-6">
+                                <strong>Cost Components:</strong>
+                                <table class="table table-sm mt-10">
+                                  <tr><td>Base Cost:</td><td class="text-end">$<?= number_format($generatedQuote['breakdown']['baseCost'] ?? 0, 2) ?></td></tr>
+                                  <tr><td>Volume Cost:</td><td class="text-end">$<?= number_format($generatedQuote['breakdown']['volumeCost'] ?? 0, 2) ?></td></tr>
+                                  <tr><td>Special Fees:</td><td class="text-end">$<?= number_format($generatedQuote['breakdown']['specialFees'] ?? 0, 2) ?></td></tr>
+                                  <tr><td>Environmental Fee:</td><td class="text-end">$<?= number_format($generatedQuote['breakdown']['environmentalFee'] ?? 0, 2) ?></td></tr>
+                                  <tr><td>Disposal Fee:</td><td class="text-end">$<?= number_format($generatedQuote['breakdown']['disposalFee'] ?? 0, 2) ?></td></tr>
+                                  <tr><td>Subtotal:</td><td class="text-end">$<?= number_format($generatedQuote['breakdown']['subtotal'] ?? 0, 2) ?></td></tr>
+                                  <tr><td>GST:</td><td class="text-end">$<?= number_format($generatedQuote['breakdown']['gst'] ?? 0, 2) ?></td></tr>
+                                  <tr><td>PST:</td><td class="text-end">$<?= number_format($generatedQuote['breakdown']['pst'] ?? 0, 2) ?></td></tr>
+                                  <tr class="font-weight-bold"><td>Total:</td><td class="text-end text-success">$<?= number_format($generatedQuote['breakdown']['total'] ?? 0, 2) ?></td></tr>
+                                </table>
+                              </div>
+                              <div class="col-md-6">
+                                <strong>Quote Details:</strong>
+                                <ul class="list-unstyled mt-10">
+                                  <?php if (isset($generatedQuote['details'])): ?>
+                                    <li><strong>Service Type:</strong> <?= esc($generatedQuote['details']['serviceType'] ?? 'N/A') ?></li>
+                                    <li><strong>Location:</strong> <?= esc($generatedQuote['details']['location'] ?? 'N/A') ?></li>
+                                    <li><strong>Valid Until:</strong> <?= esc($generatedQuote['details']['validUntil'] ?? 'N/A') ?></li>
+                                    <li><strong>Quote ID:</strong> <?= esc($generatedQuote['quoteId'] ?? 'N/A') ?></li>
+                                  <?php endif; ?>
+                                </ul>
+                                
+                                <?php if (isset($generatedQuote['estimatedCost'])): ?>
+                                  <strong>Price Range:</strong>
+                                  <div class="bg-light p-10 rounded mt-5">
+                                    <small>Min: $<?= number_format($generatedQuote['estimatedCost']['min'] ?? 0, 2) ?></small><br>
+                                    <small>Max: $<?= number_format($generatedQuote['estimatedCost']['max'] ?? 0, 2) ?></small>
+                                  </div>
+                                <?php endif; ?>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      <?php endif; ?>
+                    <?php endif; ?>
+                  </div>
+                </div>
+                <?php endif; ?>
                 <!-- AI Recommendations -->
                 <?php if (!empty($generatedQuote['recommendations'])): ?>
                 <hr>

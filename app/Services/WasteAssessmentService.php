@@ -36,6 +36,19 @@ class WasteAssessmentService
             return $aiResults;
         }
 
+        // Ensure required keys exist with fallback values
+        $aiResults['wasteType'] = $aiResults['wasteType'] ?? $aiResults['analysis']['primaryWasteType'] ?? 'Mixed Waste';
+        $aiResults['wasteTypes'] = $aiResults['wasteTypes'] ?? $aiResults['analysis']['wasteTypes'] ?? [];
+        $aiResults['volumeEstimate'] = $aiResults['volumeEstimate'] ?? $aiResults['analysis']['volumeEstimate'] ?? [
+            'category' => 'medium',
+            'description' => 'Medium load',
+            'bags' => 5,
+            'cubicYards' => 2
+        ];
+        $aiResults['hazardousItems'] = $aiResults['hazardousItems'] ?? $aiResults['analysis']['hazardousItems'] ?? [];
+        $aiResults['recommendations'] = $aiResults['recommendations'] ?? [];
+        $aiResults['confidence'] = $aiResults['confidence'] ?? $aiResults['analysis']['confidence'] ?? 90;
+
         // Enhance waste type classification
         $enhancedWasteType = $this->enhanceWasteTypeClassification($aiResults['wasteType'], $aiResults['wasteTypes']);
 
