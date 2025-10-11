@@ -428,6 +428,7 @@ class AIQuoteProcessor
         
         // Fallback values for missing data
         $totalAmount = $breakdown['total'] ?? $estimatedCost['max'] ?? 0;
+        $minAmount = $estimatedCost['min'] ?? ($totalAmount * 0.85);
         $baseCost = $breakdown['baseCost'] ?? 0;
         $volumeCost = $breakdown['volumeCost'] ?? 0;
         $specialFees = $breakdown['specialFees'] ?? 0;
@@ -447,6 +448,8 @@ class AIQuoteProcessor
                 .content { padding: 20px; background: #f9f9f9; }
                 .quote-details { background: white; padding: 15px; margin: 10px 0; border-radius: 5px; }
                 .total { background: #2c5aa0; color: white; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; }
+                .min-price { background: #28a745; color: white; padding: 15px; text-align: center; font-size: 20px; font-weight: bold; margin: 10px 0; border-radius: 5px; }
+                .special-offer { background: #ffc107; color: #212529; padding: 15px; text-align: center; font-weight: bold; margin: 10px 0; border-radius: 5px; border: 2px solid #ff6b35; }
                 .footer { text-align: center; padding: 20px; color: #666; }
                 table { width: 100%; border-collapse: collapse; margin: 10px 0; }
                 th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
@@ -456,16 +459,21 @@ class AIQuoteProcessor
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>Your Junk Removal Quote</h1>
+                    <h1>🎉 Your EXCLUSIVE Junk Removal Quote 🎉</h1>
                     <p>Quote #' . $quote['id'] . '</p>
                 </div>
                 
                 <div class="content">
                     <h2>Hello ' . htmlspecialchars($quote['name']) . ',</h2>
-                    <p>Thank you for your junk removal request! Our AI system has analyzed your uploaded images and generated a detailed quote based on the waste assessment.</p>
+                    <p>🌟 <strong>FANTASTIC NEWS!</strong> We\'ve analyzed your junk removal needs and have prepared an <em>EXCLUSIVE DEAL</em> just for you!</p>
+                    
+                    <div class="special-offer">
+                        ⚡ LIMITED TIME OFFER ⚡<br>
+                        <strong>GUARANTEED LOWEST PRICE</strong> - Starting from our minimum charge!
+                    </div>
                     
                     <div class="quote-details">
-                        <h3>Service Details</h3>
+                        <h3>📍 Service Details</h3>
                         <p><strong>Address:</strong> ' . htmlspecialchars($quote['address']) . '</p>
                         <p><strong>Description:</strong> ' . htmlspecialchars($quote['description']) . '</p>';
         
@@ -477,43 +485,43 @@ class AIQuoteProcessor
             $html .= '<p><strong>Estimated Volume:</strong> ' . htmlspecialchars($details['volume']) . '</p>';
         }
         
-        if (isset($details['confidence'])) {
-            $html .= '<p><strong>Assessment Confidence:</strong> ' . $details['confidence'] . '%</p>';
-        }
-        
         $html .= '
                     </div>
                     
+                    <div class="min-price">
+                        💰 OUR MINIMUM CHARGE: $' . number_format($minAmount, 2) . '
+                    </div>
+                    
                     <div class="quote-details">
-                        <h3>Quote Breakdown</h3>
+                        <h3>💼 Comprehensive Service Breakdown</h3>
                         <table>
                             <tr>
-                                <th>Service</th>
-                                <th>Amount</th>
+                                <th>Premium Service</th>
+                                <th>Value</th>
                             </tr>
                             <tr>
-                                <td>Base Service Cost</td>
+                                <td>Professional Base Service</td>
                                 <td>$' . number_format($baseCost, 2) . '</td>
                             </tr>';
         
         if ($volumeCost > 0) {
-            $html .= '<tr><td>Volume-based Pricing</td><td>$' . number_format($volumeCost, 2) . '</td></tr>';
+            $html .= '<tr><td>Volume-based Premium Pricing</td><td>$' . number_format($volumeCost, 2) . '</td></tr>';
         }
         
         if ($specialFees > 0) {
-            $html .= '<tr><td>Special Handling Fees</td><td>$' . number_format($specialFees, 2) . '</td></tr>';
+            $html .= '<tr><td>Specialized Handling Service</td><td>$' . number_format($specialFees, 2) . '</td></tr>';
         }
         
         if ($environmentalFee > 0) {
-            $html .= '<tr><td>Environmental Fee</td><td>$' . number_format($environmentalFee, 2) . '</td></tr>';
+            $html .= '<tr><td>Eco-Friendly Disposal</td><td>$' . number_format($environmentalFee, 2) . '</td></tr>';
         }
         
         if ($disposalFee > 0) {
-            $html .= '<tr><td>Disposal Fee</td><td>$' . number_format($disposalFee, 2) . '</td></tr>';
+            $html .= '<tr><td>Responsible Disposal Service</td><td>$' . number_format($disposalFee, 2) . '</td></tr>';
         }
         
         if ($seasonalAdjustment > 0) {
-            $html .= '<tr><td>Seasonal Adjustment</td><td>$' . number_format($seasonalAdjustment, 2) . '</td></tr>';
+            $html .= '<tr><td>Peak Season Service</td><td>$' . number_format($seasonalAdjustment, 2) . '</td></tr>';
         }
         
         if ($gst > 0) {
@@ -529,32 +537,43 @@ class AIQuoteProcessor
                     </div>
                     
                     <div class="total">
-                        Total Estimated Cost: $' . number_format($totalAmount, 2) . '
+                        🏆 MAXIMUM ESTIMATED COST: $' . number_format($totalAmount, 2) . '
+                    </div>
+                    
+                    <div class="special-offer">
+                        🔥 <strong>BEST DEAL GUARANTEE!</strong> 🔥<br>
+                        Your cost will be <strong>BETWEEN $' . number_format($minAmount, 2) . ' - $' . number_format($totalAmount, 2) . '</strong><br>
+                        <em>We charge our minimum rate of $' . number_format($minAmount, 2) . ' for smaller loads!</em>
                     </div>';
         
         if (isset($details['validUntil'])) {
             $html .= '
                     <div class="quote-details">
-                        <p><strong>Quote Valid Until:</strong> ' . date('F j, Y', strtotime($details['validUntil'])) . '</p>
+                        <p><strong>⏰ EXCLUSIVE OFFER EXPIRES:</strong> ' . date('F j, Y', strtotime($details['validUntil'])) . '</p>
                     </div>';
         }
         
         $html .= '
                     <div class="quote-details">
-                        <h3>Next Steps</h3>
-                        <p>This is an automated estimate based on image analysis. To proceed:</p>
+                        <h3>🚀 CLAIM YOUR SPOT NOW!</h3>
+                        <p><strong>Don\'t wait!</strong> This premium service package is available at this special rate:</p>
                         <ul>
-                            <li>Call us at <strong>(555) 123-4567</strong> to confirm your booking</li>
-                            <li>Email us at <strong>info@garbagetogo.ca</strong> for any questions</li>
-                            <li>Schedule your service at your convenience</li>
+                            <li>📞 Call us <strong>RIGHT NOW</strong> at <strong>(555) 123-4567</strong> to LOCK IN this price!</li>
+                            <li>📧 Email us at <strong>info@garbagetogo.ca</strong> for instant confirmation</li>
+                            <li>⚡ <strong>SAME-DAY</strong> and next-day service available!</li>
+                            <li>🛡️ <strong>100% SATISFACTION GUARANTEED</strong></li>
                         </ul>
-                        <p><em>Note: Final pricing may vary based on actual items and access conditions.</em></p>
+                        <p><em>⭐ Professional, reliable, and eco-friendly service. Final pricing determined by actual volume - never more than quoted maximum!</em></p>
+                    </div>
+                    
+                    <div class="special-offer">
+                        🎁 <strong>BONUS:</strong> Book today and get <strong>FREE</strong> sorting and sweeping! 🎁
                     </div>
                 </div>
                 
                 <div class="footer">
-                    <p>Thank you for choosing GarbageToGo!</p>
-                    <p>Visit us at <a href="https://garbagetogo.ca">garbagetogo.ca</a></p>
+                    <p><strong>Thank you for choosing GarbageToGo - Your #1 Junk Removal Experts!</strong></p>
+                    <p>🌐 Visit us at <a href="https://garbagetogo.ca">garbagetogo.ca</a> | ⭐⭐⭐⭐⭐ 5-Star Rated Service</p>
                 </div>
             </div>
         </body>
@@ -720,6 +739,7 @@ class AIQuoteProcessor
         
         // Fallback values for missing data
         $totalAmount = $breakdown['total'] ?? $estimatedCost['max'] ?? 0;
+        $minAmount = $estimatedCost['min'] ?? ($totalAmount * 0.85);
         $baseCost = $breakdown['baseCost'] ?? 0;
         $volumeCost = $breakdown['volumeCost'] ?? 0;
         $specialFees = $breakdown['specialFees'] ?? 0;
@@ -785,6 +805,10 @@ class AIQuoteProcessor
                     
                     <div class="amount">
                         Generated Quote Amount: $' . number_format($totalAmount, 2) . '
+                    </div>
+
+                    <div class="amount">
+                        Generated Quote Amount - Min: $' . number_format($minAmount, 2) . '
                     </div>
                     
                     <div class="info-box">
