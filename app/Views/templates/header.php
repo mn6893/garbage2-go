@@ -20,11 +20,11 @@
       <div class="container">
         <div class="navbar-brand">
           <a href="<?= base_url() ?>">
-            <!-- <img src="#" srcset="<?= base_url('style/images/logo.png') ?> 1x, <?= base_url('style/images/logo@2x.png') ?> 2x" alt="" /> -->
-            <span class="logo-text color-default" style="font-size: 2rem; font-weight: bold; font-style: italic;">
-              Garbage<span style="color: #003366; font-weight: bold; font-style: italic;">ToGo</span>
-            </span>
-          </a></div>
+        <img src="<?= base_url('style/images/logo.png') ?>" alt="GarbageToGo Logo" style="height: 60px; margin-right: -4px;" />
+        <span class="logo-text" style="font-size: 1rem; font-weight: bold; font-style: italic; color: green;">
+          Garbage<span style="color: #28a745; font-weight: bold; font-style: italic;">ToGo</span>
+        </span>
+      </a></div>
         <div class="navbar-other ml-auto order-lg-3">
           <ul class="navbar-nav flex-row align-items-center" data-sm-skip="true">
             <li class="nav-item">
@@ -99,8 +99,9 @@
     <div class="offcanvas-info inverse-text">
       <button class="plain offcanvas-close offcanvas-info-close"><i class="jam jam-close"></i></button>
       <a href="<?= base_url() ?>">
-        <span class="logo-text" style="font-size: 1.5rem; font-weight: bold; font-style: italic; color: white;">
-          Garbage<span style="color: #003366; font-weight: bold; font-style: italic;">ToGo</span>
+        <img src="<?= base_url('style/images/logo.png') ?>" alt="GarbageToGo Logo" style="height: 60px; margin-right: -4px;" />
+        <span class="logo-text" style="font-size: 1rem; font-weight: bold; font-style: italic; color: green;">
+          Garbage<span style="color: #28a745; font-weight: bold; font-style: italic;">ToGo</span>
         </span>
       </a>
       <div class="space30"></div>

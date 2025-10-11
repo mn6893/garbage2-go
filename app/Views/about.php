@@ -13,7 +13,9 @@
       <div class="container inner">
         <div class="row align-items-center">
           <div class="col-lg-6 text-center">
-            <div class="img-blob blob8"><img src="style/images/art/about2.jpg" style="width: 30rem" alt="" /></div>
+            <div class="img-blob blob8">
+              <img src="<?= base_url('style/images/art/about2.jpg'); ?>" style="width: 30rem" alt="About Us" />
+            </div>
           </div>
           <!--/column -->
           <div class="space30 d-none d-md-block d-lg-none"></div>

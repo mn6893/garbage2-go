@@ -1,7 +1,7 @@
 <?= $this->include('templates/header'); ?>
           
     <!-- /section -->
-    <div class="wrapper image-wrapper bg-image page-title-wrapper inverse-text" data-image-src="style/images/art/bg32.jpg">
+    <div class="wrapper image-wrapper bg-image page-title-wrapper inverse-text" data-image-src="style/images/art/slider-1.jpg">
       <div class="container inner text-center">
         <div class="space140"></div>
          <h1 class="display-1">GarbageToGo - We <span class="typer color-default" id="typer" data-delay="100" data-delim=":" data-words="remove junk:clear debris:dispose appliances:handle cleanouts:manage waste:recycle responsibly"></span><span class="cursor color-default" data-owner="typer"></span></h1>
@@ -404,7 +404,7 @@
       <div class="row align-items-center">
         <div class="col-lg-6 order-lg-2 text-center">
         <div>
-          <figure><img src="style/images/art/junk-removal-truck.png" alt="GarbageToGo Junk Removal Truck" /></figure>
+          <figure><img src="<?= base_url('style/images/art/about-index.jpg'); ?>" alt="GarbageToGo Junk Removal Truck" /></figure>
           <div class="row counter counter-s position-absolute" style="top: 45%; right: 8%;">
           <div class="col-md-10 text-center">
             <div class="box bg-white shadow">
@@ -496,7 +496,9 @@
       <div class="container inner">
       <div class="row">
         <div class="col-lg-8">
-        <div class="player" data-plyr-provider="youtube" data-plyr-embed-id="dQw4w9WgXcQ"></div>
+        <div class="player" data-plyr-provider="youtube" data-plyr-embed-id="dQw4w9WgXcQ">
+          <img src="<?= base_url('style/images/art/our-process.jpg'); ?>" alt="Watch Our Junk Removal Process" width="100%" />
+        </div>
         </div>
         <!--/column -->
         <div class="space30 d-none d-md-block d-lg-none"></div>
@@ -567,7 +569,7 @@
       <div class="grid-view">
         <div class="carousel owl-carousel" data-margin="30" data-dots="true" data-autoplay="false" data-autoplay-timeout="5000" data-responsive='{"0":{"items": "1"}, "768":{"items": "2"}, "992":{"items": "3"}}'>
         <div class="item">
-          <figure class="overlay overlay1 rounded mb-30"><a href="#"> <img src="style/images/art/toronto-area.jpg" alt="Toronto Junk Removal" /></a>
+          <figure class="overlay overlay1 rounded mb-30"><a href="#"> <img src="style/images/art/gta-junk.jpg" alt="Toronto Junk Removal" /></a>
           <figcaption>
             <h5 class="from-top mb-0">Learn More</h5>
           </figcaption>
@@ -578,7 +580,7 @@
         </div>
         <!-- /.item -->
         <div class="item">
-          <figure class="overlay overlay1 rounded mb-30"><a href="#"> <img src="style/images/art/ottawa-area.jpg" alt="Ottawa Junk Removal" /></a>
+          <figure class="overlay overlay1 rounded mb-30"><a href="#"> <img src="style/images/art/ottawa-junk.jpg" alt="Ottawa Junk Removal" /></a>
           <figcaption>
             <h5 class="from-top mb-0">Learn More</h5>
           </figcaption>
@@ -589,7 +591,7 @@
         </div>
         <!-- /.item -->
         <div class="item">
-          <figure class="overlay overlay1 rounded mb-30"><a href="#"> <img src="style/images/art/hamilton-area.jpg" alt="Hamilton Junk Removal" /></a>
+          <figure class="overlay overlay1 rounded mb-30"><a href="#"> <img src="style/images/art/hamilton-junk.jpg" alt="Hamilton Junk Removal" /></a>
           <figcaption>
             <h5 class="from-top mb-0">Learn More</h5>
           </figcaption>
@@ -600,7 +602,7 @@
         </div>
         <!-- /.item -->
         <div class="item">
-          <figure class="overlay overlay1 rounded mb-30"><a href="#"> <img src="style/images/art/london-area.jpg" alt="London Junk Removal" /></a>
+          <figure class="overlay overlay1 rounded mb-30"><a href="#"> <img src="style/images/art/gta-junk.jpg" alt="London Junk Removal" /></a>
           <figcaption>
             <h5 class="from-top mb-0">Learn More</h5>
           </figcaption>
