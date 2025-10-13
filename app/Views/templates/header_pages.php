@@ -85,6 +85,7 @@
               <li><a class="dropdown-item" href="<?= base_url('junk-removal-kitchener') ?>">Kitchener</a></li>
               </ul>
             </li>
+            <li class="nav-item"><a class="nav-link" href="<?= base_url('gallery') ?>">Gallery</a></li>
             <li class="nav-item"><a class="nav-link" href="<?= base_url('contact') ?>">Contact</a></li>
           </ul>
           <!-- /.navbar-nav -->

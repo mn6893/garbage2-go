@@ -37,6 +37,10 @@ $routes->post('quote/submit', 'Quote::submit');
 $routes->get('quote/success', 'Quote::success');
 $routes->get('quote/image/(:any)', 'Quote::serveImage/$1');
 
+// Gallery Routes
+$routes->get('gallery', 'Gallery::index');
+$routes->get('gallery/(:num)', 'Gallery::detail/$1');
+
 // Location Routes
 $routes->get('location', 'Locations::index');
 $routes->get('junk-removal-toronto', 'Locations::toronto');
