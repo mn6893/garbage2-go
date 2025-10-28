@@ -73,6 +73,20 @@ class Quote extends BaseController
                     'max_length' => 'City cannot exceed 100 characters.'
                 ]
             ],
+            'preferred_date' => [
+                'rules' => 'required|valid_date',
+                'errors' => [
+                    'required' => 'Preferred date is required.',
+                    'valid_date' => 'Please enter a valid date.'
+                ]
+            ],
+            'preferred_time' => [
+                'rules' => 'required|in_list[8:00 AM - 11:00 AM,11:00 AM - 2:00 PM,2:00 PM - 5:00 PM,5:00 PM - 8:00 PM]',
+                'errors' => [
+                    'required' => 'Preferred time window is required.',
+                    'in_list' => 'Please select a valid time window.'
+                ]
+            ],
             'junk_images' => [
                 'rules' => 'max_size[junk_images,5120]|is_image[junk_images]|mime_in[junk_images,image/jpg,image/jpeg,image/png]',
                 'errors' => [
@@ -160,6 +174,8 @@ class Quote extends BaseController
             'address' => $this->request->getPost('address'),
             'city' => $this->request->getPost('city'),
             'description' => $this->request->getPost('description'),
+            'preferred_date' => $this->request->getPost('preferred_date'),
+            'preferred_time' => $this->request->getPost('preferred_time'),
             'images' => !empty($uploadedImages) ? json_encode($uploadedImages) : null,
             'status' => 'pending',
             'created_at' => date('Y-m-d H:i:s'),

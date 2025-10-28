@@ -14,11 +14,13 @@ class QuoteModel extends Model
     protected $protectFields = true;
     protected $allowedFields = [
         'name',
-        'email', 
+        'email',
         'phone',
         'address',
         'city',
         'description',
+        'preferred_date',
+        'preferred_time',
         'images',
         'status',
         'admin_notes',

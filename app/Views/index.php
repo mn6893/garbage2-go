@@ -127,10 +127,39 @@
               </div>
             </div>
           </div>
-          
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+          <label for="preferred_date" class="form-label">Preferred Date *</label>
+          <input type="date" class="form-control" id="preferred_date" name="preferred_date"
+                 value="<?= old('preferred_date', isset($input['preferred_date']) ? esc($input['preferred_date']) : '') ?>"
+                 min="<?= date('Y-m-d') ?>" required>
+          <?php if (isset($validation) && $validation->hasError('preferred_date')): ?>
+              <div class="text-danger small mt-1"><?= $validation->getError('preferred_date') ?></div>
+          <?php endif; ?>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+          <label for="preferred_time" class="form-label">Preferred Time Window *</label>
+          <select class="form-control" id="preferred_time" name="preferred_time" required>
+            <option value="">Select a time window</option>
+            <option value="8:00 AM - 11:00 AM" <?= old('preferred_time', isset($input['preferred_time']) ? $input['preferred_time'] : '') == '8:00 AM - 11:00 AM' ? 'selected' : '' ?>>8:00 AM - 11:00 AM</option>
+            <option value="11:00 AM - 2:00 PM" <?= old('preferred_time', isset($input['preferred_time']) ? $input['preferred_time'] : '') == '11:00 AM - 2:00 PM' ? 'selected' : '' ?>>11:00 AM - 2:00 PM</option>
+            <option value="2:00 PM - 5:00 PM" <?= old('preferred_time', isset($input['preferred_time']) ? $input['preferred_time'] : '') == '2:00 PM - 5:00 PM' ? 'selected' : '' ?>>2:00 PM - 5:00 PM</option>
+            <option value="5:00 PM - 8:00 PM" <?= old('preferred_time', isset($input['preferred_time']) ? $input['preferred_time'] : '') == '5:00 PM - 8:00 PM' ? 'selected' : '' ?>>5:00 PM - 8:00 PM</option>
+          </select>
+          <?php if (isset($validation) && $validation->hasError('preferred_time')): ?>
+              <div class="text-danger small mt-1"><?= $validation->getError('preferred_time') ?></div>
+          <?php endif; ?>
+              </div>
+            </div>
+          </div>
+
           <div class="mb-3">
             <label for="address" class="form-label">Complete Address *</label>
-            <textarea class="form-control" id="address" name="address" placeholder="Your Address" style="height: 80px" required><?= old('address', isset($input['address']) ? esc($input['address']) : '') ?></textarea>
+            <textarea class="form-control" id="address" name="address" placeholder="Start typing your address..." style="height: 80px" required><?= old('address', isset($input['address']) ? esc($input['address']) : '') ?></textarea>
             <?php if (isset($validation) && $validation->hasError('address')): ?>
                 <div class="text-danger small mt-1"><?= $validation->getError('address') ?></div>
             <?php endif; ?>
@@ -144,7 +173,47 @@
             <?php endif; ?>
           </div>
 
+      <!-- Google Maps Places API -->
+      <script src="https://maps.googleapis.com/maps/api/js?key=<?= getenv('GOOGLE_MAPS_API_KEY') ?: 'YOUR_GOOGLE_MAPS_API_KEY' ?>&libraries=places&callback=initAutocomplete" async defer></script>
+
       <script>
+      // Initialize Google Places Autocomplete
+      function initAutocomplete() {
+          const addressField = document.getElementById('address');
+          const suburbField = document.getElementById('suburb');
+
+          if (addressField && typeof google !== 'undefined') {
+              const autocomplete = new google.maps.places.Autocomplete(addressField, {
+                  componentRestrictions: { country: 'ca' }, // Restrict to Canada
+                  fields: ['address_components', 'formatted_address', 'geometry'],
+                  types: ['address']
+              });
+
+              autocomplete.addListener('place_changed', function() {
+                  const place = autocomplete.getPlace();
+
+                  if (!place.geometry) {
+                      return;
+                  }
+
+                  // Set the full formatted address
+                  addressField.value = place.formatted_address;
+
+                  // Extract city from address components
+                  if (place.address_components) {
+                      for (let component of place.address_components) {
+                          if (component.types.includes('locality')) {
+                              suburbField.value = component.long_name;
+                              break;
+                          } else if (component.types.includes('administrative_area_level_3')) {
+                              suburbField.value = component.long_name;
+                          }
+                      }
+                  }
+              });
+          }
+      }
+
       document.addEventListener('DOMContentLoaded', function() {
           const uploadArea = document.querySelector('.upload-area');
           const fileInput = document.getElementById('junk_images');
