@@ -40,9 +40,15 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link <?= (strpos(current_url(), 'admin/contacts') !== false) ? 'active' : '' ?>" 
+              <a class="nav-link <?= (strpos(current_url(), 'admin/contacts') !== false) ? 'active' : '' ?>"
                  href="<?= base_url('admin/contacts') ?>">
                 <i class="icofont-envelope mr-5"></i> Contacts
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link <?= (strpos(current_url(), 'admin/image-analysis') !== false) ? 'active' : '' ?>"
+                 href="<?= base_url('admin/image-analysis') ?>">
+                <i class="icofont-image mr-5"></i> AI Image Analysis
               </a>
             </li>
           </ul>

@@ -271,6 +271,10 @@ class RetryFailedEmails extends BaseCommand
                 .content { padding: 20px; background: #f9f9f9; }
                 .quote-details { background: white; padding: 15px; margin: 10px 0; border-radius: 5px; }
                 .total { background: #2c5aa0; color: white; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; }
+                .terms { background: #f8f9fa; padding: 15px; margin: 15px 0; border-radius: 5px; border-left: 4px solid #2c5aa0; font-size: 14px; }
+                .terms h4 { margin-top: 0; color: #2c5aa0; }
+                .terms ul { margin: 10px 0; padding-left: 20px; }
+                .terms li { margin: 5px 0; }
                 .footer { text-align: center; padding: 20px; color: #666; }
                 table { width: 100%; border-collapse: collapse; margin: 10px 0; }
                 th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
@@ -283,10 +287,10 @@ class RetryFailedEmails extends BaseCommand
                     <h1>Your Junk Removal Quote</h1>
                     <p>Quote #' . $quote['id'] . '</p>
                 </div>
-                
+
                 <div class="content">
-                    <h2>Hello ' . htmlspecialchars($quote['name']) . ',</h2>
-                    <p>Thank you for your junk removal request! Our AI system has analyzed your uploaded images and generated a detailed quote based on the waste assessment.</p>
+                    <h2>Dear ' . htmlspecialchars($quote['name']) . ',</h2>
+                    <p>Thank you for choosing GarbageToGo for your junk removal needs. Our AI system has carefully analyzed your uploaded images and prepared a detailed quote based on the waste assessment.</p>
                     
                     <div class="quote-details">
                         <h3>Service Details</h3>
@@ -306,24 +310,39 @@ class RetryFailedEmails extends BaseCommand
                     </div>
                     
                     <div class="total">
-                        Total Estimated Cost: $' . number_format($quoteData['total_amount'] ?? 0, 2) . '
+                        Estimated Total Cost: $' . number_format($quoteData['total_amount'] ?? 0, 2) . '
                     </div>
-                    
+
                     <div class="quote-details">
-                        <h3>Next Steps</h3>
-                        <p>This is an automated estimate based on image analysis. To proceed:</p>
+                        <h3>How to Proceed</h3>
+                        <p>This is an automated estimate based on our AI image analysis. We would be delighted to assist you further. To proceed with your service:</p>
                         <ul>
-                            <li>Call us at <strong>(555) 123-4567</strong> to confirm your booking</li>
-                            <li>Email us at <strong>info@garbagetogo.ca</strong> for any questions</li>
-                            <li>Schedule your service at your convenience</li>
+                            <li>Phone: <strong>(555) 123-4567</strong></li>
+                            <li>Email: <strong>info@garbagetogo.ca</strong></li>
+                            <li>We offer flexible scheduling at your convenience</li>
+                            <li>Same-day and next-day service options available upon request</li>
                         </ul>
-                        <p><em>Note: Final pricing may vary based on actual items and access conditions.</em></p>
+                        <p><em>Our team is committed to providing professional, reliable, and eco-friendly service. Final pricing will be determined by the actual volume on-site.</em></p>
+                    </div>
+
+                    <div class="terms">
+                        <h4>Terms and Conditions</h4>
+                        <ul>
+                            <li><strong>Service Changes:</strong> Any changes to the scope of work, additional items, or modifications to the service requested after the quote has been provided may result in additional charges. We will inform you of any extra costs before proceeding with the changes.</li>
+                            <li><strong>Covered Materials:</strong> If the junk or waste is covered, wrapped, or otherwise not visible during our initial assessment, uncovering or removing the covering materials may incur additional costs. This includes items stored in bags, boxes, or under tarps that were not visible during the quote preparation.</li>
+                            <li><strong>Final Pricing:</strong> The final cost will be based on the actual volume of items removed. This automated quote is an estimate and may vary based on actual items and access conditions on-site.</li>
+                            <li><strong>Quote Validity:</strong> This quote is valid for 30 days from the date issued. Prices are subject to change after the expiration date.</li>
+                            <li><strong>Payment:</strong> Payment is due upon completion of service. We accept various payment methods for your convenience.</li>
+                            <li><strong>Cancellation:</strong> Please provide at least 24 hours notice for cancellations to avoid potential fees.</li>
+                        </ul>
+                        <p style="margin-top: 10px; font-size: 12px;"><em>By proceeding with our service, you acknowledge and accept these terms and conditions.</em></p>
                     </div>
                 </div>
-                
+
                 <div class="footer">
-                    <p>Thank you for choosing GarbageToGo!</p>
+                    <p><strong>Thank you for considering GarbageToGo for your junk removal needs!</strong></p>
                     <p>Visit us at <a href="https://garbagetogo.ca">garbagetogo.ca</a></p>
+                    <p style="font-size: 12px; margin-top: 10px;">Professional, Reliable, and Eco-Friendly Service</p>
                 </div>
             </div>
         </body>

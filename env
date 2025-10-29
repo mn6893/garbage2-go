@@ -79,8 +79,8 @@ AI_PROCESSING_TIMEOUT = 120
 # Email Configuration (if using email features)
 email.protocol = smtp
 email.SMTPHost = smtp.gmail.com
-email.SMTPUser = your_email@example.com
-email.SMTPPass = your_app_password
+email.SMTPUser = abubakr4mavens@gmail.com
+email.SMTPPass = wpjhqdulhcpfjpzc
 email.SMTPPort = 587
 email.SMTPCrypto = tls
 email.mailType = html

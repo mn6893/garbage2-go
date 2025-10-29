@@ -36,6 +36,8 @@ $routes->get('quote', 'Quote::index');
 $routes->post('quote/submit', 'Quote::submit');
 $routes->get('quote/success', 'Quote::success');
 $routes->get('quote/image/(:any)', 'Quote::serveImage/$1');
+$routes->get('quote/response/(:num)/(:alpha)', 'Quote::response/$1/$2');
+$routes->post('quote/talk-to-manager/submit', 'Quote::submitTalkToManager');
 
 // Gallery Routes
 $routes->get('gallery', 'Gallery::index');
@@ -70,4 +72,8 @@ $routes->group('admin', function($routes) {
     $routes->get('contacts', 'Admin::contacts');
     $routes->get('contact/(:num)', 'Admin::contact/$1');
     $routes->post('contact/update-status', 'Admin::updateContactStatus');
+    $routes->get('image-analysis', 'Admin::imageAnalysis');
+    $routes->post('image-analysis/process', 'Admin::processImageAnalysis');
+    $routes->get('image-analysis/results', 'Admin::analysisResults');
+    $routes->get('view-analysis-image/(:any)', 'Admin::viewAnalysisImage/$1');
 });

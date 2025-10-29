@@ -450,6 +450,10 @@ class AIQuoteProcessor
                 .total { background: #2c5aa0; color: white; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; }
                 .min-price { background: #28a745; color: white; padding: 15px; text-align: center; font-size: 20px; font-weight: bold; margin: 10px 0; border-radius: 5px; }
                 .special-offer { background: #ffc107; color: #212529; padding: 15px; text-align: center; font-weight: bold; margin: 10px 0; border-radius: 5px; border: 2px solid #ff6b35; }
+                .terms { background: #f8f9fa; padding: 15px; margin: 15px 0; border-radius: 5px; border-left: 4px solid #2c5aa0; font-size: 14px; }
+                .terms h4 { margin-top: 0; color: #2c5aa0; }
+                .terms ul { margin: 10px 0; padding-left: 20px; }
+                .terms li { margin: 5px 0; }
                 .footer { text-align: center; padding: 20px; color: #666; }
                 table { width: 100%; border-collapse: collapse; margin: 10px 0; }
                 th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
@@ -459,17 +463,17 @@ class AIQuoteProcessor
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>🎉 Your EXCLUSIVE Junk Removal Quote 🎉</h1>
+                    <h1>Your Junk Removal Quote</h1>
                     <p>Quote #' . $quote['id'] . '</p>
                 </div>
-                
+
                 <div class="content">
-                    <h2>Hello ' . htmlspecialchars($quote['name']) . ',</h2>
-                    <p>🌟 <strong>FANTASTIC NEWS!</strong> We\'ve analyzed your junk removal needs and have prepared an <em>EXCLUSIVE DEAL</em> just for you!</p>
-                    
+                    <h2>Dear ' . htmlspecialchars($quote['name']) . ',</h2>
+                    <p>Thank you for choosing GarbageToGo for your junk removal needs. We have carefully reviewed your request and are pleased to provide you with a detailed quote for your service.</p>
+
                     <div class="special-offer">
-                        ⚡ LIMITED TIME OFFER ⚡<br>
-                        <strong>GUARANTEED LOWEST PRICE</strong> - Starting from our minimum charge!
+                        Special Offer Available<br>
+                        <strong>Competitive Pricing</strong> - Starting from our minimum service charge
                     </div>
                     
                     <div class="quote-details">
@@ -489,39 +493,39 @@ class AIQuoteProcessor
                     </div>
                     
                     <div class="min-price">
-                        💰 OUR MINIMUM CHARGE: $' . number_format($minAmount, 2) . '
+                        Minimum Service Charge: $' . number_format($minAmount, 2) . '
                     </div>
-                    
+
                     <div class="quote-details">
-                        <h3>💼 Comprehensive Service Breakdown</h3>
+                        <h3>Service Breakdown</h3>
                         <table>
                             <tr>
-                                <th>Premium Service</th>
-                                <th>Value</th>
+                                <th>Service Description</th>
+                                <th>Amount</th>
                             </tr>
                             <tr>
-                                <td>Professional Base Service</td>
+                                <td>Base Service Charge</td>
                                 <td>$' . number_format($baseCost, 2) . '</td>
                             </tr>';
         
         if ($volumeCost > 0) {
-            $html .= '<tr><td>Volume-based Premium Pricing</td><td>$' . number_format($volumeCost, 2) . '</td></tr>';
+            $html .= '<tr><td>Volume-based Charge</td><td>$' . number_format($volumeCost, 2) . '</td></tr>';
         }
-        
+
         if ($specialFees > 0) {
-            $html .= '<tr><td>Specialized Handling Service</td><td>$' . number_format($specialFees, 2) . '</td></tr>';
+            $html .= '<tr><td>Special Item Handling</td><td>$' . number_format($specialFees, 2) . '</td></tr>';
         }
-        
+
         if ($environmentalFee > 0) {
-            $html .= '<tr><td>Eco-Friendly Disposal</td><td>$' . number_format($environmentalFee, 2) . '</td></tr>';
+            $html .= '<tr><td>Environmental Disposal Fee</td><td>$' . number_format($environmentalFee, 2) . '</td></tr>';
         }
-        
+
         if ($disposalFee > 0) {
-            $html .= '<tr><td>Responsible Disposal Service</td><td>$' . number_format($disposalFee, 2) . '</td></tr>';
+            $html .= '<tr><td>Disposal Fee</td><td>$' . number_format($disposalFee, 2) . '</td></tr>';
         }
-        
+
         if ($seasonalAdjustment > 0) {
-            $html .= '<tr><td>Peak Season Service</td><td>$' . number_format($seasonalAdjustment, 2) . '</td></tr>';
+            $html .= '<tr><td>Seasonal Adjustment</td><td>$' . number_format($seasonalAdjustment, 2) . '</td></tr>';
         }
         
         if ($gst > 0) {
@@ -537,43 +541,89 @@ class AIQuoteProcessor
                     </div>
                     
                     <div class="total">
-                        🏆 MAXIMUM ESTIMATED COST: $' . number_format($totalAmount, 2) . '
+                        Estimated Total Cost: $' . number_format($totalAmount, 2) . '
                     </div>
-                    
+
                     <div class="special-offer">
-                        🔥 <strong>BEST DEAL GUARANTEE!</strong> 🔥<br>
-                        Your cost will be <strong>BETWEEN $' . number_format($minAmount, 2) . ' - $' . number_format($totalAmount, 2) . '</strong><br>
-                        <em>We charge our minimum rate of $' . number_format($minAmount, 2) . ' for smaller loads!</em>
+                        <strong>Estimated Price Range</strong><br>
+                        Your service cost will range between <strong>$' . number_format($minAmount, 2) . ' - $' . number_format($totalAmount, 2) . '</strong><br>
+                        <em>Please note: Smaller loads will be charged at our minimum rate of $' . number_format($minAmount, 2) . '</em>
                     </div>';
         
         if (isset($details['validUntil'])) {
             $html .= '
                     <div class="quote-details">
-                        <p><strong>⏰ EXCLUSIVE OFFER EXPIRES:</strong> ' . date('F j, Y', strtotime($details['validUntil'])) . '</p>
+                        <p><strong>Quote Valid Until:</strong> ' . date('F j, Y', strtotime($details['validUntil'])) . '</p>
                     </div>';
         }
-        
+
         $html .= '
                     <div class="quote-details">
-                        <h3>🚀 CLAIM YOUR SPOT NOW!</h3>
-                        <p><strong>Don\'t wait!</strong> This premium service package is available at this special rate:</p>
-                        <ul>
-                            <li>📞 Call us <strong>RIGHT NOW</strong> at <strong>(555) 123-4567</strong> to LOCK IN this price!</li>
-                            <li>📧 Email us at <strong>info@garbagetogo.ca</strong> for instant confirmation</li>
-                            <li>⚡ <strong>SAME-DAY</strong> and next-day service available!</li>
-                            <li>🛡️ <strong>100% SATISFACTION GUARANTEED</strong></li>
-                        </ul>
-                        <p><em>⭐ Professional, reliable, and eco-friendly service. Final pricing determined by actual volume - never more than quoted maximum!</em></p>
+                        <h3>How Would You Like to Proceed?</h3>
+                        <p>Please let us know your decision by clicking one of the buttons below:</p>
+
+                        <div style="text-align: center; margin: 30px 0;">
+                            <table width="100%" cellpadding="10" cellspacing="0" style="margin: 20px 0;">
+                                <tr>
+                                    <td style="text-align: center; padding: 10px;">
+                                        <a href="' . base_url('quote/response/' . $quote['id'] . '/accept') . '"
+                                           style="display: inline-block; padding: 15px 30px; background: #28a745; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">
+                                            ✓ Accept Quote
+                                        </a>
+                                    </td>
+                                    <td style="text-align: center; padding: 10px;">
+                                        <a href="' . base_url('quote/response/' . $quote['id'] . '/consider') . '"
+                                           style="display: inline-block; padding: 15px 30px; background: #ffc107; color: #212529; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">
+                                            ⏰ Consider Later
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center; padding: 10px;">
+                                        <a href="' . base_url('quote/response/' . $quote['id'] . '/reject') . '"
+                                           style="display: inline-block; padding: 15px 30px; background: #dc3545; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">
+                                            ✗ Decline Quote
+                                        </a>
+                                    </td>
+                                    <td style="text-align: center; padding: 10px;">
+                                        <a href="tel:+15551234567"
+                                           style="display: inline-block; padding: 15px 30px; background: #2c5aa0; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">
+                                            📞 Call Manager Now
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div style="background: #e7f3ff; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                            <p style="margin: 0; text-align: center;"><strong>Or Contact Us Directly:</strong></p>
+                            <p style="margin: 5px 0; text-align: center;">
+                                Phone: <strong>(555) 123-4567</strong> |
+                                Email: <strong>info@garbagetogo.ca</strong>
+                            </p>
+                        </div>
+
+                        <p style="font-size: 14px; color: #666;"><em>Our team is committed to providing professional, reliable, and eco-friendly service. Final pricing will be determined by the actual volume on-site and will not exceed the quoted maximum.</em></p>
                     </div>
-                    
-                    <div class="special-offer">
-                        🎁 <strong>BONUS:</strong> Book today and get <strong>FREE</strong> sorting and sweeping! 🎁
+
+                    <div class="terms">
+                        <h4>Terms and Conditions</h4>
+                        <ul>
+                            <li><strong>Service Changes:</strong> Any changes to the scope of work, additional items, or modifications to the service requested after the quote has been provided may result in additional charges. We will inform you of any extra costs before proceeding with the changes.</li>
+                            <li><strong>Covered Materials:</strong> If the junk or waste is covered, wrapped, or otherwise not visible during our initial assessment, uncovering or removing the covering materials may incur additional costs. This includes items stored in bags, boxes, or under tarps that were not visible during the quote preparation.</li>
+                            <li><strong>Final Pricing:</strong> The final cost will be based on the actual volume of items removed and will fall within the estimated range provided above, not exceeding the maximum quoted amount unless additional services or items are requested.</li>
+                            <li><strong>Quote Validity:</strong> This quote is valid for the period specified above. Prices are subject to change after the expiration date.</li>
+                            <li><strong>Payment:</strong> Payment is due upon completion of service. We accept various payment methods for your convenience.</li>
+                            <li><strong>Cancellation:</strong> Please provide at least 24 hours notice for cancellations to avoid potential fees.</li>
+                        </ul>
+                        <p style="margin-top: 10px; font-size: 12px;"><em>By proceeding with our service, you acknowledge and accept these terms and conditions.</em></p>
                     </div>
                 </div>
-                
+
                 <div class="footer">
-                    <p><strong>Thank you for choosing GarbageToGo - Your #1 Junk Removal Experts!</strong></p>
-                    <p>🌐 Visit us at <a href="https://garbagetogo.ca">garbagetogo.ca</a> | ⭐⭐⭐⭐⭐ 5-Star Rated Service</p>
+                    <p><strong>Thank you for considering GarbageToGo for your junk removal needs!</strong></p>
+                    <p>Visit us at <a href="https://garbagetogo.ca">garbagetogo.ca</a></p>
+                    <p style="font-size: 12px; margin-top: 10px;">Professional, Reliable, and Eco-Friendly Service</p>
                 </div>
             </div>
         </body>

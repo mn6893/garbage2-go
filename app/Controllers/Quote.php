@@ -323,4 +323,221 @@ class Quote extends BaseController
     {
         return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
     }
+
+    /**
+     * Handle quote response from customer
+     */
+    public function response($quoteId, $action)
+    {
+        // Get quote details
+        $quote = $this->quoteModel->find($quoteId);
+
+        if (!$quote) {
+            return redirect()->to('/')->with('error', 'Quote not found');
+        }
+
+        // For talk-to-manager, redirect to form
+        if ($action === 'talk-to-manager') {
+            return view('quote/talk_to_manager', ['quote' => $quote]);
+        }
+
+        // Update quote status based on action
+        $statusMap = [
+            'accept' => 'accepted',
+            'reject' => 'rejected',
+            'consider' => 'considering'
+        ];
+
+        $status = $statusMap[$action] ?? 'pending';
+
+        // Update the quote status
+        $this->quoteModel->update($quoteId, [
+            'status' => $status,
+            'customer_response' => $action,
+            'customer_response_date' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
+
+        // Send email notification to admin
+        $this->sendAdminNotification($quote, $action);
+
+        // Show thank you page
+        return view('quote/response_thank_you', [
+            'quote' => $quote,
+            'action' => $action
+        ]);
+    }
+
+    /**
+     * Handle talk to manager form submission
+     */
+    public function submitTalkToManager()
+    {
+        $quoteId = $this->request->getPost('quote_id');
+        $name = $this->request->getPost('name');
+        $email = $this->request->getPost('email');
+        $phone = $this->request->getPost('phone');
+        $preferredTime = $this->request->getPost('preferred_time');
+        $message = $this->request->getPost('message');
+
+        // Get quote details
+        $quote = $this->quoteModel->find($quoteId);
+
+        if (!$quote) {
+            return redirect()->to('/')->with('error', 'Quote not found');
+        }
+
+        // Update quote status
+        $this->quoteModel->update($quoteId, [
+            'status' => 'talk_to_manager',
+            'customer_response' => 'talk_to_manager',
+            'customer_response_date' => date('Y-m-d H:i:s'),
+            'admin_notes' => "Customer wants to talk to manager. Preferred time: {$preferredTime}. Message: {$message}",
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
+
+        // Send email to admin with customer information
+        $this->sendTalkToManagerEmail($quote, [
+            'name' => $name,
+            'email' => $email,
+            'phone' => $phone,
+            'preferred_time' => $preferredTime,
+            'message' => $message
+        ]);
+
+        // Show thank you page with contact info
+        return view('quote/talk_to_manager_thank_you', [
+            'quote' => $quote,
+            'phone' => $phone
+        ]);
+    }
+
+    /**
+     * Send admin notification email for customer response
+     */
+    private function sendAdminNotification($quote, $action)
+    {
+        try {
+            $email = service('email');
+            $adminEmail = env('ADMIN_EMAIL', 'admin@garbagetogo.ca');
+
+            $actionText = [
+                'accept' => '✓ ACCEPTED',
+                'reject' => '✗ DECLINED',
+                'consider' => '⏰ CONSIDERING'
+            ];
+
+            $actionColor = [
+                'accept' => '#28a745',
+                'reject' => '#dc3545',
+                'consider' => '#ffc107'
+            ];
+
+            $email->setTo($adminEmail);
+            $email->setFrom('noreply@garbagetogo.ca', 'GarbageToGo System');
+            $email->setSubject('Customer Quote Response: ' . $actionText[$action] . ' - Quote #' . $quote['id']);
+
+            $html = '
+            <html>
+            <body style="font-family: Arial, sans-serif;">
+                <div style="max-width: 600px; margin: 0 auto;">
+                    <div style="background: ' . $actionColor[$action] . '; color: white; padding: 20px; text-align: center;">
+                        <h2>Customer Quote Response</h2>
+                        <h3>' . $actionText[$action] . '</h3>
+                    </div>
+                    <div style="padding: 20px; background: #f9f9f9;">
+                        <h3>Quote #' . $quote['id'] . '</h3>
+                        <p><strong>Customer:</strong> ' . htmlspecialchars($quote['name']) . '</p>
+                        <p><strong>Email:</strong> ' . htmlspecialchars($quote['email']) . '</p>
+                        <p><strong>Phone:</strong> ' . htmlspecialchars($quote['phone']) . '</p>
+                        <p><strong>Address:</strong> ' . htmlspecialchars($quote['address']) . '</p>
+                        <p><strong>Response:</strong> Customer has <strong>' . strtoupper($action) . '</strong> the quote</p>
+                        <p><strong>Response Time:</strong> ' . date('Y-m-d H:i:s') . '</p>
+                        <hr>
+                        <p><a href="' . base_url('admin/quote/' . $quote['id']) . '" style="display: inline-block; padding: 10px 20px; background: #2c5aa0; color: white; text-decoration: none; border-radius: 5px;">View Quote in Admin Panel</a></p>
+                    </div>
+                </div>
+            </body>
+            </html>';
+
+            $email->setMessage($html);
+            $email->send();
+
+            log_message('info', 'Admin notification sent for quote #' . $quote['id'] . ' response: ' . $action);
+
+        } catch (\Exception $e) {
+            log_message('error', 'Failed to send admin notification: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Send talk to manager email to admin
+     */
+    private function sendTalkToManagerEmail($quote, $customerInfo)
+    {
+        try {
+            $email = service('email');
+            $adminEmail = env('ADMIN_EMAIL', 'admin@garbagetogo.ca');
+
+            $email->setTo($adminEmail);
+            $email->setFrom('noreply@garbagetogo.ca', 'GarbageToGo System');
+            $email->setSubject('📞 URGENT: Customer Wants to Talk to Manager - Quote #' . $quote['id']);
+
+            $html = '
+            <html>
+            <body style="font-family: Arial, sans-serif;">
+                <div style="max-width: 600px; margin: 0 auto;">
+                    <div style="background: #2c5aa0; color: white; padding: 20px; text-align: center;">
+                        <h2>📞 Customer Wants to Talk to Manager</h2>
+                        <h3>Quote #' . $quote['id'] . '</h3>
+                    </div>
+                    <div style="padding: 20px; background: #f9f9f9;">
+                        <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin-bottom: 20px;">
+                            <strong>⚠️ ACTION REQUIRED:</strong> Customer has requested to speak with a manager
+                        </div>
+
+                        <h3>Customer Information:</h3>
+                        <p><strong>Name:</strong> ' . htmlspecialchars($customerInfo['name']) . '</p>
+                        <p><strong>Email:</strong> ' . htmlspecialchars($customerInfo['email']) . '</p>
+                        <p><strong>Phone:</strong> <strong style="font-size: 18px; color: #2c5aa0;">' . htmlspecialchars($customerInfo['phone']) . '</strong></p>
+                        <p><strong>Preferred Call Time:</strong> ' . htmlspecialchars($customerInfo['preferred_time']) . '</p>
+
+                        <h3>Customer Message:</h3>
+                        <div style="background: white; padding: 15px; border: 1px solid #ddd; border-radius: 5px;">
+                            ' . nl2br(htmlspecialchars($customerInfo['message'])) . '
+                        </div>
+
+                        <h3>Quote Details:</h3>
+                        <p><strong>Quote ID:</strong> #' . $quote['id'] . '</p>
+                        <p><strong>Address:</strong> ' . htmlspecialchars($quote['address']) . '</p>
+                        <p><strong>Service Description:</strong> ' . htmlspecialchars($quote['description']) . '</p>
+
+                        <hr>
+                        <div style="text-align: center; margin: 20px 0;">
+                            <a href="' . base_url('admin/quote/' . $quote['id']) . '"
+                               style="display: inline-block; padding: 15px 30px; background: #28a745; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                                View Quote in Admin Panel
+                            </a>
+                        </div>
+
+                        <div style="background: #e7f3ff; padding: 15px; border-radius: 5px; margin-top: 20px;">
+                            <p style="margin: 0;"><strong>📞 Please call the customer at:</strong></p>
+                            <p style="margin: 5px 0; font-size: 20px; color: #2c5aa0;">
+                                <strong>' . htmlspecialchars($customerInfo['phone']) . '</strong>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </body>
+            </html>';
+
+            $email->setMessage($html);
+            $email->send();
+
+            log_message('info', 'Talk to manager email sent for quote #' . $quote['id']);
+
+        } catch (\Exception $e) {
+            log_message('error', 'Failed to send talk to manager email: ' . $e->getMessage());
+        }
+    }
 }

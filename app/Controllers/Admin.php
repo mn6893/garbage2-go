@@ -167,17 +167,25 @@ class Admin extends BaseController
         $id = $this->request->getPost('id');
         $status = $this->request->getPost('status');
         $notes = $this->request->getPost('notes');
-        
+
         $db = \Config\Database::connect();
         $builder = $db->table('quotes');
-        
+
+        // Get current quote data before update
+        $quote = $builder->where('id', $id)->get()->getRowArray();
+
         $data = [
             'status' => $status,
             'admin_notes' => $notes,
             'updated_at' => date('Y-m-d H:i:s')
         ];
-        
+
         if ($builder->where('id', $id)->update($data)) {
+            // Send completion email if status changed to completed
+            if ($status === 'completed' && $quote) {
+                $this->sendCompletionEmail($quote);
+            }
+
             return redirect()->to('/admin/quotes')->with('success', 'Quote status updated successfully');
         } else {
             return redirect()->to('/admin/quotes')->with('error', 'Failed to update quote status');
@@ -282,17 +290,224 @@ class Admin extends BaseController
         try {
             $processor = new \App\Libraries\AIQuoteProcessor();
             $result = $processor->processQuote($id);
-            
+
             if ($result['success']) {
-                return redirect()->to('/admin/quote/' . $id)->with('success', 
+                return redirect()->to('/admin/quote/' . $id)->with('success',
                     'AI processing completed successfully. Quote amount: $' . number_format($result['quote_amount'], 2));
             } else {
-                return redirect()->to('/admin/quote/' . $id)->with('error', 
+                return redirect()->to('/admin/quote/' . $id)->with('error',
                     'AI processing failed: ' . $result['error']);
             }
         } catch (\Exception $e) {
-            return redirect()->to('/admin/quote/' . $id)->with('error', 
+            return redirect()->to('/admin/quote/' . $id)->with('error',
                 'Error triggering AI processing: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Image upload and AI analysis page
+     */
+    public function imageAnalysis()
+    {
+        return view('admin/image_analysis');
+    }
+
+    /**
+     * Process uploaded image with AI
+     */
+    public function processImageAnalysis()
+    {
+        try {
+            // Validate image upload
+            $validationRule = [
+                'images' => [
+                    'label' => 'Images',
+                    'rules' => 'uploaded[images]|max_size[images,5120]|is_image[images]',
+                ],
+            ];
+
+            if (!$this->validate($validationRule)) {
+                return redirect()->back()->with('error', 'Invalid image upload: ' . implode(', ', $this->validator->getErrors()));
+            }
+
+            $files = $this->request->getFiles();
+
+            if (empty($files['images'])) {
+                return redirect()->back()->with('error', 'No images uploaded');
+            }
+
+            // Create upload directory if it doesn't exist
+            $uploadPath = WRITEPATH . 'uploads/admin_analysis/';
+            if (!is_dir($uploadPath)) {
+                mkdir($uploadPath, 0777, true);
+            }
+
+            $uploadedImages = [];
+
+            foreach ($files['images'] as $file) {
+                if ($file->isValid() && !$file->hasMoved()) {
+                    $newName = $file->getRandomName();
+                    $file->move($uploadPath, $newName);
+                    $uploadedImages[] = $newName;
+                }
+            }
+
+            if (empty($uploadedImages)) {
+                return redirect()->back()->with('error', 'Failed to upload images');
+            }
+
+            // Process with AI Vision Service - Full Quote Generation
+            $visionService = new \App\Services\AIVisionService();
+            $assessmentService = new \App\Services\WasteAssessmentService();
+            $quoteService = new \App\Services\QuoteGeneratorService();
+            $analysisResults = [];
+
+            foreach ($uploadedImages as $imageName) {
+                $imagePath = $uploadPath . $imageName;
+
+                try {
+                    // Step 1: Analyze the image with AI Vision
+                    $aiAnalysis = $visionService->analyzeImages([$imagePath]);
+
+                    // Step 2: Perform waste assessment based on AI analysis
+                    $wasteAssessment = $assessmentService->processAnalysis($aiAnalysis, [
+                        'address' => 'Admin Analysis',
+                        'description' => 'Admin uploaded image analysis'
+                    ]);
+
+                    // Step 3: Generate quote with pricing
+                    $generatedQuote = $quoteService->generateQuote($wasteAssessment, [
+                        'address' => 'Admin Analysis',
+                        'description' => 'Admin uploaded image analysis'
+                    ]);
+
+                    // Step 4: Format the complete quote result
+                    $formattedQuote = $this->formatQuoteForDisplay($generatedQuote, $wasteAssessment);
+
+                    $analysisResults[] = [
+                        'image_name' => $imageName,
+                        'image_path' => $imagePath,
+                        'ai_analysis' => $aiAnalysis,
+                        'waste_assessment' => $wasteAssessment,
+                        'quote' => $formattedQuote,
+                        'success' => true
+                    ];
+
+                } catch (\Exception $e) {
+                    log_message('error', 'Image analysis error for ' . $imageName . ': ' . $e->getMessage());
+                    $analysisResults[] = [
+                        'image_name' => $imageName,
+                        'image_path' => $imagePath,
+                        'success' => false,
+                        'error' => $e->getMessage()
+                    ];
+                }
+            }
+
+            // Store results in session for display
+            session()->set('analysis_results', $analysisResults);
+            session()->set('uploaded_images', $uploadedImages);
+
+            return redirect()->to('/admin/image-analysis/results')->with('success',
+                'Images analyzed successfully! ' . count($uploadedImages) . ' image(s) processed.');
+
+        } catch (\Exception $e) {
+            log_message('error', 'Admin image analysis error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Error processing images: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Display image analysis results
+     */
+    public function analysisResults()
+    {
+        $analysisResults = session()->get('analysis_results');
+        $uploadedImages = session()->get('uploaded_images');
+
+        if (empty($analysisResults)) {
+            return redirect()->to('/admin/image-analysis')->with('error', 'No analysis results found. Please upload images first.');
+        }
+
+        return view('admin/analysis_results', [
+            'results' => $analysisResults,
+            'images' => $uploadedImages
+        ]);
+    }
+
+    /**
+     * Format quote data for display in admin analysis
+     */
+    private function formatQuoteForDisplay(array $generatedQuote, array $wasteAssessment): array
+    {
+        // Extract quote breakdown
+        $breakdown = $generatedQuote['breakdown'] ?? [];
+        $details = $generatedQuote['details'] ?? [];
+        $estimatedCost = $generatedQuote['estimatedCost'] ?? [];
+
+        // Calculate totals
+        $totalAmount = $breakdown['total'] ?? $estimatedCost['max'] ?? 0;
+        $minAmount = $estimatedCost['min'] ?? ($totalAmount * 0.85);
+
+        return [
+            'breakdown' => [
+                'baseCost' => $breakdown['baseCost'] ?? 0,
+                'volumeCost' => $breakdown['volumeCost'] ?? 0,
+                'specialFees' => $breakdown['specialFees'] ?? 0,
+                'environmentalFee' => $breakdown['environmentalFee'] ?? 0,
+                'disposalFee' => $breakdown['disposalFee'] ?? 0,
+                'seasonalAdjustment' => $breakdown['seasonalAdjustment'] ?? 0,
+                'gst' => $breakdown['gst'] ?? 0,
+                'pst' => $breakdown['pst'] ?? 0,
+                'subtotal' => $breakdown['subtotal'] ?? 0,
+                'total' => $totalAmount
+            ],
+            'estimatedCost' => [
+                'min' => $minAmount,
+                'max' => $totalAmount,
+                'currency' => 'CAD'
+            ],
+            'details' => [
+                'wasteType' => $wasteAssessment['wasteType'] ?? $details['wasteType'] ?? 'Mixed Waste',
+                'volume' => $wasteAssessment['estimatedVolume'] ?? $details['volume'] ?? 'N/A',
+                'validUntil' => date('Y-m-d', strtotime('+30 days')),
+                'notes' => $details['notes'] ?? ''
+            ],
+            'items' => $wasteAssessment['items'] ?? [],
+            'recommendations' => $wasteAssessment['recommendations'] ?? []
+        ];
+    }
+
+    /**
+     * View uploaded analysis image
+     */
+    public function viewAnalysisImage($imageName)
+    {
+        try {
+            $imagePath = WRITEPATH . 'uploads/admin_analysis/' . $imageName;
+
+            if (!file_exists($imagePath)) {
+                throw new \Exception('Image file does not exist');
+            }
+
+            // Get file info
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $mimeType = finfo_file($finfo, $imagePath);
+            finfo_close($finfo);
+
+            // Set headers for image display
+            header('Content-Type: ' . $mimeType);
+            header('Content-Length: ' . filesize($imagePath));
+            header('Cache-Control: public, max-age=3600');
+
+            // Output image
+            readfile($imagePath);
+            exit;
+
+        } catch (\Exception $e) {
+            log_message('error', 'Analysis image view error: ' . $e->getMessage());
+            $this->response->setStatusCode(404);
+            return 'Image not found';
         }
     }
     
@@ -511,6 +726,135 @@ class Admin extends BaseController
         </body></html>';
     }
     
+    /**
+     * Send completion thank you email to customer
+     */
+    private function sendCompletionEmail(array $quote): void
+    {
+        try {
+            $email = service('email');
+            $email->clear();
+            $email->setTo($quote['email']);
+            $email->setFrom('noreply@garbagetogo.ca', 'GarbageToGo');
+            $email->setSubject('Thank You - Service Completed - Quote #' . $quote['id']);
+
+            $emailContent = $this->generateCompletionEmailContent($quote);
+            $email->setMessage($emailContent);
+
+            if ($email->send()) {
+                log_message('info', 'Completion email sent successfully to: ' . $quote['email'] . ' for quote #' . $quote['id']);
+            } else {
+                log_message('error', 'Failed to send completion email to: ' . $quote['email'] . ' for quote #' . $quote['id']);
+            }
+        } catch (\Exception $e) {
+            log_message('error', 'Error sending completion email for quote #' . $quote['id'] . ': ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Generate completion email content
+     */
+    private function generateCompletionEmailContent(array $quote): string
+    {
+        $html = '
+        <html>
+        <head>
+            <style>
+                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background: #28a745; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }
+                .content { padding: 20px; background: #f9f9f9; }
+                .highlight-box { background: white; padding: 20px; margin: 15px 0; border-radius: 5px; border-left: 4px solid #28a745; }
+                .info-box { background: #e7f4e7; padding: 15px; margin: 15px 0; border-radius: 5px; }
+                .footer { text-align: center; padding: 20px; color: #666; background: #f0f0f0; border-radius: 0 0 5px 5px; }
+                .btn { display: inline-block; padding: 12px 30px; background: #28a745; color: white; text-decoration: none; border-radius: 5px; margin: 10px 0; }
+                ul { padding-left: 20px; }
+                li { margin: 8px 0; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>Payment Received - Thank You!</h1>
+                    <p>Service Completed Successfully</p>
+                </div>
+
+                <div class="content">
+                    <h2>Dear ' . htmlspecialchars($quote['name']) . ',</h2>
+
+                    <div class="info-box">
+                        <p style="margin: 0; font-size: 16px; text-align: center;">
+                            <strong>We have received your payment and your service has been completed!</strong>
+                        </p>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h3 style="margin-top: 0; color: #28a745;">Service Details</h3>
+                        <p><strong>Quote Number:</strong> #' . $quote['id'] . '</p>
+                        <p><strong>Service Address:</strong> ' . htmlspecialchars($quote['address']) . '</p>
+                        <p><strong>Status:</strong> Completed & Paid</p>
+                    </div>
+
+                    <p>Thank you for choosing GarbageToGo for your junk removal needs. We truly appreciate your business and trust in our services.</p>
+
+                    <div class="highlight-box">
+                        <h3 style="margin-top: 0;">We Hope You Were Satisfied!</h3>
+                        <p>Your satisfaction is our top priority. We hope that our service met your expectations and that your experience with us was pleasant and professional.</p>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h3 style="margin-top: 0;">Please Consider Our Services Again</h3>
+                        <p>We would be honored to serve you again in the future. Whether you need:</p>
+                        <ul>
+                            <li>Residential junk removal</li>
+                            <li>Commercial waste disposal</li>
+                            <li>Estate cleanouts</li>
+                            <li>Renovation debris removal</li>
+                            <li>Furniture and appliance disposal</li>
+                            <li>Yard waste removal</li>
+                        </ul>
+                        <p>We are always here to help you with professional, reliable, and eco-friendly service.</p>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h3 style="margin-top: 0;">Share Your Experience</h3>
+                        <p>If you were happy with our service, we would greatly appreciate it if you could share your experience with others. Your feedback helps us improve and grow our business.</p>
+                        <p>You can also refer friends and family to GarbageToGo for their junk removal needs!</p>
+                    </div>
+
+                    <div style="text-align: center; margin: 20px 0;">
+                        <p><strong>Need our services again?</strong></p>
+                        <p>Contact us anytime:</p>
+                        <p>
+                            <strong>Phone:</strong> (555) 123-4567<br>
+                            <strong>Email:</strong> info@garbagetogo.ca<br>
+                            <strong>Website:</strong> <a href="https://garbagetogo.ca">garbagetogo.ca</a>
+                        </p>
+                    </div>
+
+                    <div class="info-box">
+                        <p style="margin: 0; text-align: center;">
+                            <strong>Thank you once again for your business!</strong><br>
+                            <em>We look forward to serving you in the future.</em>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <p><strong>GarbageToGo - Your Trusted Junk Removal Partner</strong></p>
+                    <p>Professional, Reliable, and Eco-Friendly Service</p>
+                    <p style="font-size: 12px; margin-top: 15px;">
+                        This is an automated confirmation email. If you have any questions or concerns,<br>
+                        please contact us at info@garbagetogo.ca or call (555) 123-4567
+                    </p>
+                </div>
+            </div>
+        </body>
+        </html>';
+
+        return $html;
+    }
+
     /**
      * View quote image
      */
