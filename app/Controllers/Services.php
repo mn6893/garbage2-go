@@ -157,4 +157,15 @@ class Services extends BaseController
         ];
         return view('services/green_waste_removal', $data);
     }
+
+    public function electronicRecycling()
+    {
+        $data = [
+            'title' => 'Electronic Recycling & Disposal Services - GarbageToGo',
+            'service_title' => 'Electronic Recycling & Disposal Services',
+            'service_description' => 'Responsible electronic waste recycling with secure data destruction',
+            'hero_image' => 'electronic-recycling.jpg'
+        ];
+        return view('services/electronic_recycling', $data);
+    }
 }

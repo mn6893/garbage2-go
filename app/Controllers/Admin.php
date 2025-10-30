@@ -288,6 +288,26 @@ class Admin extends BaseController
     public function processQuoteAI($id)
     {
         try {
+            $quoteModel = new \App\Models\QuoteModel();
+            $quote = $quoteModel->find($id);
+
+            if (!$quote) {
+                return redirect()->to('/admin/quotes')->with('error', 'Quote not found');
+            }
+
+            // Store original status to allow reprocessing regardless of current status
+            $originalStatus = $quote['status'];
+
+            // Temporarily set status to 'pending' to allow AI processing
+            $quoteModel->update($id, [
+                'status' => 'pending',
+                'ai_processed_at' => null, // Clear previous processing timestamp
+                'processing_lock' => null, // Clear any existing locks
+                'updated_at' => date('Y-m-d H:i:s')
+            ]);
+
+            log_message('info', 'Admin manually triggered AI processing for quote #' . $id . ' (original status: ' . $originalStatus . ')');
+
             $processor = new \App\Libraries\AIQuoteProcessor();
             $result = $processor->processQuote($id);
 
@@ -295,6 +315,11 @@ class Admin extends BaseController
                 return redirect()->to('/admin/quote/' . $id)->with('success',
                     'AI processing completed successfully. Quote amount: $' . number_format($result['quote_amount'], 2));
             } else {
+                // Restore original status if processing failed
+                $quoteModel->update($id, [
+                    'status' => $originalStatus,
+                    'updated_at' => date('Y-m-d H:i:s')
+                ]);
                 return redirect()->to('/admin/quote/' . $id)->with('error',
                     'AI processing failed: ' . $result['error']);
             }
@@ -911,43 +936,156 @@ class Admin extends BaseController
         try {
             $quoteModel = new \App\Models\QuoteModel();
             $quote = $quoteModel->find($quoteId);
-            
+
             if (!$quote) {
                 throw new \Exception('Quote not found');
             }
-            
+
             $images = json_decode($quote['images'], true);
             if (!is_array($images) || !isset($images[$imageIndex])) {
                 throw new \Exception('Image not found');
             }
-            
+
             $filename = $images[$imageIndex];
             $imagePath = WRITEPATH . 'uploads/quote_images/' . $filename;
-            
+
             if (!file_exists($imagePath)) {
                 throw new \Exception('Image file does not exist');
             }
-            
+
             // Get file info
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $mimeType = finfo_file($finfo, $imagePath);
             finfo_close($finfo);
-            
+
             // Force download headers
             header('Content-Type: application/octet-stream');
             header('Content-Disposition: attachment; filename="quote_' . $quoteId . '_image_' . ($imageIndex + 1) . '_' . $filename . '"');
             header('Content-Length: ' . filesize($imagePath));
             header('Cache-Control: no-cache, must-revalidate');
-            
+
             // Output file
             readfile($imagePath);
             exit;
-            
+
         } catch (\Exception $e) {
             log_message('error', 'Image download error: ' . $e->getMessage());
-            
+
             $this->response->setStatusCode(404);
             return 'Image not found';
+        }
+    }
+
+    /**
+     * Upload additional images to an existing quote from admin panel
+     */
+    public function uploadQuoteImages($quoteId)
+    {
+        try {
+            $quoteModel = new \App\Models\QuoteModel();
+            $quote = $quoteModel->find($quoteId);
+
+            if (!$quote) {
+                return redirect()->to('/admin/quote/' . $quoteId)->with('error', 'Quote not found');
+            }
+
+            // Validate image upload
+            $validationRule = [
+                'additional_images' => [
+                    'label' => 'Images',
+                    'rules' => 'uploaded[additional_images]|max_size[additional_images,5120]|is_image[additional_images]',
+                ],
+            ];
+
+            if (!$this->validate($validationRule)) {
+                return redirect()->back()->with('error', 'Invalid image upload: ' . implode(', ', $this->validator->getErrors()));
+            }
+
+            $files = $this->request->getFiles();
+
+            if (empty($files['additional_images'])) {
+                return redirect()->back()->with('error', 'No images uploaded');
+            }
+
+            // Create upload directory if it doesn't exist
+            $uploadPath = WRITEPATH . 'uploads/quote_images/';
+            if (!is_dir($uploadPath)) {
+                mkdir($uploadPath, 0777, true);
+            }
+
+            $uploadedImages = [];
+
+            foreach ($files['additional_images'] as $file) {
+                if ($file->isValid() && !$file->hasMoved()) {
+                    $newName = $file->getRandomName();
+                    $file->move($uploadPath, $newName);
+                    $uploadedImages[] = $newName;
+                }
+            }
+
+            if (empty($uploadedImages)) {
+                return redirect()->back()->with('error', 'Failed to upload images');
+            }
+
+            // Get existing images
+            $existingImages = json_decode($quote['images'], true) ?? [];
+
+            // Merge new images with existing ones
+            $allImages = array_merge($existingImages, $uploadedImages);
+
+            // Update quote with new images
+            $quoteModel->update($quoteId, [
+                'images' => json_encode($allImages),
+                'updated_at' => date('Y-m-d H:i:s')
+            ]);
+
+            log_message('info', 'Admin uploaded ' . count($uploadedImages) . ' new images to quote #' . $quoteId);
+
+            // Check if AI processing is requested
+            $processWithAI = $this->request->getPost('process_with_ai');
+
+            if ($processWithAI) {
+                // Trigger AI processing with the same logic as existing processQuoteAI
+                try {
+                    // First, temporarily set status to 'pending' to allow reprocessing
+                    $originalStatus = $quote['status'];
+                    $quoteModel->update($quoteId, [
+                        'status' => 'pending',
+                        'ai_processed_at' => null, // Clear previous processing timestamp
+                        'processing_lock' => null, // Clear any existing locks
+                        'updated_at' => date('Y-m-d H:i:s')
+                    ]);
+
+                    log_message('info', 'Admin triggered AI reprocessing for quote #' . $quoteId . ' (original status: ' . $originalStatus . ')');
+
+                    $processor = new \App\Libraries\AIQuoteProcessor();
+                    $result = $processor->processQuote($quoteId);
+
+                    if ($result['success']) {
+                        return redirect()->to('/admin/quote/' . $quoteId)->with('success',
+                            count($uploadedImages) . ' image(s) uploaded successfully and AI processing completed! Quote amount: $' . number_format($result['quote_amount'], 2));
+                    } else {
+                        // Restore original status if processing failed
+                        $quoteModel->update($quoteId, [
+                            'status' => $originalStatus,
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ]);
+                        return redirect()->to('/admin/quote/' . $quoteId)->with('warning',
+                            count($uploadedImages) . ' image(s) uploaded, but AI processing failed: ' . $result['error']);
+                    }
+                } catch (\Exception $e) {
+                    log_message('error', 'AI processing error after image upload: ' . $e->getMessage());
+                    return redirect()->to('/admin/quote/' . $quoteId)->with('warning',
+                        count($uploadedImages) . ' image(s) uploaded, but AI processing encountered an error: ' . $e->getMessage());
+                }
+            } else {
+                return redirect()->to('/admin/quote/' . $quoteId)->with('success',
+                    count($uploadedImages) . ' image(s) uploaded successfully! You can now process with AI using the button below.');
+            }
+
+        } catch (\Exception $e) {
+            log_message('error', 'Admin image upload error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Error uploading images: ' . $e->getMessage());
         }
     }
 }

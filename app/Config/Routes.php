@@ -16,7 +16,7 @@ $routes->get('services/household-junk-removal', 'Services::householdJunkRemoval'
 $routes->get('services/garage-junk-removal', 'Services::garageJunkRemoval');
 $routes->get('services/backyard-clean-up-and-junk-removal', 'Services::backyardCleanUp');
 $routes->get('services/mattress-recycling-canada', 'Services::mattressRecycling');
-$routes->get('junk-removal-canada', 'Services::junkRemovalCanada');
+$routes->get('services/junk-removal-canada', 'Services::junkRemovalCanada');
 
 // Commercial Junk Removal Services
 $routes->get('services/commercial-junk-removal', 'Services::commercialJunkRemoval');
@@ -30,6 +30,7 @@ $routes->get('services/worksite-junk-removal', 'Services::worksiteJunkRemoval');
 // Other Services
 $routes->get('services/deceased-estate-junk-removal', 'Services::deceasedEstateJunkRemoval');
 $routes->get('services/green-waste-removal', 'Services::greenWasteRemoval');
+$routes->get('services/electronic-recycling', 'Services::electronicRecycling');
 
 // Quote Routes
 $routes->get('quote', 'Quote::index');
@@ -65,6 +66,7 @@ $routes->group('admin', function($routes) {
     $routes->get('quote/(:num)', 'Admin::quote/$1');
     $routes->post('quote/update-status', 'Admin::updateQuoteStatus');
     $routes->post('quote/(:num)/process-ai', 'Admin::processQuoteAI/$1');
+    $routes->post('quote/(:num)/upload-images', 'Admin::uploadQuoteImages/$1');
     $routes->post('retry-quote-emails/(:num)', 'Admin::retryQuoteEmails/$1');
     $routes->post('bulk-retry-emails', 'Admin::bulkRetryEmails');
     $routes->get('quote/image/(:num)/(:num)', 'Admin::viewQuoteImage/$1/$2');

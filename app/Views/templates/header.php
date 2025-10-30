@@ -53,7 +53,7 @@
                 <li><a class="dropdown-item" href="<?= base_url('services/garage-junk-removal') ?>">Garage Junk Removal</a></li>
                 <li><a class="dropdown-item" href="<?= base_url('services/backyard-clean-up-and-junk-removal') ?>">Backyard Clean-up</a></li>
                 <li><a class="dropdown-item" href="<?= base_url('services/mattress-recycling-melbourne') ?>">Mattress Recycling</a></li>
-                <li><a class="dropdown-item" href="<?= base_url('junk-removal-melbourne') ?>">Junk Removal</a></li>
+                <li><a class="dropdown-item" href="<?= base_url('services/junk-removal-melbourne') ?>">Junk Removal</a></li>
                 </ul>
               </li>
               <li class="dropdown-item dropdown">
@@ -69,6 +69,7 @@
               </li>
               <li><a class="dropdown-item" href="<?= base_url('services/deceased-estate-junk-removal') ?>">Deceased Estate Junk Removal</a></li>
               <li><a class="dropdown-item" href="<?= base_url('services/green-waste-removal') ?>">Green Waste Removal</a></li>
+              <li><a class="dropdown-item" href="<?= base_url('services/electronic-recycling') ?>">Electronic Recycling</a></li>
               </ul>
             </li>
             <li class="nav-item dropdown">

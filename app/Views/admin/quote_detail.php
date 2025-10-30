@@ -488,32 +488,32 @@
         <?php endif; ?>
         
         <!-- Images -->
-        <?php if (!empty($quote['images'])): ?>
         <div class="row">
           <div class="col-md-12">
             <div class="card mb-20">
               <div class="card-header">
-                <h5 class="card-title mb-0">Uploaded Images</h5>
+                <h5 class="card-title mb-0">Quote Images</h5>
               </div>
               <div class="card-body">
-                <div class="row">
-                  <?php 
+                <?php if (!empty($quote['images'])): ?>
+                <div class="row mb-20">
+                  <?php
                   $images = json_decode($quote['images'], true);
                   if (is_array($images)):
-                    foreach ($images as $index => $image): 
+                    foreach ($images as $index => $image):
                   ?>
                     <div class="col-md-3 col-sm-6 mb-15">
                       <div class="image-container">
-                        <img src="<?= base_url('admin/quote/image/' . $quote['id'] . '/' . $index) ?>" 
-                             alt="Quote Image" class="img-fluid rounded" 
+                        <img src="<?= base_url('admin/quote/image/' . $quote['id'] . '/' . $index) ?>"
+                             alt="Quote Image" class="img-fluid rounded"
                              style="width: 100%; height: 200px; object-fit: cover; cursor: pointer;"
                              onclick="openImageModal('<?= base_url('admin/quote/image/' . $quote['id'] . '/' . $index) ?>')">
                         <div class="mt-10 text-center">
-                          <button type="button" class="btn btn-sm btn-outline-primary me-1" 
+                          <button type="button" class="btn btn-sm btn-outline-primary me-1"
                                   onclick="openImageModal('<?= base_url('admin/quote/image/' . $quote['id'] . '/' . $index) ?>')">
                             <i class="icofont-eye"></i> View
                           </button>
-                          <a href="<?= base_url('admin/quote/download/' . $quote['id'] . '/' . $index) ?>" 
+                          <a href="<?= base_url('admin/quote/download/' . $quote['id'] . '/' . $index) ?>"
                              class="btn btn-sm btn-outline-success" target="_blank">
                             <i class="icofont-download"></i> Download
                           </a>
@@ -523,16 +523,60 @@
                         </div>
                       </div>
                     </div>
-                  <?php 
+                  <?php
                     endforeach;
-                  endif; 
+                  endif;
                   ?>
+                </div>
+                <hr>
+                <?php else: ?>
+                <div class="alert alert-info">
+                  <i class="icofont-info-circle"></i> No images uploaded yet. Use the form below to add images for AI analysis.
+                </div>
+                <?php endif; ?>
+
+                <!-- Upload New Images Section -->
+                <div class="upload-section">
+                  <h6 class="mb-15">Upload Additional Images for AI Processing</h6>
+                  <form id="uploadImageForm" method="post" action="<?= base_url('admin/quote/' . $quote['id'] . '/upload-images') ?>" enctype="multipart/form-data">
+                    <?= csrf_field() ?>
+                    <div class="row">
+                      <div class="col-md-8">
+                        <div class="mb-15">
+                          <label class="form-label">Select Images (Max 5MB each, JPG/PNG)</label>
+                          <input type="file" name="additional_images[]" id="additional_images"
+                                 class="form-control" multiple accept="image/jpeg,image/jpg,image/png" required>
+                          <small class="text-muted">You can select multiple images at once</small>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <label class="form-label">&nbsp;</label>
+                        <div class="d-grid gap-2">
+                          <button type="submit" class="btn btn-info" id="uploadBtn">
+                            <i class="icofont-upload-alt"></i> Upload Images
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-check mb-15">
+                      <input class="form-check-input" type="checkbox" name="process_with_ai" id="process_with_ai" value="1" checked>
+                      <label class="form-check-label" for="process_with_ai">
+                        <strong>Process with AI immediately after upload</strong>
+                        <br><small class="text-muted">Automatically analyze images and generate/update quote</small>
+                      </label>
+                    </div>
+                  </form>
+
+                  <!-- Image Preview Section -->
+                  <div id="imagePreviewSection" class="mt-20" style="display: none;">
+                    <h6>Selected Images Preview:</h6>
+                    <div id="imagePreviewContainer" class="row"></div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <?php endif; ?>
         
                 <!-- Action Buttons -->
         <div class="row">
@@ -543,11 +587,11 @@
                   <i class="icofont-arrow-left mr-5"></i> Back to Quotes
                 </a>
                 
-                <?php if (!empty($quote['images']) && empty($quote['ai_processed_at'])): ?>
+                <?php if (!empty($quote['images'])): ?>
                 <form method="post" action="<?= base_url('admin/quote/' . $quote['id'] . '/process-ai') ?>" class="d-inline">
                   <?= csrf_field() ?>
-                  <button type="submit" class="btn btn-info" onclick="return confirm('Trigger AI processing for this quote?')">
-                    <i class="icofont-robot mr-5"></i> Process with AI
+                  <button type="submit" class="btn btn-info" onclick="return confirm('<?= !empty($quote['ai_processed_at']) ? 'This quote has already been processed. Reprocess with AI?' : 'Trigger AI processing for this quote?' ?>')">
+                    <i class="icofont-robot mr-5"></i> <?= !empty($quote['ai_processed_at']) ? 'Reprocess with AI' : 'Process with AI' ?>
                   </button>
                 </form>
                 <?php endif; ?>
@@ -590,20 +634,73 @@
 <script>
 function openImageModal(imageSrc) {
     document.getElementById('modalImage').src = imageSrc;
-    
+
     // Extract image info from the URL for better modal title
     const urlParts = imageSrc.split('/');
     const quoteId = urlParts[urlParts.length - 2];
     const imageIndex = urlParts[urlParts.length - 1];
-    
+
     document.getElementById('modalImageName').textContent = `Quote #${quoteId} - Image ${parseInt(imageIndex) + 1}`;
-    
+
     // Set download button
     const downloadUrl = imageSrc.replace('/image/', '/download/');
     document.getElementById('modalDownloadBtn').href = downloadUrl;
-    
+
     new bootstrap.Modal(document.getElementById('imageModal')).show();
 }
+
+// Image preview before upload
+document.addEventListener('DOMContentLoaded', function() {
+    const imageInput = document.getElementById('additional_images');
+    const previewSection = document.getElementById('imagePreviewSection');
+    const previewContainer = document.getElementById('imagePreviewContainer');
+    const uploadForm = document.getElementById('uploadImageForm');
+    const uploadBtn = document.getElementById('uploadBtn');
+
+    if (imageInput) {
+        imageInput.addEventListener('change', function(e) {
+            const files = e.target.files;
+            previewContainer.innerHTML = '';
+
+            if (files.length > 0) {
+                previewSection.style.display = 'block';
+
+                Array.from(files).forEach((file, index) => {
+                    if (file.type.match('image.*')) {
+                        const reader = new FileReader();
+
+                        reader.onload = function(e) {
+                            const col = document.createElement('div');
+                            col.className = 'col-md-3 col-sm-6 mb-15';
+                            col.innerHTML = `
+                                <div class="card">
+                                    <img src="${e.target.result}" class="card-img-top" style="height: 150px; object-fit: cover;">
+                                    <div class="card-body p-2">
+                                        <small class="text-muted">${file.name}</small>
+                                        <br><small class="text-muted">${(file.size / 1024 / 1024).toFixed(2)} MB</small>
+                                    </div>
+                                </div>
+                            `;
+                            previewContainer.appendChild(col);
+                        };
+
+                        reader.readAsDataURL(file);
+                    }
+                });
+            } else {
+                previewSection.style.display = 'none';
+            }
+        });
+    }
+
+    // Handle form submission with loading state
+    if (uploadForm) {
+        uploadForm.addEventListener('submit', function(e) {
+            uploadBtn.disabled = true;
+            uploadBtn.innerHTML = '<i class="icofont-spinner-alt-1 icofont-rotate"></i> Uploading...';
+        });
+    }
+});
 </script>
 
 <?= $this->include('admin/footer'); ?>

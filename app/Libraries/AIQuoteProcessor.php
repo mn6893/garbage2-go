@@ -450,6 +450,10 @@ class AIQuoteProcessor
                 .total { background: #2c5aa0; color: white; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; }
                 .min-price { background: #28a745; color: white; padding: 15px; text-align: center; font-size: 20px; font-weight: bold; margin: 10px 0; border-radius: 5px; }
                 .special-offer { background: #ffc107; color: #212529; padding: 15px; text-align: center; font-weight: bold; margin: 10px 0; border-radius: 5px; border: 2px solid #ff6b35; }
+                .pricing-comparison { background: white; padding: 25px; margin: 20px 0; border-radius: 10px; text-align: center; border: 3px solid #28a745; }
+                .market-price { color: #999; font-size: 20px; text-decoration: line-through; margin-bottom: 5px; }
+                .our-price { color: #28a745; font-size: 32px; font-weight: bold; margin-top: 10px; }
+                .savings-badge { background: #ff6b35; color: white; padding: 8px 20px; border-radius: 20px; display: inline-block; margin-top: 10px; font-size: 16px; }
                 .terms { background: #f8f9fa; padding: 15px; margin: 15px 0; border-radius: 5px; border-left: 4px solid #2c5aa0; font-size: 14px; }
                 .terms h4 { margin-top: 0; color: #2c5aa0; }
                 .terms ul { margin: 10px 0; padding-left: 20px; }
@@ -491,9 +495,15 @@ class AIQuoteProcessor
         
         $html .= '
                     </div>
-                    
-                    <div class="min-price">
-                        Minimum Service Charge: $' . number_format($minAmount, 2) . '
+
+                    <div class="pricing-comparison">
+                        <div style="font-size: 18px; color: #666; margin-bottom: 10px;">Market Price</div>
+                        <div class="market-price">$' . number_format($totalAmount, 2) . '</div>
+                        <div style="font-size: 18px; color: #28a745; font-weight: bold; margin-top: 15px;">Our Price</div>
+                        <div class="our-price">$' . number_format($minAmount, 2) . '</div>
+                        <div class="savings-badge">
+                            You Save: $' . number_format($totalAmount - $minAmount, 2) . '
+                        </div>
                     </div>
 
                     <div class="quote-details">
@@ -538,16 +548,9 @@ class AIQuoteProcessor
         
         $html .= '
                         </table>
-                    </div>
-                    
-                    <div class="total">
-                        Estimated Total Cost: $' . number_format($totalAmount, 2) . '
-                    </div>
-
-                    <div class="special-offer">
-                        <strong>Estimated Price Range</strong><br>
-                        Your service cost will range between <strong>$' . number_format($minAmount, 2) . ' - $' . number_format($totalAmount, 2) . '</strong><br>
-                        <em>Please note: Smaller loads will be charged at our minimum rate of $' . number_format($minAmount, 2) . '</em>
+                        <p style="text-align: center; color: #666; font-size: 14px; margin-top: 15px;">
+                            <em>All prices shown are estimates. Final pricing based on actual volume and materials.</em>
+                        </p>
                     </div>';
         
         if (isset($details['validUntil'])) {
@@ -580,15 +583,15 @@ class AIQuoteProcessor
                                 </tr>
                                 <tr>
                                     <td style="text-align: center; padding: 10px;">
-                                        <a href="' . base_url('quote/response/' . $quote['id'] . '/reject') . '"
-                                           style="display: inline-block; padding: 15px 30px; background: #dc3545; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">
-                                            ✗ Decline Quote
-                                        </a>
-                                    </td>
-                                    <td style="text-align: center; padding: 10px;">
                                         <a href="tel:+15551234567"
                                            style="display: inline-block; padding: 15px 30px; background: #2c5aa0; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">
                                             📞 Call Manager Now
+                                        </a>
+                                    </td>
+                                    <td style="text-align: center; padding: 10px;">
+                                        <a href="' . base_url('quote/response/' . $quote['id'] . '/reject') . '"
+                                           style="display: inline-block; padding: 15px 30px; background: #dc3545; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">
+                                            ✗ Decline Quote
                                         </a>
                                     </td>
                                 </tr>

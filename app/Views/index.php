@@ -5,9 +5,15 @@
       <div class="container inner text-center">
         <div class="space140"></div>
          <h1 class="display-1">GarbageToGo - We <span class="typer color-default" id="typer" data-delay="100" data-delim=":" data-words="remove junk:clear debris:dispose appliances:handle cleanouts:manage waste:recycle responsibly"></span><span class="cursor color-default" data-owner="typer"></span></h1>
-         <p class="lead larger text-center mt-20">Professional Junk Removal Services | Residential Cleanouts | Commercial Waste Management | Construction Debris Removal | Appliance Disposal</p>
+         <p class="lead larger text-center mt-20">Professional Junk Removal Services | Residential Cleanouts | Commercial Waste Management | Construction Debris Removal | Appliance Disposal | Electronic Recycling</p>
         <!-- <h1 class="display-1">We love to clear your junk <br class="d-none d-lg-block" />and make your space beautiful</h1> -->
         <div class="space20"></div>
+        <div class="mb-30">
+          <p class="lead" style="font-weight: 600; color: rgba(255, 255, 255, 0.95); font-size: 1.3rem; margin: 0;">
+            <i class="jam jam-recycle" style="color: #00EC01; margin-right: 8px;"></i>
+            Our Last Option Will Be Landfill
+          </p>
+        </div>
         <a href="#portfolio" class="btn btn-l btn-default scroll">Request a Quote </a>
       </div>
       <!-- /.container -->
