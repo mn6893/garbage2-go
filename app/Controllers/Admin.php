@@ -193,6 +193,149 @@ class Admin extends BaseController
     }
     
     /**
+     * Update quote amount
+     */
+    public function updateQuoteAmount()
+    {
+        $id = $this->request->getPost('id');
+        $quoteAmount = $this->request->getPost('quote_amount');
+        $adminNotes = $this->request->getPost('admin_notes');
+
+        // Validate quote ID
+        if (!$id) {
+            return redirect()->back()->with('error', 'Invalid quote ID');
+        }
+
+        $quoteModel = new \App\Models\QuoteModel();
+
+        // Get current quote
+        $quote = $quoteModel->find($id);
+        if (!$quote) {
+            return redirect()->to('/admin/quotes')->with('error', 'Quote not found');
+        }
+
+        // Prepare update data
+        $data = [
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+
+        // Update quote amount if provided
+        if ($quoteAmount !== '' && $quoteAmount !== null) {
+            $data['quote_amount'] = floatval($quoteAmount);
+            // Change status to 'quoted' when manual amount is set
+            if ($quote['status'] === 'pending' || $quote['status'] === 'ai_quoted') {
+                $data['status'] = 'quoted';
+            }
+        } else {
+            // If amount is cleared, set to null
+            $data['quote_amount'] = null;
+        }
+
+        // Update admin notes if provided
+        if ($adminNotes !== null && trim($adminNotes) !== '') {
+            $data['admin_notes'] = $adminNotes;
+        }
+
+        // Update the quote
+        if ($quoteModel->update($id, $data)) {
+            return redirect()->to('/admin/quote/' . $id)->with('success', 'Quote amount updated successfully');
+        } else {
+            return redirect()->to('/admin/quote/' . $id)->with('error', 'Failed to update quote amount');
+        }
+    }
+
+    /**
+     * Update cost breakdown
+     */
+    public function updateCostBreakdown()
+    {
+        $id = $this->request->getPost('id');
+
+        // Validate quote ID
+        if (!$id) {
+            return redirect()->back()->with('error', 'Invalid quote ID');
+        }
+
+        $quoteModel = new \App\Models\QuoteModel();
+
+        // Get current quote
+        $quote = $quoteModel->find($id);
+        if (!$quote) {
+            return redirect()->to('/admin/quotes')->with('error', 'Quote not found');
+        }
+
+        // Get cost breakdown inputs
+        $baseCost = floatval($this->request->getPost('base_cost') ?? 0);
+        $volumeCost = floatval($this->request->getPost('volume_cost') ?? 0);
+        $specialFees = floatval($this->request->getPost('special_fees') ?? 0);
+        $environmentalFee = floatval($this->request->getPost('environmental_fee') ?? 0);
+        $disposalFee = floatval($this->request->getPost('disposal_fee') ?? 0);
+        $subtotal = floatval($this->request->getPost('subtotal') ?? 0);
+        $gst = floatval($this->request->getPost('gst') ?? 0);
+        $pst = floatval($this->request->getPost('pst') ?? 0);
+        $finalTotal = floatval($this->request->getPost('final_total') ?? 0);
+        $adminNotes = $this->request->getPost('admin_notes');
+
+        // Build the cost breakdown structure
+        $breakdown = [
+            'baseCost' => $baseCost,
+            'volumeCost' => $volumeCost,
+            'specialFees' => $specialFees,
+            'environmentalFee' => $environmentalFee,
+            'disposalFee' => $disposalFee,
+            'subtotal' => $subtotal,
+            'gst' => $gst,
+            'pst' => $pst,
+            'total' => $finalTotal
+        ];
+
+        // Parse existing generated_quote or create new one
+        $generatedQuote = [];
+        if (!empty($quote['generated_quote'])) {
+            $generatedQuote = json_decode($quote['generated_quote'], true);
+        }
+
+        // Update breakdown in generated_quote
+        $generatedQuote['breakdown'] = $breakdown;
+        $generatedQuote['quote'] = [
+            'base_cost' => $baseCost,
+            'volume_cost' => $volumeCost,
+            'special_fees' => $specialFees,
+            'taxes' => $gst + $pst,
+            'total_amount' => $finalTotal
+        ];
+        $generatedQuote['updatedBy'] = 'admin';
+        $generatedQuote['updatedAt'] = date('Y-m-d H:i:s');
+
+        // Prepare update data
+        $data = [
+            'quote_amount' => $finalTotal,
+            'base_amount' => $baseCost,
+            'additional_fees' => $specialFees + $environmentalFee + $disposalFee,
+            'estimated_amount' => $finalTotal,
+            'generated_quote' => json_encode($generatedQuote),
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+
+        // Change status to 'quoted' when manual breakdown is set
+        if ($quote['status'] === 'pending' || $quote['status'] === 'ai_quoted') {
+            $data['status'] = 'quoted';
+        }
+
+        // Update admin notes if provided
+        if ($adminNotes !== null && trim($adminNotes) !== '') {
+            $data['admin_notes'] = $adminNotes;
+        }
+
+        // Update the quote
+        if ($quoteModel->update($id, $data)) {
+            return redirect()->to('/admin/quote/' . $id)->with('success', 'Cost breakdown updated successfully');
+        } else {
+            return redirect()->to('/admin/quote/' . $id)->with('error', 'Failed to update cost breakdown');
+        }
+    }
+
+    /**
      * View quote details
      */
     public function quote($id)
@@ -200,14 +343,14 @@ class Admin extends BaseController
         $db = \Config\Database::connect();
         $builder = $db->table('quotes');
         $quote = $builder->where('id', $id)->get()->getRowArray();
-        
+
         if (!$quote) {
             return redirect()->to('/admin/quotes')->with('error', 'Quote not found');
         }
-        
+
         return view('admin/quote_detail', ['quote' => $quote]);
     }
-    
+
     /**
      * Contact management
      */

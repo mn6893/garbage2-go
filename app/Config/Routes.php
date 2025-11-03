@@ -65,6 +65,8 @@ $routes->group('admin', function($routes) {
     $routes->get('quotes', 'Admin::quotes');
     $routes->get('quote/(:num)', 'Admin::quote/$1');
     $routes->post('quote/update-status', 'Admin::updateQuoteStatus');
+    $routes->post('quote/update-amount', 'Admin::updateQuoteAmount');
+    $routes->post('quote/update-cost-breakdown', 'Admin::updateCostBreakdown');
     $routes->post('quote/(:num)/process-ai', 'Admin::processQuoteAI/$1');
     $routes->post('quote/(:num)/upload-images', 'Admin::uploadQuoteImages/$1');
     $routes->post('retry-quote-emails/(:num)', 'Admin::retryQuoteEmails/$1');

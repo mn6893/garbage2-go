@@ -102,8 +102,164 @@
               </div>
             </div>
           </div>
+
+          <!-- Quote Amount -->
+          <div class="col-md-6">
+            <div class="card mb-20">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">Quote Amount & Cost Breakdown</h5>
+                <button type="button" class="btn btn-sm btn-outline-primary" onclick="toggleCostBreakdown()">
+                  <i class="icofont-edit"></i> Edit Breakdown
+                </button>
+              </div>
+              <div class="card-body">
+                <!-- Simple Amount Form (Default View) -->
+                <div id="simpleAmountForm">
+                  <form method="post" action="<?= base_url('admin/quote/update-amount') ?>">
+                    <?= csrf_field() ?>
+                    <input type="hidden" name="id" value="<?= $quote['id'] ?>">
+
+                    <div class="mb-15">
+                      <label class="form-label">Manual Quote Amount ($)</label>
+                      <input type="number" name="quote_amount" class="form-control"
+                             step="0.01" min="0"
+                             value="<?= $quote['quote_amount'] ?? '' ?>"
+                             placeholder="Enter quote amount">
+                      <small class="text-muted">Leave empty to use AI-generated amount</small>
+                    </div>
+
+                    <?php if (!empty($quote['estimated_amount'])): ?>
+                    <div class="mb-15">
+                      <label class="form-label">AI Estimated Amount</label>
+                      <div class="bg-light p-10 rounded">
+                        <strong class="text-success">$<?= number_format($quote['estimated_amount'], 2) ?></strong>
+                      </div>
+                    </div>
+                    <?php endif; ?>
+
+                    <div class="mb-15">
+                      <label class="form-label">Admin Notes (Optional)</label>
+                      <textarea name="admin_notes" class="form-control" rows="2"
+                                placeholder="Add notes about this quote amount..."><?= esc($quote['admin_notes'] ?? '') ?></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-success">Update Amount</button>
+                  </form>
+                </div>
+
+                <!-- Detailed Cost Breakdown Form (Hidden by Default) -->
+                <div id="detailedCostForm" style="display: none;">
+                  <form method="post" action="<?= base_url('admin/quote/update-cost-breakdown') ?>" id="costBreakdownForm">
+                    <?= csrf_field() ?>
+                    <input type="hidden" name="id" value="<?= $quote['id'] ?>">
+
+                    <?php
+                    // Parse existing breakdown from generated_quote
+                    $breakdown = [];
+                    if (!empty($quote['generated_quote'])) {
+                        $generatedQuote = json_decode($quote['generated_quote'], true);
+                        $breakdown = $generatedQuote['breakdown'] ?? [];
+                    }
+                    ?>
+
+                    <h6 class="mb-10">Cost Components</h6>
+
+                    <div class="row">
+                      <div class="col-md-6 mb-10">
+                        <label class="form-label">Base Cost ($)</label>
+                        <input type="number" name="base_cost" id="base_cost" class="form-control cost-input"
+                               step="0.01" min="0" value="<?= $breakdown['baseCost'] ?? $quote['base_amount'] ?? 0 ?>"
+                               onchange="calculateTotal()">
+                      </div>
+                      <div class="col-md-6 mb-10">
+                        <label class="form-label">Volume Cost ($)</label>
+                        <input type="number" name="volume_cost" id="volume_cost" class="form-control cost-input"
+                               step="0.01" min="0" value="<?= $breakdown['volumeCost'] ?? 0 ?>"
+                               onchange="calculateTotal()">
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-6 mb-10">
+                        <label class="form-label">Special Fees ($)</label>
+                        <input type="number" name="special_fees" id="special_fees" class="form-control cost-input"
+                               step="0.01" min="0" value="<?= $breakdown['specialFees'] ?? 0 ?>"
+                               onchange="calculateTotal()">
+                      </div>
+                      <div class="col-md-6 mb-10">
+                        <label class="form-label">Environmental Fee ($)</label>
+                        <input type="number" name="environmental_fee" id="environmental_fee" class="form-control cost-input"
+                               step="0.01" min="0" value="<?= $breakdown['environmentalFee'] ?? 0 ?>"
+                               onchange="calculateTotal()">
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-6 mb-10">
+                        <label class="form-label">Disposal Fee ($)</label>
+                        <input type="number" name="disposal_fee" id="disposal_fee" class="form-control cost-input"
+                               step="0.01" min="0" value="<?= $breakdown['disposalFee'] ?? 0 ?>"
+                               onchange="calculateTotal()">
+                      </div>
+                      <div class="col-md-6 mb-10">
+                        <label class="form-label">Subtotal</label>
+                        <input type="text" id="subtotal_display" class="form-control bg-light" readonly value="$0.00">
+                        <input type="hidden" name="subtotal" id="subtotal" value="0">
+                      </div>
+                    </div>
+
+                    <hr>
+                    <h6 class="mb-10">Taxes</h6>
+
+                    <div class="row">
+                      <div class="col-md-4 mb-10">
+                        <label class="form-label">GST Rate (%)</label>
+                        <input type="number" name="gst_rate" id="gst_rate" class="form-control"
+                               step="0.01" min="0" max="100" value="5.00"
+                               onchange="calculateTotal()">
+                      </div>
+                      <div class="col-md-4 mb-10">
+                        <label class="form-label">PST Rate (%)</label>
+                        <input type="number" name="pst_rate" id="pst_rate" class="form-control"
+                               step="0.01" min="0" max="100" value="0.00"
+                               onchange="calculateTotal()">
+                      </div>
+                      <div class="col-md-4 mb-10">
+                        <label class="form-label">Total Taxes</label>
+                        <input type="text" id="total_tax_display" class="form-control bg-light" readonly value="$0.00">
+                        <input type="hidden" name="gst" id="gst" value="0">
+                        <input type="hidden" name="pst" id="pst" value="0">
+                      </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="row mb-15">
+                      <div class="col-md-12">
+                        <label class="form-label"><strong>Final Total</strong></label>
+                        <input type="text" id="final_total_display" class="form-control form-control-lg bg-success text-white"
+                               readonly value="$0.00" style="font-size: 1.5rem; font-weight: bold;">
+                        <input type="hidden" name="final_total" id="final_total" value="0">
+                      </div>
+                    </div>
+
+                    <div class="mb-15">
+                      <label class="form-label">Admin Notes (Optional)</label>
+                      <textarea name="admin_notes" class="form-control" rows="2"
+                                placeholder="Add notes about this cost breakdown..."><?= esc($quote['admin_notes'] ?? '') ?></textarea>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                      <button type="submit" class="btn btn-success">Save Cost Breakdown</button>
+                      <button type="button" class="btn btn-outline-secondary" onclick="toggleCostBreakdown()">Cancel</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        
+
         <!-- Address & Description -->
         <div class="row">
           <div class="col-md-12">
@@ -701,6 +857,57 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// Cost Breakdown Functions
+function toggleCostBreakdown() {
+    const simpleForm = document.getElementById('simpleAmountForm');
+    const detailedForm = document.getElementById('detailedCostForm');
+
+    if (detailedForm.style.display === 'none') {
+        simpleForm.style.display = 'none';
+        detailedForm.style.display = 'block';
+        // Calculate initial total when opening
+        calculateTotal();
+    } else {
+        simpleForm.style.display = 'block';
+        detailedForm.style.display = 'none';
+    }
+}
+
+function calculateTotal() {
+    // Get all cost inputs
+    const baseCost = parseFloat(document.getElementById('base_cost').value) || 0;
+    const volumeCost = parseFloat(document.getElementById('volume_cost').value) || 0;
+    const specialFees = parseFloat(document.getElementById('special_fees').value) || 0;
+    const environmentalFee = parseFloat(document.getElementById('environmental_fee').value) || 0;
+    const disposalFee = parseFloat(document.getElementById('disposal_fee').value) || 0;
+
+    // Calculate subtotal
+    const subtotal = baseCost + volumeCost + specialFees + environmentalFee + disposalFee;
+
+    // Get tax rates
+    const gstRate = parseFloat(document.getElementById('gst_rate').value) || 0;
+    const pstRate = parseFloat(document.getElementById('pst_rate').value) || 0;
+
+    // Calculate taxes
+    const gst = (subtotal * gstRate) / 100;
+    const pst = (subtotal * pstRate) / 100;
+    const totalTax = gst + pst;
+
+    // Calculate final total
+    const finalTotal = subtotal + totalTax;
+
+    // Update display fields
+    document.getElementById('subtotal_display').value = '$' + subtotal.toFixed(2);
+    document.getElementById('subtotal').value = subtotal.toFixed(2);
+
+    document.getElementById('total_tax_display').value = '$' + totalTax.toFixed(2);
+    document.getElementById('gst').value = gst.toFixed(2);
+    document.getElementById('pst').value = pst.toFixed(2);
+
+    document.getElementById('final_total_display').value = '$' + finalTotal.toFixed(2);
+    document.getElementById('final_total').value = finalTotal.toFixed(2);
+}
 </script>
 
 <?= $this->include('admin/footer'); ?>

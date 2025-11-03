@@ -180,7 +180,7 @@
           </div>
 
       <!-- Google Maps Places API -->
-      <script src="https://maps.googleapis.com/maps/api/js?key=<?= getenv('GOOGLE_MAPS_API_KEY') ?: 'YOUR_GOOGLE_MAPS_API_KEY' ?>&libraries=places&callback=initAutocomplete" async defer></script>
+      <script src="https://maps.googleapis.com/maps/api/js?key=<?= getenv('GOOGLE_MAPS_API_KEY') ?: 'AIzaSyA6ApBEw4KoErt0Blz40Xg22_YEi5j559U' ?>&libraries=places&callback=initAutocomplete" async defer></script>
 
       <script>
       // Initialize Google Places Autocomplete

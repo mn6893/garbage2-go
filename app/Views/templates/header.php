@@ -7,9 +7,6 @@
   <title><?= isset($title) ? $title : 'GarbageToGo' ?></title>
   <link rel="stylesheet" type="text/css" href="<?= base_url('style/css/bootstrap.min.css') ?>">
   <link rel="stylesheet" type="text/css" href="<?= base_url('style/css/plugins.css') ?>">
-  <link rel="stylesheet" type="text/css" href="<?= base_url('style/revolution/css/settings.css') ?>">
-  <link rel="stylesheet" type="text/css" href="<?= base_url('style/revolution/css/layers.css') ?>">
-  <link rel="stylesheet" type="text/css" href="<?= base_url('style/revolution/css/navigation.css') ?>">
   <link rel="stylesheet" type="text/css" href="<?= base_url('style/type/type.css') ?>">
   <link rel="stylesheet" type="text/css" href="<?= base_url('style/css/style.css') ?>">
   <link rel="stylesheet" type="text/css" href="<?= base_url('style/css/color/purple.css') ?>">

@@ -164,9 +164,11 @@
                   <div class="col-md-12">
                     <div class="form-group">
                       <label for="form_address">Complete Address *</label>
-                      <textarea id="form_address" name="address" class="form-control"
-                                placeholder="Start typing your address..."
-                                rows="2" required><?= old('address', isset($input['address']) ? esc($input['address']) : '') ?></textarea>
+                      <input id="form_address" name="address" class="form-control"
+                             placeholder="Start typing your address..."
+                             value="<?= old('address', isset($input['address']) ? esc($input['address']) : '') ?>"
+                             required>
+                      <input type="hidden" id="form_address_full" name="address_full">
                       <?php if (isset($validation) && $validation->hasError('address')): ?>
                           <div class="text-danger small mt-1"><?= $validation->getError('address') ?></div>
                       <?php endif; ?>
@@ -225,43 +227,80 @@
         </div>
 
         <!-- Google Maps Places API -->
-        <script src="https://maps.googleapis.com/maps/api/js?key=<?= getenv('GOOGLE_MAPS_API_KEY') ?: 'YOUR_GOOGLE_MAPS_API_KEY' ?>&libraries=places&callback=initAutocomplete" async defer></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=<?= getenv('GOOGLE_MAPS_API_KEY') ?: 'AIzaSyA6ApBEw4KoErt0Blz40Xg22_YEi5j559U' ?>&libraries=places&callback=initAutocomplete" async defer></script>
 
         <script>
-        // Initialize Google Places Autocomplete
+        // Initialize Google Places Autocomplete using the new API
         function initAutocomplete() {
             const addressField = document.getElementById('form_address');
             const cityField = document.getElementById('form_city');
 
-            if (addressField && typeof google !== 'undefined') {
-                const autocomplete = new google.maps.places.Autocomplete(addressField, {
-                    componentRestrictions: { country: 'ca' }, // Restrict to Canada
-                    fields: ['address_components', 'formatted_address', 'geometry'],
-                    types: ['address']
-                });
+            if (addressField && typeof google !== 'undefined' && google.maps && google.maps.places) {
+                // Check if the new PlaceAutocompleteElement is available
+                if (google.maps.places.PlaceAutocompleteElement) {
+                    // Use the new Place Autocomplete Element (recommended)
+                    const autocompleteElement = new google.maps.places.PlaceAutocompleteElement({
+                        componentRestrictions: { country: 'ca' },
+                        fields: ['address_components', 'formatted_address', 'geometry'],
+                        types: ['address']
+                    });
 
-                autocomplete.addListener('place_changed', function() {
-                    const place = autocomplete.getPlace();
+                    // Replace the input field with the new element
+                    addressField.parentNode.insertBefore(autocompleteElement, addressField);
+                    addressField.style.display = 'none';
 
-                    if (!place.geometry) {
-                        return;
-                    }
+                    autocompleteElement.addEventListener('gmp-placeselect', async ({ place }) => {
+                        await place.fetchFields({
+                            fields: ['address_components', 'formatted_address', 'geometry']
+                        });
 
-                    // Set the full formatted address
-                    addressField.value = place.formatted_address;
+                        // Set the full formatted address in the hidden original field
+                        addressField.value = place.formattedAddress || '';
 
-                    // Extract city from address components
-                    if (place.address_components) {
-                        for (let component of place.address_components) {
-                            if (component.types.includes('locality')) {
-                                cityField.value = component.long_name;
-                                break;
-                            } else if (component.types.includes('administrative_area_level_3')) {
-                                cityField.value = component.long_name;
+                        // Extract city from address components
+                        if (place.addressComponents) {
+                            for (let component of place.addressComponents) {
+                                if (component.types.includes('locality')) {
+                                    cityField.value = component.longText;
+                                    break;
+                                } else if (component.types.includes('administrative_area_level_3')) {
+                                    cityField.value = component.longText;
+                                }
                             }
                         }
-                    }
-                });
+                    });
+                } else {
+                    // Fallback to old Autocomplete API (will be deprecated)
+                    console.warn('Using deprecated Autocomplete API. Please update to PlaceAutocompleteElement.');
+                    const autocomplete = new google.maps.places.Autocomplete(addressField, {
+                        componentRestrictions: { country: 'ca' },
+                        fields: ['address_components', 'formatted_address', 'geometry'],
+                        types: ['address']
+                    });
+
+                    autocomplete.addListener('place_changed', function() {
+                        const place = autocomplete.getPlace();
+
+                        if (!place.geometry) {
+                            return;
+                        }
+
+                        // Set the full formatted address
+                        addressField.value = place.formatted_address;
+
+                        // Extract city from address components
+                        if (place.address_components) {
+                            for (let component of place.address_components) {
+                                if (component.types.includes('locality')) {
+                                    cityField.value = component.long_name;
+                                    break;
+                                } else if (component.types.includes('administrative_area_level_3')) {
+                                    cityField.value = component.long_name;
+                                }
+                            }
+                        }
+                    });
+                }
             }
         }
 

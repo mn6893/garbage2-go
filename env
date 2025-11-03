@@ -86,3 +86,5 @@ email.SMTPCrypto = tls
 email.mailType = html
 email.charset = utf-8
 email.wordWrap = true
+
+GOOGLE_MAPS_API_KEY=AIzaSyA6ApBEw4KoErt0Blz40Xg22_YEi5j559U
