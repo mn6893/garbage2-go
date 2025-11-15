@@ -745,6 +745,7 @@ class Admin extends BaseController
                     // Generate simple email content
                     $quoteData = $generatedQuote['quote'];
                     $emailContent = $this->generateSimpleQuoteEmail($quote, $quoteData);
+                    $email->setMailType('html');
                     $email->setMessage($emailContent);
                     
                     $success = $email->send();
@@ -768,6 +769,7 @@ class Admin extends BaseController
                     
                     $quoteData = $generatedQuote['quote'];
                     $emailContent = $this->generateSimpleAdminEmail($quote, $quoteData);
+                    $email->setMailType('html');
                     $email->setMessage($emailContent);
                     
                     $success = $email->send();

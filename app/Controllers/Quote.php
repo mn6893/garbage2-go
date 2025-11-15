@@ -460,6 +460,7 @@ class Quote extends BaseController
             </body>
             </html>';
 
+            $email->setMailType('html');
             $email->setMessage($html);
             $email->send();
 
@@ -531,6 +532,7 @@ class Quote extends BaseController
             </body>
             </html>';
 
+            $email->setMailType('html');
             $email->setMessage($html);
             $email->send();
 

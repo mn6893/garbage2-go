@@ -1,6 +1,7 @@
 # Environment configuration
 .env
 .env.*
+env
 
 # CodeIgniter 4 specific files
 /writable/cache/*

@@ -198,6 +198,7 @@ class RetryFailedEmails extends BaseCommand
         
         // Use the same email generation logic as AIQuoteProcessor
         $emailContent = $this->generateQuoteEmailContent($quote, $generatedQuote);
+        $email->setMailType('html');
         $email->setMessage($emailContent);
         
         return $email->send();
@@ -217,6 +218,7 @@ class RetryFailedEmails extends BaseCommand
         $email->setSubject('AI Quote Generated - Quote #' . $quote['id']);
         
         $emailContent = $this->generateAdminNotificationContent($quote, $generatedQuote);
+        $email->setMailType('html');
         $email->setMessage($emailContent);
         
         return $email->send();

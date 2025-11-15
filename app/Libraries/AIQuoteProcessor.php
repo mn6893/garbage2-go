@@ -392,6 +392,7 @@ class AIQuoteProcessor
         
         // Generate email content
         $emailContent = $this->generateQuoteEmailContent($quote, $generatedQuote);
+        $this->email->setMailType('html');
         $this->email->setMessage($emailContent);
         
         return $this->email->send();
@@ -402,7 +403,7 @@ class AIQuoteProcessor
      */
     private function sendAdminNotificationEmail(array $quote, array $generatedQuote): bool
     {
-        $adminEmail = env('ADMIN_EMAIL', 'admin@garbagetogo.ca');
+        $adminEmail = env('ADMIN_EMAIL', 'integrations@garbagetogo.ca');
         
         $this->email->clear();
         $this->email->setTo($adminEmail);
@@ -411,6 +412,7 @@ class AIQuoteProcessor
         
         // Generate admin email content
         $emailContent = $this->generateAdminNotificationContent($quote, $generatedQuote);
+        $this->email->setMailType('html');
         $this->email->setMessage($emailContent);
         
         return $this->email->send();

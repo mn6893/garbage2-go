@@ -153,7 +153,7 @@ class Home extends BaseController
         <p>{$data['message']}</p>
         <p><strong>Submitted:</strong> {$data['created_at']}</p>
         ";
-        
+        $email->setMailType('html');
         $email->setMessage($message);
         
         // Send email (handle errors gracefully)
