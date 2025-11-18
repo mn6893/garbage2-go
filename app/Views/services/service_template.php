@@ -135,7 +135,6 @@
                                     <li><a href="<?= base_url('rubbish-removal-mississauga') ?>">Mississauga</a></li>
                                     <li><a href="<?= base_url('rubbish-removal-brampton') ?>">Brampton</a></li>
                                     <li><a href="<?= base_url('rubbish-removal-hamilton') ?>">Hamilton</a></li>
-                                    <li><a href="<?= base_url('rubbish-removal-ottawa') ?>">Ottawa</a></li>
                                     <li><a href="<?= base_url('location') ?>">View All Locations</a></li>
                                 </ul>
                             </div>

@@ -25,12 +25,6 @@
                     </div>
                     <div class="col-md-4 mb-4">
                         <div class="service-box text-center">
-                            <h4><a href="<?= base_url('rubbish-removal-ottawa') ?>">Ottawa</a></h4>
-                            <p>National Capital Region - serving Ottawa and surrounding communities</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-4">
-                        <div class="service-box text-center">
                             <h4><a href="<?= base_url('rubbish-removal-mississauga') ?>">Mississauga</a></h4>
                             <p>Professional junk removal services in Canada's sixth-largest city</p>
                         </div>

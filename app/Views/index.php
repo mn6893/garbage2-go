@@ -38,7 +38,7 @@
                 <li><i class="jam jam-check" style="background-color: #003366; color: white; border-radius: 50%; padding: 2px; font-size: 16px;"></i> <span style="font-size: 16px;"> We do all the Loading, Lifting, Moving & Clearing</span></li>
                 <li><i class="jam jam-check" style="background-color: #003366; color: white; border-radius: 50%; padding: 2px; font-size: 16px;"></i> <span style="font-size: 16px;"> From single mattress to 40 feet container load</span></li>
                 <li><i class="jam jam-check" style="background-color: #003366; color: white; border-radius: 50%; padding: 2px; font-size: 16px;"></i> <span style="font-size: 16px;"> Up to 50% cheaper than our competitors</span></li>
-              <li><i class="jam jam-check" style="background-color: #003366; color: white; border-radius: 50%; padding: 2px; font-size: 16px;"></i> <span style="font-size: 16px;"> We service most areas of Ontario including GTA, Ottawa, Hamilton, London & surrounding regions</span></li>
+              <li><i class="jam jam-check" style="background-color: #003366; color: white; border-radius: 50%; padding: 2px; font-size: 16px;"></i> <span style="font-size: 16px;"> We service most areas of Ontario including GTA, Hamilton, London & surrounding regions</span></li>
             </ul>
           </div>
               </div>
@@ -570,130 +570,112 @@
     <div class="wrapper light-wrapper">
       <div class="container inner">
       <div class="row">
-        <div class="col-lg-8">
-        <div class="player" data-plyr-provider="youtube" data-plyr-embed-id="dQw4w9WgXcQ">
-          <img src="<?= base_url('style/images/art/our-process.jpg'); ?>" alt="Watch Our Junk Removal Process" width="100%" />
+      <div class="col-lg-8">
+      <div class="box bg-white shadow p-40">
+        <h2 class="section-title text-uppercase mb-30 color-default">Why Choose GarbageToGo?</h2>
+        <div class="row">
+        <div class="col-md-6 mb-30">
+          <div class="d-flex flex-row align-items-start">
+          <div class="icon color-default fs-38 mr-20"><i class="icofont-thumbs-up"></i></div>
+          <div>
+            <h5 class="mb-10">Professional Service</h5>
+            <p class="mb-0">Our trained team handles your junk removal with care and professionalism.</p>
+          </div>
+          </div>
+        </div>
+        <div class="col-md-6 mb-30">
+          <div class="d-flex flex-row align-items-start">
+          <div class="icon color-default fs-38 mr-20"><i class="icofont-clock-time"></i></div>
+          <div>
+            <h5 class="mb-10">Same Day Service</h5>
+            <p class="mb-0">Need it done today? We offer same-day junk removal services across Canada.</p>
+          </div>
+          </div>
+        </div>
+        <div class="col-md-6 mb-30">
+          <div class="d-flex flex-row align-items-start">
+          <div class="icon color-default fs-38 mr-20"><i class="icofont-price"></i></div>
+          <div>
+            <h5 class="mb-10">Transparent Pricing</h5>
+            <p class="mb-0">No hidden fees. You'll know the exact cost before we start the job.</p>
+          </div>
+          </div>
+        </div>
+        <div class="col-md-6 mb-30">
+          <div class="d-flex flex-row align-items-start">
+          <div class="icon color-default fs-38 mr-20"><i class="icofont-leaf"></i></div>
+          <div>
+            <h5 class="mb-10">Eco-Conscious</h5>
+            <p class="mb-0">We recycle and donate whenever possible. Landfill is our last option.</p>
+          </div>
+          </div>
         </div>
         </div>
-        <!--/column -->
-        <div class="space30 d-none d-md-block d-lg-none"></div>
-        <div class="col-lg-4 pl-50 pl-md-15">
-        <h2 class="section-title text-uppercase mb-20 color-default">Our Process</h2>
-        <p>Simple, efficient, and hassle-free junk removal. We handle everything from scheduling to disposal, so you don't have to worry about a thing.</p>
-        <ul class="icon-list bullet-default">
-          <li><i class="jam jam-arrow-right" style="color: #003366;"></i>Schedule your free estimate online or by phone.</li>
-          <li><i class="jam jam-arrow-right" style="color: #003366;"></i>We arrive on time with our professional crew.</li>
-          <li><i class="jam jam-arrow-right" style="color: #003366;"></i>We do all the heavy lifting and loading.</li>
-          <li><i class="jam jam-arrow-right" style="color: #003366;"></i>We clean up and dispose responsibly.</li>
-        </ul>
-        <div class="space10"></div>
-        <a href="<?= base_url('quote') ?>" class="btn mb-0" style="background: #003366; color: white;">Get Free Quote</a>
-        </div>
-        <!--/column -->
+      </div>
+      </div>
+      <!--/column -->
+      <div class="space30 d-none d-md-block d-lg-none"></div>
+      <div class="col-lg-4 pl-50 pl-md-15">
+      <h2 class="section-title text-uppercase mb-20 color-default">Our Process</h2>
+      <p>Simple, efficient, and hassle-free junk removal. We handle everything from scheduling to disposal, so you don't have to worry about a thing.</p>
+      <ul class="icon-list bullet-default">
+        <li><i class="jam jam-arrow-right" style="color: #003366;"></i>Schedule your free estimate online or by phone.</li>
+        <li><i class="jam jam-arrow-right" style="color: #003366;"></i>We arrive on time with our professional crew.</li>
+        <li><i class="jam jam-arrow-right" style="color: #003366;"></i>We do all the heavy lifting and loading.</li>
+        <li><i class="jam jam-arrow-right" style="color: #003366;"></i>We clean up and dispose responsibly.</li>
+      </ul>
+      <div class="space10"></div>
+      <a href="<?= base_url('quote') ?>" class="btn mb-0" style="background: #003366; color: white;">Get Free Quote</a>
+      </div>
+      <!--/column -->
       </div>
       <!--/.row -->
       <div class="space80"></div>
       <div class="row gutter-60 gutter-md-30">
-        <div class="col-lg-4">
-        <div class="d-flex flex-row">
-          <div>
-          <span class="icon icon-bg icon-bg-default color-default mr-25" style="background: #003366; color: white;"><span class="number">1</span></span>
-          </div>
-          <div>
-          <h5>Book Online</h5>
-          <p class="mb-0">Schedule your junk removal service online or call us for a free estimate.</p>
-          </div>
+      <div class="col-lg-4">
+      <div class="d-flex flex-row">
+        <div>
+        <span class="icon icon-bg icon-bg-default color-default mr-25" style="background: #003366; color: white;"><span class="number">1</span></span>
         </div>
+        <div>
+        <h5>Book Online</h5>
+        <p class="mb-0">Schedule your junk removal service online or call us for a free estimate.</p>
         </div>
-        <!--/column -->
-        <div class="space30 d-none d-md-block d-lg-none"></div>
-        <div class="col-lg-4">
-        <div class="d-flex flex-row">
-          <div>
-          <span class="icon icon-bg icon-bg-default color-default mr-25" style="background: #003366; color: white;"><span class="number">2</span></span>
-          </div>
-          <div>
-          <h5>We Arrive & Remove</h5>
-          <p class="mb-0">Our professional team arrives on time and handles all the heavy lifting.</p>
-          </div>
+      </div>
+      </div>
+      <!--/column -->
+      <div class="space30 d-none d-md-block d-lg-none"></div>
+      <div class="col-lg-4">
+      <div class="d-flex flex-row">
+        <div>
+        <span class="icon icon-bg icon-bg-default color-default mr-25" style="background: #003366; color: white;"><span class="number">2</span></span>
         </div>
+        <div>
+        <h5>We Arrive & Remove</h5>
+        <p class="mb-0">Our professional team arrives on time and handles all the heavy lifting.</p>
         </div>
-        <!--/column -->
-        <div class="space30 d-none d-md-block d-lg-none"></div>
-        <div class="col-lg-4">
-        <div class="d-flex flex-row">
-          <div>
-          <span class="icon icon-bg icon-bg-default color-default mr-25" style="background: #003366; color: white;"><span class="number">3</span></span>
-          </div>
-          <div>
-          <h5>Clean & Dispose</h5>
-          <p class="mb-0">We clean up after ourselves and dispose of your junk responsibly.</p>
-          </div>
+      </div>
+      </div>
+      <!--/column -->
+      <div class="space30 d-none d-md-block d-lg-none"></div>
+      <div class="col-lg-4">
+      <div class="d-flex flex-row">
+        <div>
+        <span class="icon icon-bg icon-bg-default color-default mr-25" style="background: #003366; color: white;"><span class="number">3</span></span>
         </div>
+        <div>
+        <h5>Clean & Dispose</h5>
+        <p class="mb-0">We clean up after ourselves and dispose of your junk responsibly.</p>
         </div>
-        <!--/column -->
+      </div>
+      </div>
+      <!--/column -->
       </div>
       <!--/.row -->
       </div>
       <!-- /.container -->
     </div>
     <!-- /.wrapper -->
-    <div class="wrapper light-wrapper">
-      <div class="container inner">
-      <h2 class="section-title text-uppercase text-center mb-40 color-default">Service Areas</h2>
-      <div class="grid-view">
-        <div class="carousel owl-carousel" data-margin="30" data-dots="true" data-autoplay="false" data-autoplay-timeout="5000" data-responsive='{"0":{"items": "1"}, "768":{"items": "2"}, "992":{"items": "3"}}'>
-        <div class="item">
-          <figure class="overlay overlay1 rounded mb-30"><a href="#"> <img src="style/images/art/gta-junk.jpg" alt="Toronto Junk Removal" /></a>
-          <figcaption>
-            <h5 class="from-top mb-0">Learn More</h5>
-          </figcaption>
-          </figure>
-          <div class="category"><a href="#" class="badge badge-pill" style="background: #003366; color: white;">GTA</a></div>
-          <h2 class="post-title"><a href="#">Toronto & Greater Toronto Area Junk Removal Services</a></h2>
-          <div class="meta mb-0"><span class="date"><i class="jam jam-map-marker" style="color: #003366;"></i>Toronto, Mississauga, Brampton</span></div>
-        </div>
-        <!-- /.item -->
-        <div class="item">
-          <figure class="overlay overlay1 rounded mb-30"><a href="#"> <img src="style/images/art/ottawa-junk.jpg" alt="Ottawa Junk Removal" /></a>
-          <figcaption>
-            <h5 class="from-top mb-0">Learn More</h5>
-          </figcaption>
-          </figure>
-          <div class="category"><a href="#" class="badge badge-pill" style="background: #00558b; color: white;">Capital</a></div>
-          <h2 class="post-title"><a href="#">Ottawa & Surrounding Areas Waste Management</a></h2>
-          <div class="meta mb-0"><span class="date"><i class="jam jam-map-marker" style="color: #003366;"></i>Ottawa, Gatineau, Kanata</span></div>
-        </div>
-        <!-- /.item -->
-        <div class="item">
-          <figure class="overlay overlay1 rounded mb-30"><a href="#"> <img src="style/images/art/hamilton-junk.jpg" alt="Hamilton Junk Removal" /></a>
-          <figcaption>
-            <h5 class="from-top mb-0">Learn More</h5>
-          </figcaption>
-          </figure>
-          <div class="category"><a href="#" class="badge badge-pill" style="background: #007bb8; color: white;">Hamilton</a></div>
-          <h2 class="post-title"><a href="#">Hamilton & Burlington Junk Removal Services</a></h2>
-          <div class="meta mb-0"><span class="date"><i class="jam jam-map-marker" style="color: #003366;"></i>Hamilton, Burlington, Oakville</span></div>
-        </div>
-        <!-- /.item -->
-        <div class="item">
-          <figure class="overlay overlay1 rounded mb-30"><a href="#"> <img src="style/images/art/gta-junk.jpg" alt="London Junk Removal" /></a>
-          <figcaption>
-            <h5 class="from-top mb-0">Learn More</h5>
-          </figcaption>
-          </figure>
-          <div class="category"><a href="#" class="badge badge-pill" style="background: #0099e5; color: white;">Southwest</a></div>
-          <h2 class="post-title"><a href="#">London Ontario Residential & Commercial Cleanouts</a></h2>
-          <div class="meta mb-0"><span class="date"><i class="jam jam-map-marker" style="color: #003366;"></i>London, Kitchener, Windsor</span></div>
-        </div>
-        <!-- /.item -->
-        </div>
-        <!-- /.owl-carousel -->
-      </div>
-      <!-- /.grid-view -->
-      </div>
-      <!-- /.container -->
-    </div>
-    <!-- /.wrapper -->
+   
   <?= $this->include('templates/footer'); ?>
     <!-- /.dark-wrapper -->

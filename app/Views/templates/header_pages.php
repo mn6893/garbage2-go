@@ -73,7 +73,6 @@
               <a class="nav-link dropdown-toggle" data-toggle="dropdown">Locations</a>
               <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="<?= base_url('junk-removal-toronto') ?>">Toronto</a></li>
-              <li><a class="dropdown-item" href="<?= base_url('junk-removal-ottawa') ?>">Ottawa</a></li>
               <li><a class="dropdown-item" href="<?= base_url('junk-removal-mississauga') ?>">Mississauga</a></li>
               <li><a class="dropdown-item" href="<?= base_url('junk-removal-brampton') ?>">Brampton</a></li>
               <li><a class="dropdown-item" href="<?= base_url('junk-removal-hamilton') ?>">Hamilton</a></li>

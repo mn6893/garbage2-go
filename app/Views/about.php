@@ -12,34 +12,28 @@
     <div class="wrapper white-wrapper">
       <div class="container inner">
         <div class="row align-items-center">
-          <div class="col-lg-6 text-center">
-            <div class="img-blob blob8">
-              <img src="<?= base_url('style/images/art/about2.jpg'); ?>" style="width: 30rem" alt="About Us" />
-            </div>
-          </div>
-          <!--/column -->
           <div class="space30 d-none d-md-block d-lg-none"></div>
-          <div class="col-lg-6 pl-60 pl-md-15">
+          <div class="col-lg-12 pl-60 pl-md-15">
             <h2 class="title-color color-gray">About GarbageToGo</h2>
             <h3 class="display-3">We are Canada's leading waste removal company that believes in sustainable solutions and exceptional service.</h3>
             <div class="space20"></div>
             <p>Founded with a mission to make waste removal simple, efficient, and environmentally responsible, GarbageToGo has been serving Canadian communities for over a decade. We specialize in residential, commercial, and construction waste removal, ensuring that up to 80% of collected materials are recycled or donated rather than sent to landfills.</p>
             <div class="space20"></div>
             <div class="row counter">
-              <div class="col-md-4">
-                <h3 class="value">15000+</h3>
-                <p>Jobs Completed</p>
-              </div>
-              <!--/column -->
-              <div class="col-md-4">
-                <h3 class="value">8500+</h3>
-                <p>Satisfied Customers</p>
-              </div>
-              <!--/column -->
-              <div class="col-md-4">
-                <h3 class="value">80%</h3>
-                <p>Material Recycled</p>
-              </div>
+                <div class="col-md-4">
+                  <h3 class="value">15000</h3><span>+</span>
+                  <p>Jobs Completed</p>
+                </div>
+                <!--/column -->
+                <div class="col-md-4">
+                  <h3 class="value">8500</h3><span>+</span>
+                  <p>Satisfied Customers</p>
+                </div>
+                <!--/column -->
+                <div class="col-md-4">
+                  <h3 class="value">80</h3><span>%</span>
+                  <p>Material Recycled</p>
+                </div>
               <!--/column -->
             </div>
             <!--/.row -->
@@ -218,7 +212,7 @@
                   <blockquote>
                     <p>"GarbageToGo made our office renovation so much easier! They arrived on time, worked efficiently, and even donated our old furniture to local charities. Excellent service!"</p>
                     <div class="blockquote-details">
-                      <div class="img-blob blob1"><img src="style/images/art/t1.jpg" alt="" /></div>
+                      <div class="img-blob blob1"></div>
                       <div class="info">
                         <h6 class="mb-0">Michael Chen</h6>
                         <span class="meta mb-0">Property Manager</span>
@@ -237,7 +231,7 @@
                   <blockquote>
                     <p>"I was amazed by how professional and courteous the team was. They cleaned out my entire basement in two hours and left the space spotless. Highly recommend!"</p>
                     <div class="blockquote-details">
-                      <div class="img-blob blob1"><img src="style/images/art/t2.jpg" alt="" /></div>
+                      <div class="img-blob blob1"></div>
                       <div class="info">
                         <h6 class="mb-0">Sarah Wilson</h6>
                         <span class="meta mb-0">Homeowner</span>
@@ -256,7 +250,7 @@
                   <blockquote>
                     <p>"Great service at a fair price! They handled our construction debris removal quickly and efficiently. The crew was professional and the pricing was transparent."</p>
                     <div class="blockquote-details">
-                      <div class="img-blob blob1"><img src="style/images/art/t3.jpg" alt="" /></div>
+                      <div class="img-blob blob1"></div>
                       <div class="info">
                         <h6 class="mb-0">David Rodriguez</h6>
                         <span class="meta mb-0">Contractor</span>
@@ -275,7 +269,7 @@
                   <blockquote>
                     <p>"Curabitur blandit tempus porttitor. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Duis mollis, est non commodo luctus."</p>
                     <div class="blockquote-details">
-                      <div class="img-blob blob1"><img src="style/images/art/t4.jpg" alt="" /></div>
+                      <div class="img-blob blob1"></div>
                       <div class="info">
                         <h6 class="mb-0">Nikolas Brooten</h6>
                         <span class="meta mb-0">Investment Planner</span>
@@ -294,7 +288,7 @@
                   <blockquote>
                     <p>"Aenean lacinia bibendum nulla sed consectetur. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus vestibulum."</p>
                     <div class="blockquote-details">
-                      <div class="img-blob blob1"><img src="style/images/art/t5.jpg" alt="" /></div>
+                      <div class="img-blob blob1"></div>
                       <div class="info">
                         <h6 class="mb-0">Jackie Sanders</h6>
                         <span class="meta mb-0">Sales Specialist</span>
@@ -313,7 +307,7 @@
                   <blockquote>
                     <p>"Donec sed odio dui. Cras mattis consectetur purus sit amet fermentum. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis."</p>
                     <div class="blockquote-details">
-                      <div class="img-blob blob1"><img src="style/images/art/t6.jpg" alt="" /></div>
+                      <div class="img-blob blob1"></div>
                       <div class="info">
                         <h6 class="mb-0">Tina Geller</h6>
                         <span class="meta mb-0">Financial Analyst</span>

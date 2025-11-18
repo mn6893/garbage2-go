@@ -522,7 +522,7 @@ class QuoteGeneratorService
         $location = strtolower($location);
 
         $provinceKeywords = [
-            'ON' => ['ontario', 'toronto', 'ottawa', 'hamilton', 'mississauga'],
+            'ON' => ['ontario', 'toronto', 'hamilton', 'mississauga'],
             'BC' => ['british columbia', 'vancouver', 'victoria', 'surrey', 'burnaby'],
             'AB' => ['alberta', 'calgary', 'edmonton', 'red deer'],
             'QC' => ['quebec', 'montreal', 'quebec city', 'laval']
@@ -541,7 +541,7 @@ class QuoteGeneratorService
 
     private function isUrbanArea(string $location): bool
     {
-        $urbanKeywords = ['toronto', 'montreal', 'vancouver', 'calgary', 'edmonton', 'ottawa', 'mississauga', 'winnipeg'];
+        $urbanKeywords = ['toronto', 'montreal', 'vancouver', 'calgary', 'edmonton', 'mississauga', 'winnipeg'];
         $location = strtolower($location);
 
         foreach ($urbanKeywords as $city) {

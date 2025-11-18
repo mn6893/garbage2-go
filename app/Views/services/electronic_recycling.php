@@ -96,7 +96,6 @@
                     <p>We serve all major cities across Ontario including:</p>
                     <ul class="list-unstyled">
                         <li><i class="icofont-location-pin"></i> Toronto & GTA</li>
-                        <li><i class="icofont-location-pin"></i> Ottawa</li>
                         <li><i class="icofont-location-pin"></i> Hamilton</li>
                         <li><i class="icofont-location-pin"></i> London</li>
                         <li><i class="icofont-location-pin"></i> Kitchener-Waterloo</li>

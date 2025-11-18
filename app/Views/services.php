@@ -210,25 +210,25 @@
             <div class="row counter">
               <div class="col-md-3 text-center">
                 <div class="icon icon-svg mb-20"><i class="icofont-check-circle" style="font-size: 48px; color: #001f3f;"></i></div>
-                <h3 class="value">15000+</h3>
+                <h3 class="value">15000</h3><span>+</span>
                 <p>Jobs Completed</p>
               </div>
               <!--/column -->
               <div class="col-md-3 text-center">
                 <div class="icon icon-svg mb-20"><i class="icofont-handshake-deal" style="font-size: 48px; color: #00EC01;"></i></div>
-                <h3 class="value">8500+</h3>
+                <h3 class="value">8500</h3><span>+</span>
                 <p>Satisfied Customers</p>
               </div>
               <!--/column -->
               <div class="col-md-3 text-center">
                 <div class="icon icon-svg mb-20"><i class="icofont-recycle" style="font-size: 48px; color: #001f3f;"></i></div>
-                <h3 class="value">80%</h3>
+                <h3 class="value">80</h3><span>%</span>
                 <p>Material Recycled</p>
               </div>
               <!--/column -->
               <div class="col-md-3 text-center">
                 <div class="icon icon-svg mb-20"><i class="icofont-location-pin" style="font-size: 48px; color: #00EC01;"></i></div>
-                <h3 class="value">25+</h3>
+                <h3 class="value">25</h3><span>+</span>
                 <p>Cities Served</p>
               </div>
               <!--/column -->

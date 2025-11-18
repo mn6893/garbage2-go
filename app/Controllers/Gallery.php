@@ -31,21 +31,21 @@ class Gallery extends BaseController
             ],
             [
                 'id' => 2,
-                'title' => 'Garage Cleanout - Mississauga',
+                'title' => 'Garage Cleanout - Toronto',
                 'description' => 'Full garage cleanout and debris removal',
                 'before_image' => 'gallery/garage-before2.jpg',
                 'after_image' => 'gallery/garage-after2.jpg',
                 'category' => 'garage',
-                'location' => 'Mississauga, ON'
+                'location' => 'Toronto, ON'
             ],
             [
                 'id' => 3,
-                'title' => 'Backyard Cleanup - Hamilton',
+                'title' => 'Backyard Cleanup - Toronto',
                 'description' => 'Garden cleanup and green waste removal',
                 'before_image' => 'gallery/garage-before6.jpg',
                 'after_image' => 'gallery/garage-after6.jpg',
                 'category' => 'commercial',
-                'location' => 'Ottawa, ON'
+                'location' => 'Toronto, ON'
             ],
             [
                 'id' => 4,
