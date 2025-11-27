@@ -185,7 +185,11 @@ class Quote extends BaseController
         // Save the quote request
         try {
             $quoteId = $this->quoteModel->insert($data);
-            
+
+            // Send notification email to admin about new quote
+            $data['id'] = $quoteId;
+            $this->sendNewQuoteNotification($data);
+
             // Trigger AI processing if images were uploaded
             if (!empty($uploadedImages)) {
                 $successMessage = 'Your quote request with images has been submitted successfully! We will review your images and contact you soon with a detailed quote.';
@@ -542,6 +546,97 @@ class Quote extends BaseController
 
         } catch (\Exception $e) {
             log_message('error', 'Failed to send talk to manager email: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Send notification email to admin when a new quote is submitted
+     */
+    private function sendNewQuoteNotification($quote)
+    {
+        try {
+            $email = service('email');
+            $adminEmail = env('ADMIN_EMAIL', 'info@garbagetogo.ca');
+
+            $email->setTo($adminEmail);
+            $email->setCC('garbage2go.ca@gmail.com');
+            $email->setFrom('info@garbagetogo.ca', 'GarbageToGo System');
+            $email->setSubject('🆕 New Quote Request - Quote #' . $quote['id']);
+
+            $html = '
+            <html>
+            <body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4;">
+                <div style="max-width: 600px; margin: 0 auto; background: white;">
+                    <div style="background: linear-gradient(135deg, #2c5aa0 0%, #1e3d6f 100%); color: white; padding: 30px; text-align: center;">
+                        <h1 style="margin: 0; font-size: 28px;">🆕 New Quote Request</h1>
+                        <p style="margin: 10px 0 0 0; font-size: 18px;">Quote #' . $quote['id'] . '</p>
+                    </div>
+
+                    <div style="padding: 30px;">
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                            <h3 style="margin-top: 0; color: #2c5aa0; border-bottom: 2px solid #2c5aa0; padding-bottom: 10px;">Customer Information</h3>
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <tr>
+                                    <td style="padding: 8px 0; font-weight: bold; width: 140px;">Name:</td>
+                                    <td style="padding: 8px 0;">' . htmlspecialchars($quote['name']) . '</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 0; font-weight: bold;">Email:</td>
+                                    <td style="padding: 8px 0;"><a href="mailto:' . htmlspecialchars($quote['email']) . '">' . htmlspecialchars($quote['email']) . '</a></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 0; font-weight: bold;">Phone:</td>
+                                    <td style="padding: 8px 0;"><a href="tel:' . htmlspecialchars($quote['phone']) . '">' . htmlspecialchars($quote['phone']) . '</a></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 0; font-weight: bold;">Address:</td>
+                                    <td style="padding: 8px 0;">' . htmlspecialchars($quote['address']) . '</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 0; font-weight: bold;">City:</td>
+                                    <td style="padding: 8px 0;">' . htmlspecialchars($quote['city'] ?? 'N/A') . '</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div style="background: #fff3cd; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #ffc107;">
+                            <h3 style="margin-top: 0; color: #856404;">Preferred Schedule</h3>
+                            <p style="margin: 5px 0;"><strong>Date:</strong> ' . htmlspecialchars($quote['preferred_date'] ?? 'Not specified') . '</p>
+                            <p style="margin: 5px 0;"><strong>Time:</strong> ' . htmlspecialchars($quote['preferred_time'] ?? 'Not specified') . '</p>
+                        </div>
+
+                        <div style="background: #e8f4fd; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #2c5aa0;">
+                            <h3 style="margin-top: 0; color: #2c5aa0;">Service Description</h3>
+                            <p style="margin: 0; white-space: pre-wrap;">' . htmlspecialchars($quote['description']) . '</p>
+                        </div>
+
+                        <div style="text-align: center; margin: 30px 0;">
+                            <a href="' . base_url('admin/quote/' . $quote['id']) . '"
+                               style="display: inline-block; padding: 15px 40px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 16px; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);">
+                                View Quote Details
+                            </a>
+                        </div>
+
+                        <div style="background: #d4edda; padding: 15px; border-radius: 8px; text-align: center;">
+                            <p style="margin: 0; color: #155724;"><strong>Submitted:</strong> ' . date('F j, Y \a\t g:i A') . '</p>
+                        </div>
+                    </div>
+
+                    <div style="background: #333; color: #fff; padding: 20px; text-align: center;">
+                        <p style="margin: 0; font-size: 14px;">GarbageToGo - Professional Junk Removal Services</p>
+                    </div>
+                </div>
+            </body>
+            </html>';
+
+            $email->setMailType('html');
+            $email->setMessage($html);
+            $email->send();
+
+            log_message('info', 'New quote notification email sent for quote #' . $quote['id']);
+
+        } catch (\Exception $e) {
+            log_message('error', 'Failed to send new quote notification email: ' . $e->getMessage());
         }
     }
 }
