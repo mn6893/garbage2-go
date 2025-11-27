@@ -403,7 +403,7 @@ class AIQuoteProcessor
      */
     private function sendAdminNotificationEmail(array $quote, array $generatedQuote): bool
     {
-        $adminEmail = env('ADMIN_EMAIL', 'integrations@garbagetogo.ca');
+        $adminEmail = env('ADMIN_EMAIL', 'info@garbagetogo.ca');
         
         $this->email->clear();
         $this->email->setTo($adminEmail);

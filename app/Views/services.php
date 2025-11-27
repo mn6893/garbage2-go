@@ -195,7 +195,7 @@
         <div class="text-center">
           <a href="<?= base_url('contact') ?>" class="btn btn-lg btn-primary">Get Free Quote</a>
           <span class="mx-3">or</span>
-          <a href="tel:+14165555865" class="btn btn-lg btn-outline-primary">Call +1 (416) 555-JUNK</a>
+          <a href="tel:+16479138775" class="btn btn-lg btn-outline-primary">Call +1 (647) 913-8775</a>
         </div>
       </div>
       <!-- /.container -->
@@ -259,7 +259,7 @@
                   </div>
                   <h6>Call for Quote</h6>
                   <p class="mb-15">Get an instant estimate over the phone</p>
-                  <a href="tel:+14165555865" class="btn btn-sm btn-outline-primary">+1 (416) 555-JUNK</a>
+                  <a href="tel:+14165555865" class="btn btn-sm btn-outline-primary">+1 (647) 913-8775</a>
                 </div>
               </div>
               
@@ -270,7 +270,7 @@
                   </div>
                   <h6>Email Quote</h6>
                   <p class="mb-15">Send us details for a detailed estimate</p>
-                  <a href="mailto:info@garbagetogo.com" class="btn btn-sm btn-outline-primary">Send Email</a>
+                  <a href="mailto:info@garbagetogo.ca" class="btn btn-sm btn-outline-primary">Send Email</a>
                 </div>
               </div>
               

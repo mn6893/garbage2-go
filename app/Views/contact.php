@@ -158,7 +158,7 @@
               </div>
               <div>
                 <h6 class="mb-5">Headquarters</h6>
-                <address>1250 Bay Street, Suite 200 <br class="d-none d-md-block" />Toronto, ON M5R 2A4, Canada</address>
+                <address>1201-15 Cougar Court<br />Scarborough, ON M1J 3E4<br />Canada</address>
               </div>
             </div>
             <div class="d-flex flex-row">
@@ -167,7 +167,7 @@
               </div>
               <div>
                 <h6 class="mb-5">Phone</h6>
-                <p>+1 (416) 555-JUNK <br class="d-none d-md-block" />+1 (800) 742-2463</p>
+                <p>+1 (647) 913-8775</p>
               </div>
             </div>
             <div class="d-flex flex-row">
@@ -176,7 +176,7 @@
               </div>
               <div>
                 <h6 class="mb-5">E-mail</h6>
-                <p><a href="mailto:info@garbagetogo.com" class="nocolor">info@garbagetogo.com</a> <br class="d-none d-md-block" /><a href="mailto:support@garbagetogo.com" class="nocolor">support@garbagetogo.com</a></p>
+                <p><a href="mailto:info@garbagetogo.ca" class="nocolor">info@garbagetogo.ca</a> <br class="d-none d-md-block" /><a href="mailto:garbage2go.ca@gmail.com" class="nocolor">garbage2go.ca@gmail.com</a></p>
               </div>
             </div>
           </div>
@@ -207,7 +207,7 @@
               </div>
               <h5>Call Us</h5>
               <p>Speak directly with our team for immediate assistance and quotes.</p>
-              <a href="tel:+14165555865" class="btn btn-sm btn-outline-default">+1 (416) 555-JUNK</a>
+              <a href="tel:+16479138775" class="btn btn-sm btn-outline-default">+1 (647) 913-8775</a>
             </div>
           </div>
           
@@ -218,7 +218,7 @@
               </div>
               <h5>Email Us</h5>
               <p>Send us details about your project and we'll respond within 2 hours.</p>
-              <a href="mailto:info@garbagetogo.com" class="btn btn-sm btn-outline-default">info@garbagetogo.com</a>
+              <a href="mailto:info@garbagetogo.ca" class="btn btn-sm btn-outline-default">info@garbagetogo.ca</a>
             </div>
           </div>
 

@@ -8,13 +8,13 @@
                 <div class="contact-item">
                   <div class="contact-icon"><i class="jam jam-map-marker"></i></div>
                   <div class="contact-details">
-                    <span>1250 Bay Street, Suite 200<br>Toronto, ON M5R 2A4</span>
+                    <span>1201-15 Cougar Court<br />Scarborough, ON M1J 3E4<br />Canada</span>
                   </div>
                 </div>
                 <div class="contact-item">
                   <div class="contact-icon"><i class="jam jam-phone"></i></div>
                   <div class="contact-details">
-                    <span>+1 (416) 555-JUNK</span>
+                    <span>+1 (647) 913-8775</span>
                   </div>
                 </div>
                 <div class="contact-item">

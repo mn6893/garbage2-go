@@ -88,7 +88,7 @@
               <p class="mb-20">For immediate assistance or urgent requests, call us directly:</p>
               <p class="h4 mb-20">
                 <i class="icofont-phone mr-10"></i> 
-                <a href="tel:+14165555865" class="color-purple">+1 (416) 555-JUNK</a>
+                <a href="tel:+16479138775" class="color-purple">+1 (647) 913-8775</a>
               </p>
               <p class="text-muted">Available 7 days a week, 8 AM - 8 PM</p>
             </div>
@@ -122,7 +122,7 @@
                     <i class="icofont-mail-box"></i>
                   </div>
                   <h6>Email Us</h6>
-                  <p><a href="mailto:info@garbagetogo.com" class="nocolor">info@garbagetogo.com</a></p>
+                  <p><a href="mailto:info@garbagetogo.ca" class="nocolor">info@garbagetogo.ca</a></p>
                 </div>
               </div>
               <div class="col-md-4">
@@ -140,7 +140,7 @@
                     <i class="icofont-location-pin"></i>
                   </div>
                   <h6>Visit Us</h6>
-                  <p>1250 Bay Street, Suite 200<br>Toronto, ON M5R 2A4</p>
+                  <p>1201-15 Cougar Court<br />Scarborough, ON M1J 3E4<br />Canada</p>
                 </div>
               </div>
             </div>
