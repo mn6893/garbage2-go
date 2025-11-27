@@ -878,7 +878,7 @@ class Admin extends BaseController
                 <p><strong>Address:</strong> ' . htmlspecialchars($quote['address']) . '</p>
                 <p><strong>Total Amount:</strong> $' . number_format($quoteData['total_amount'] ?? 0, 2) . '</p>
             </div>
-            <p>To proceed, please call us at (555) 123-4567 or email info@garbagetogo.ca</p>
+            <p>To proceed, please call us at +1 (647) 913-8775 or email info@garbagetogo.ca</p>
             <p>Thank you!</p>
         </body></html>';
     }
@@ -997,7 +997,7 @@ class Admin extends BaseController
                         <p><strong>Need our services again?</strong></p>
                         <p>Contact us anytime:</p>
                         <p>
-                            <strong>Phone:</strong> (555) 123-4567<br>
+                            <strong>Phone:</strong> +1 (647) 913-8775<br>
                             <strong>Email:</strong> info@garbagetogo.ca<br>
                             <strong>Website:</strong> <a href="https://garbagetogo.ca">garbagetogo.ca</a>
                         </p>
@@ -1016,7 +1016,7 @@ class Admin extends BaseController
                     <p>Professional, Reliable, and Eco-Friendly Service</p>
                     <p style="font-size: 12px; margin-top: 15px;">
                         This is an automated confirmation email. If you have any questions or concerns,<br>
-                        please contact us at info@garbagetogo.ca or call (555) 123-4567
+                        please contact us at info@garbagetogo.ca or call +1 (647) 913-8775
                     </p>
                 </div>
             </div>

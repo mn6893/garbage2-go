@@ -586,7 +586,7 @@ class AIQuoteProcessor
                                 </tr>
                                 <tr>
                                     <td style="text-align: center; padding: 10px;">
-                                        <a href="tel:+15551234567"
+                                        <a href="tel:+16479138775"
                                            style="display: inline-block; padding: 15px 30px; background: #2c5aa0; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">
                                             📞 Call Manager Now
                                         </a>
@@ -604,7 +604,7 @@ class AIQuoteProcessor
                         <div style="background: #e7f3ff; padding: 15px; border-radius: 5px; margin: 20px 0;">
                             <p style="margin: 0; text-align: center;"><strong>Or Contact Us Directly:</strong></p>
                             <p style="margin: 5px 0; text-align: center;">
-                                Phone: <strong>(555) 123-4567</strong> |
+                                Phone: <strong>+1 (647) 913-8775</strong> |
                                 Email: <strong>info@garbagetogo.ca</strong>
                             </p>
                         </div>

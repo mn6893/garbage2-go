@@ -259,7 +259,7 @@
                   </div>
                   <h6>Call for Quote</h6>
                   <p class="mb-15">Get an instant estimate over the phone</p>
-                  <a href="tel:+14165555865" class="btn btn-sm btn-outline-primary">+1 (647) 913-8775</a>
+                  <a href="tel:+16479138775" class="btn btn-sm btn-outline-primary">+1 (647) 913-8775</a>
                 </div>
               </div>
               

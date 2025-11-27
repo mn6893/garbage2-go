@@ -98,7 +98,7 @@ $icon = $actionIcons[$action] ?? 'icofont-check-circled';
             <div class="box bg-white shadow-sm p-30 rounded">
               <div class="icon mb-15"><i class="icofont-phone fs-32 color-purple"></i></div>
               <h5>Call Us</h5>
-              <p class="mb-0"><strong>(555) 123-4567</strong></p>
+              <p class="mb-0"><strong>+1 (647) 913-8775</strong></p>
               <p class="text-muted mb-0">Mon-Sat: 8AM - 8PM</p>
             </div>
           </div>

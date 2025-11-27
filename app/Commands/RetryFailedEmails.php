@@ -320,7 +320,7 @@ class RetryFailedEmails extends BaseCommand
                         <h3>How to Proceed</h3>
                         <p>This is an automated estimate based on our AI image analysis. We would be delighted to assist you further. To proceed with your service:</p>
                         <ul>
-                            <li>Phone: <strong>(555) 123-4567</strong></li>
+                            <li>Phone: <strong>+1 (647) 913-8775</strong></li>
                             <li>Email: <strong>info@garbagetogo.ca</strong></li>
                             <li>We offer flexible scheduling at your convenience</li>
                             <li>Same-day and next-day service options available upon request</li>
