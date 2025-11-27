@@ -10,6 +10,13 @@
   <link rel="stylesheet" type="text/css" href="<?= base_url('style/type/type.css') ?>">
   <link rel="stylesheet" type="text/css" href="<?= base_url('style/css/style.css') ?>">
   <link rel="stylesheet" type="text/css" href="<?= base_url('style/css/color/purple.css') ?>">
+  <style>
+    .header-call-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(40, 167, 69, 0.5) !important;
+      color: #fff !important;
+    }
+  </style>
 </head>
 <body>
   <div class="content-wrapper">
@@ -28,14 +35,19 @@
               <div class="navbar-hamburger d-lg-none d-xl-none ml-auto"><button class="hamburger animate plain" data-toggle="offcanvas-nav"><span></span></button></div>
             </li>
 
-            <li class="nav-item"><button class="plain" data-toggle="offcanvas-info"><i class="jam jam-info"></i></button></li>
+            <li class="nav-item">
+              <a href="tel:+16479138775" class="header-call-btn" style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #014144 0%, #00294a 100%); color: #fff; padding: 10px 20px; border-radius: 50px; font-weight: 600; font-size: 14px; text-decoration: none; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4); transition: all 0.3s ease;">
+                <i class="jam jam-phone" style="font-size: 18px;"></i>
+                <span class="d-none d-md-inline">Call Now</span>
+              </a>
+            </li>
           </ul>
           <!-- /.navbar-nav -->
         </div>
         <!-- /.navbar-other -->
         <div class="navbar-collapse offcanvas-nav">
           <div class="offcanvas-header d-lg-none d-xl-none">
-            <a href="<?= base_url() ?>"><img src="#" srcset="<?= base_url('style/images/logo-light.png') ?> 1x, <?= base_url('style/images/logo-light@2x.png') ?> 2x" alt="" /></a>
+            <a href="<?= base_url() ?>"><img src="#" srcset="<?= base_url('style/images/logo.png') ?> 1x, <?= base_url('style/images/logo.png') ?> 2x" alt="" /></a>
             <button class="plain offcanvas-close offcanvas-nav-close"><i class="jam jam-close"></i></button>
           </div>
           <ul class="navbar-nav ml-auto">
@@ -70,7 +82,7 @@
               </ul>
             </li>
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" data-toggle="dropdown">Locations</a>
+              <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Locations</a>
               <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="<?= base_url('junk-removal-toronto') ?>">Toronto</a></li>
               <li><a class="dropdown-item" href="<?= base_url('junk-removal-mississauga') ?>">Mississauga</a></li>
@@ -92,45 +104,4 @@
       <!-- /.container -->
     </nav>
     <!-- /.navbar -->
-
-    <!-- /.navbar -->
-    <div class="offcanvas-info inverse-text">
-      <button class="plain offcanvas-close offcanvas-info-close"><i class="jam jam-close"></i></button>
-      <a href="<?= base_url() ?>">
-        <img src="<?= base_url('style/images/logo.png') ?>" alt="GarbageToGo Logo" style="height: 60px; margin-right: -4px;" />
-        <span class="logo-text" style="font-size: 1rem; font-weight: bold; font-style: italic; color: green;">
-          Garbage<span style="color: #28a745; font-weight: bold; font-style: italic;">ToGo</span>
-        </span>
-      </a>
-      <div class="space30"></div>
-      <p>GarbageToGo is a trusted garbage removal service providing efficient waste collection solutions for homes and businesses across Canada.</p>
-      <div class="space20"></div>
-      <div class="widget">
-        <h5 class="widget-title">Contact Info</h5>
-        <address> Moonshine St. 14/05 <br /> Light City, London <div class="space20"></div>
-          <a href="mailto:first.last@email.com" class="nocolor">info@email.com</a><br /> +00 (123) 456 78 90 </address>
-      </div>
-      <!-- /.widget -->
-      <div class="widget">
-        <h3 class="widget-title">Learn More</h3>
-        <ul class="list-unstyled">
-          <li><a href="#" class="nocolor">Our Story</a></li>
-          <li><a href="#" class="nocolor">Terms of Use</a></li>
-          <li><a href="#" class="nocolor">Privacy Policy</a></li>
-          <li><a href="#" class="nocolor">Contact Us</a></li>
-        </ul>
-      </div>
-      <!-- /.widget -->
-      <div class="widget">
-        <h3 class="widget-title">Follow Us</h3>
-        <ul class="social social-mute social-s ml-auto">
-          <li><a href="#"><i class="jam jam-twitter"></i></a></li>
-          <li><a href="#"><i class="jam jam-facebook"></i></a></li>
-          <li><a href="#"><i class="jam jam-instagram"></i></a></li>
-          <li><a href="#"><i class="jam jam-vimeo"></i></a></li>
-          <li><a href="#"><i class="jam jam-youtube"></i></a></li>
-        </ul>
-      </div>
-      <!-- /.widget -->
-    </div>
-    <!-- /.offcanvas-info -->
+   

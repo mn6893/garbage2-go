@@ -35,9 +35,9 @@
               <ul class="list-unstyled">
                 <li><a href="<?= base_url('about') ?>">About Us</a></li>
                 <li><a href="<?= base_url('services') ?>">Our Services</a></li>
-                <li><a href="<?= base_url('contact') ?>">Get Quote</a></li>
+                <li><a href="<?= base_url('quote') ?>">Get Quote</a></li>
                 <li><a href="<?= base_url('services/emergency-junk-removal') ?>">Emergency Service</a></li>
-                <li><a href="#">Service Areas</a></li>
+                <!-- <li><a href="#">Service Areas</a></li> -->
               </ul>
             </div>
             <!-- /.widget -->
@@ -48,10 +48,10 @@
               <h3 class="widget-title">Follow Us</h3>
               <p>Stay connected for updates and eco-friendly waste removal tips.</p>
               <div class="social social-mute social-s ml-auto">
-                <a href="#"><i class="jam jam-twitter"></i></a>
+                <!-- <a href="#"><i class="jam jam-twitter"></i></a> -->
                 <a href="#"><i class="jam jam-facebook"></i></a>
                 <a href="#"><i class="jam jam-instagram"></i></a>
-                <a href="#"><i class="jam jam-linkedin"></i></a>
+                <!-- <a href="#"><i class="jam jam-linkedin"></i></a> -->
                 <a href="#"><i class="jam jam-youtube"></i></a>
               </div>
             </div>
@@ -84,10 +84,10 @@
         <div class="d-md-flex align-items-center justify-content-between">
           <p class="mb-2 mb-lg-0">&copy; <?= date('Y') ?> Garbage2Go. All rights reserved.</p>
           <nav class="nav social social-mute">
-            <a href="#"><i class="jam jam-twitter"></i></a>
+            <!-- <a href="#"><i class="jam jam-twitter"></i></a> -->
             <a href="#"><i class="jam jam-facebook"></i></a>
             <a href="#"><i class="jam jam-instagram"></i></a>
-            <a href="#"><i class="jam jam-linkedin"></i></a>
+            <!-- <a href="#"><i class="jam jam-linkedin"></i></a> -->
             <a href="#"><i class="jam jam-youtube"></i></a>
           </nav>
           <!-- /.social -->
