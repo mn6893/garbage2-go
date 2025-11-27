@@ -739,7 +739,7 @@ class Admin extends BaseController
                 try {
                     $email->clear();
                     $email->setTo($quote['email']);
-                    $email->setFrom('noreply@garbagetogo.ca', 'GarbageToGo');
+                    $email->setFrom('info@garbagetogo.ca', 'GarbageToGo');
                     $email->setSubject('Your Junk Removal Quote is Ready - Quote #' . $quote['id']);
                     
                     // Generate simple email content
@@ -760,11 +760,12 @@ class Admin extends BaseController
             // Retry admin email if requested
             if (($type === 'admin' || $type === 'both') && !$quote['email_sent_to_admin']) {
                 try {
-                    $adminEmail = env('ADMIN_EMAIL', 'admin@garbagetogo.ca');
+                    $adminEmail = env('ADMIN_EMAIL', 'info@garbagetogo.ca');
                     
                     $email->clear();
                     $email->setTo($adminEmail);
-                    $email->setFrom('noreply@garbagetogo.ca', 'GarbageToGo AI System');
+                    $email->setCC('garbage2go.ca@gmail.com');
+                    $email->setFrom('info@garbagetogo.ca', 'GarbageToGo AI System');
                     $email->setSubject('AI Quote Generated - Quote #' . $quote['id']);
                     
                     $quoteData = $generatedQuote['quote'];
@@ -905,7 +906,7 @@ class Admin extends BaseController
             $email = service('email');
             $email->clear();
             $email->setTo($quote['email']);
-            $email->setFrom('noreply@garbagetogo.ca', 'GarbageToGo');
+            $email->setFrom('info@garbagetogo.ca', 'GarbageToGo');
             $email->setSubject('Thank You - Service Completed - Quote #' . $quote['id']);
 
             $emailContent = $this->generateCompletionEmailContent($quote);

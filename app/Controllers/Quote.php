@@ -419,7 +419,7 @@ class Quote extends BaseController
     {
         try {
             $email = service('email');
-            $adminEmail = env('ADMIN_EMAIL', 'admin@garbagetogo.ca');
+            $adminEmail = env('ADMIN_EMAIL', 'info@garbagetogo.ca');
 
             $actionText = [
                 'accept' => '✓ ACCEPTED',
@@ -434,7 +434,8 @@ class Quote extends BaseController
             ];
 
             $email->setTo($adminEmail);
-            $email->setFrom('noreply@garbagetogo.ca', 'GarbageToGo System');
+            $email->setCC('garbage2go.ca@gmail.com');
+            $email->setFrom('info@garbagetogo.ca', 'GarbageToGo System');
             $email->setSubject('Customer Quote Response: ' . $actionText[$action] . ' - Quote #' . $quote['id']);
 
             $html = '
@@ -478,10 +479,11 @@ class Quote extends BaseController
     {
         try {
             $email = service('email');
-            $adminEmail = env('ADMIN_EMAIL', 'admin@garbagetogo.ca');
+            $adminEmail = env('ADMIN_EMAIL', 'info@garbagetogo.ca');
 
             $email->setTo($adminEmail);
-            $email->setFrom('noreply@garbagetogo.ca', 'GarbageToGo System');
+            $email->setCC('garbage2go.ca@gmail.com');
+            $email->setFrom('info@garbagetogo.ca', 'GarbageToGo System');
             $email->setSubject('📞 URGENT: Customer Wants to Talk to Manager - Quote #' . $quote['id']);
 
             $html = '

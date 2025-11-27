@@ -387,7 +387,7 @@ class AIQuoteProcessor
     {
         $this->email->clear();
         $this->email->setTo($quote['email']);
-        $this->email->setFrom('noreply@garbagetogo.ca', 'GarbageToGo');
+        $this->email->setFrom('info@garbagetogo.ca', 'GarbageToGo');
         $this->email->setSubject('Your Junk Removal Quote is Ready - Quote #' . $quote['id']);
         
         // Generate email content
@@ -407,7 +407,8 @@ class AIQuoteProcessor
         
         $this->email->clear();
         $this->email->setTo($adminEmail);
-        $this->email->setFrom('noreply@garbagetogo.ca', 'GarbageToGo AI System');
+        $this->email->setCC('garbage2go.ca@gmail.com');
+        $this->email->setFrom('info@garbagetogo.ca', 'GarbageToGo AI System');
         $this->email->setSubject('AI Quote Generated - Quote #' . $quote['id']);
         
         // Generate admin email content

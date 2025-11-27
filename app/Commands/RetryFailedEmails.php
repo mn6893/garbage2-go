@@ -193,7 +193,7 @@ class RetryFailedEmails extends BaseCommand
         $email = service('email');
         $email->clear();
         $email->setTo($quote['email']);
-        $email->setFrom('noreply@garbagetogo.ca', 'GarbageToGo');
+        $email->setFrom('info@garbagetogo.ca', 'GarbageToGo');
         $email->setSubject('Your Junk Removal Quote is Ready - Quote #' . $quote['id']);
         
         // Use the same email generation logic as AIQuoteProcessor
@@ -209,12 +209,13 @@ class RetryFailedEmails extends BaseCommand
      */
     private function sendAdminEmail(array $quote, array $generatedQuote): bool
     {
-        $adminEmail = env('ADMIN_EMAIL', 'admin@garbagetogo.ca');
+        $adminEmail = env('ADMIN_EMAIL', 'info@garbagetogo.ca');
         
         $email = service('email');
         $email->clear();
         $email->setTo($adminEmail);
-        $email->setFrom('noreply@garbagetogo.ca', 'GarbageToGo AI System');
+        $email->setCC('garbage2go.ca@gmail.com');
+        $email->setFrom('info@garbagetogo.ca', 'GarbageToGo AI System');
         $email->setSubject('AI Quote Generated - Quote #' . $quote['id']);
         
         $emailContent = $this->generateAdminNotificationContent($quote, $generatedQuote);

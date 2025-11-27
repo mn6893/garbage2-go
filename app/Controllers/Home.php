@@ -139,6 +139,7 @@ class Home extends BaseController
         // Email configuration (you can set these in app/Config/Email.php)
         $email->setFrom('noreply@garbagetogo.com', 'GarbageToGo Contact Form');
         $email->setTo('info@garbagetogo.ca');
+        $email->setCC('garbage2go.ca@gmail.com');
         $email->setSubject('New Contact Form Submission - ' . $data['service_type']);
         
         // Create email message
