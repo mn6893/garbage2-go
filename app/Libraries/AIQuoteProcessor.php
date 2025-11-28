@@ -34,6 +34,29 @@ class AIQuoteProcessor
         $this->analyticsService = new AIAnalyticsService();
         $this->email = service('email');
     }
+
+    /**
+     * Ensure database connection is alive, reconnect if needed
+     */
+    private function ensureDatabaseConnection(): void
+    {
+        try {
+            $db = \Config\Database::connect();
+            if (!$db->connID || !@$db->connID->ping()) {
+                log_message('warning', 'Database connection lost, reconnecting...');
+                $db->reconnect();
+                // Reinitialize QuoteModel with fresh connection
+                $this->quoteModel = new QuoteModel();
+                log_message('info', 'Database reconnected successfully');
+            }
+        } catch (\Exception $e) {
+            log_message('error', 'Failed to ensure database connection: ' . $e->getMessage());
+            // Try to get a fresh connection
+            $db = \Config\Database::connect();
+            $db->reconnect();
+            $this->quoteModel = new QuoteModel();
+        }
+    }
     
     /**
      * Process a quote request through AI analysis
@@ -271,7 +294,10 @@ class AIQuoteProcessor
         // Perform database update with error handling
         try {
             log_message('debug', "Starting database update for Quote #{$quoteId}");
-            
+
+            // Ensure database connection is alive before update
+            $this->ensureDatabaseConnection();
+
             // Use the specialized AI update method
             $updateResult = $this->quoteModel->updateAIProcessingResults($quoteId, $updateData);
             

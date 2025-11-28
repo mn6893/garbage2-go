@@ -267,21 +267,69 @@ class QuoteModel extends Model
     /**
      * Update quote with AI processing results
      * This method bypasses field protection for AI-specific updates
+     * Includes retry logic for database connection issues
      */
     public function updateAIProcessingResults(int $id, array $aiData): bool
     {
         // Temporarily disable field protection to allow AI fields
         $this->protect(false);
-        
+
         // Ensure updated_at is set
         $aiData['updated_at'] = date('Y-m-d H:i:s');
-        
-        $result = $this->update($id, $aiData);
-        
-        // Re-enable field protection
+
+        $maxRetries = 3;
+        $retryDelay = 1; // seconds
+        $lastException = null;
+
+        for ($attempt = 1; $attempt <= $maxRetries; $attempt++) {
+            try {
+                // Reconnect to database if connection was lost
+                $db = \Config\Database::connect();
+                if (!$db->connID || !@$db->connID->ping()) {
+                    log_message('warning', "Database connection lost, attempting reconnect (attempt {$attempt}/{$maxRetries})");
+                    $db->reconnect();
+                }
+
+                $result = $this->update($id, $aiData);
+
+                // Re-enable field protection
+                $this->protect(true);
+
+                return $result;
+
+            } catch (\mysqli_sql_exception $e) {
+                $lastException = $e;
+                log_message('error', "Database error on attempt {$attempt}/{$maxRetries}: " . $e->getMessage());
+
+                if ($attempt < $maxRetries) {
+                    // Try to reconnect
+                    try {
+                        $db = \Config\Database::connect();
+                        $db->reconnect();
+                        sleep($retryDelay);
+                    } catch (\Exception $reconnectError) {
+                        log_message('error', "Reconnect failed: " . $reconnectError->getMessage());
+                    }
+                }
+            } catch (\Exception $e) {
+                $lastException = $e;
+                log_message('error', "General error on attempt {$attempt}/{$maxRetries}: " . $e->getMessage());
+
+                if ($attempt < $maxRetries) {
+                    sleep($retryDelay);
+                }
+            }
+        }
+
+        // Re-enable field protection even on failure
         $this->protect(true);
-        
-        return $result;
+
+        // If all retries failed, throw the last exception
+        if ($lastException) {
+            throw $lastException;
+        }
+
+        return false;
     }
     
     /**
