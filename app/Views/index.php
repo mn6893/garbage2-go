@@ -386,6 +386,11 @@
             })
             .then(data => {
               if (data.success) {
+                // Track successful quote submission
+                gtag('event', 'conversion_event_request_quote', {
+                  'event_category': 'form',
+                  'event_label': 'homepage_quote_form'
+                });
                 showMessage(data.message || 'Your quote request has been submitted successfully! We will contact you soon.', 'success');
                 // Reset form
                 this.reset();

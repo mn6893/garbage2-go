@@ -207,7 +207,7 @@
               </div>
               <h5>Call Us</h5>
               <p>Speak directly with our team for immediate assistance and quotes.</p>
-              <a href="tel:+16479138775" class="btn btn-sm btn-outline-default">+1 (647) 913-8775</a>
+              <a href="tel:+16479138775" onclick="return gtagTrackCall('tel:+16479138775');" class="btn btn-sm btn-outline-default">+1 (647) 913-8775</a>
             </div>
           </div>
           

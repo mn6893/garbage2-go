@@ -463,6 +463,11 @@
                 hideLoading();
                 
                 if (data.success) {
+                  // Track successful quote submission
+                  gtag('event', 'conversion_event_request_quote', {
+                    'event_category': 'form',
+                    'event_label': 'quote_page_form'
+                  });
                   showMessage(data.message, 'success');
                   // Reset form after successful submission
                   document.getElementById('quote-form').reset();

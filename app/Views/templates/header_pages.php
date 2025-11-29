@@ -10,6 +10,34 @@
     gtag('config', 'G-16C7V13M57');
   </script>
 
+  <!-- Google tag (gtag.js) event - conversion tracking helpers -->
+  <script>
+    // Track quote request conversions
+    function gtagSendEvent(url) {
+      var callback = function () {
+        if (typeof url === 'string') {
+          window.location = url;
+        }
+      };
+      gtag('event', 'conversion_event_request_quote', {
+        'event_callback': callback,
+        'event_timeout': 2000,
+      });
+      return false;
+    }
+
+    // Track phone call conversions
+    function gtagTrackCall(phoneUrl) {
+      gtag('event', 'conversion_event_phone_call', {
+        'event_callback': function() {
+          window.location = phoneUrl;
+        },
+        'event_timeout': 2000,
+      });
+      return false;
+    }
+  </script>
+
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" href="<?= base_url('style/images/favicon.png') ?>">
@@ -19,14 +47,6 @@
   <link rel="stylesheet" type="text/css" href="<?= base_url('style/type/type.css') ?>">
   <link rel="stylesheet" type="text/css" href="<?= base_url('style/css/style.css') ?>">
   <link rel="stylesheet" type="text/css" href="<?= base_url('style/css/color/purple.css') ?>">
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-16C7V13M57"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-16C7V13M57');
-  </script>
   <style>
     .header-call-btn:hover {
       transform: translateY(-2px);
@@ -53,7 +73,7 @@
               <div class="navbar-hamburger d-lg-none d-xl-none ml-auto"><button class="hamburger animate plain" data-toggle="offcanvas-nav"><span></span></button></div>
             </li>
             <li class="nav-item">
-              <a href="tel:+16479138775" class="header-call-btn" style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: #fff; padding: 10px 20px; border-radius: 50px; font-weight: 600; font-size: 14px; text-decoration: none; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4); transition: all 0.3s ease;">
+              <a href="tel:+16479138775" onclick="return gtagTrackCall('tel:+16479138775');" class="header-call-btn" style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: #fff; padding: 10px 20px; border-radius: 50px; font-weight: 600; font-size: 14px; text-decoration: none; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4); transition: all 0.3s ease;">
                 <i class="jam jam-phone" style="font-size: 18px;"></i>
                 <span class="d-none d-md-inline">Call Now</span>
               </a>
