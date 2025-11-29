@@ -19,6 +19,14 @@
   <link rel="stylesheet" type="text/css" href="<?= base_url('style/type/type.css') ?>">
   <link rel="stylesheet" type="text/css" href="<?= base_url('style/css/style.css') ?>">
   <link rel="stylesheet" type="text/css" href="<?= base_url('style/css/color/purple.css') ?>">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-16C7V13M57"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-16C7V13M57');
+  </script>
   <style>
     .header-call-btn:hover {
       transform: translateY(-2px);
