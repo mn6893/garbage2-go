@@ -132,13 +132,13 @@ class Admin extends BaseController
     {
         $db = \Config\Database::connect();
         $builder = $db->table('quotes');
-        
+
         // Handle status filter
         $status = $this->request->getGet('status');
-        if ($status && in_array($status, ['pending', 'ai_queued', 'ai_processing', 'ai_quoted', 'ai_error', 'contacted', 'quoted', 'accepted', 'rejected', 'completed'])) {
+        if ($status && in_array($status, ['pending', 'ai_queued', 'ai_processing', 'ai_quoted', 'ai_error', 'contacted', 'quoted', 'accepted', 'rejected', 'completed', 'considering'])) {
             $builder->where('status', $status);
         }
-        
+
         // Handle search
         $search = $this->request->getGet('search');
         if ($search) {
@@ -149,13 +149,31 @@ class Admin extends BaseController
                    ->orLike('address', $search)
                    ->groupEnd();
         }
-        
-        $quotes = $builder->orderBy('created_at', 'DESC')->get()->getResultArray();
-        
+
+        // Pagination settings
+        $perPage = 10;
+        $page = (int) ($this->request->getGet('page') ?? 1);
+        if ($page < 1) $page = 1;
+
+        // Get total count for pagination
+        $totalQuotes = $builder->countAllResults(false);
+        $totalPages = ceil($totalQuotes / $perPage);
+
+        // Get paginated results
+        $offset = ($page - 1) * $perPage;
+        $quotes = $builder->orderBy('created_at', 'DESC')
+                          ->limit($perPage, $offset)
+                          ->get()
+                          ->getResultArray();
+
         return view('admin/quotes', [
             'quotes' => $quotes,
             'currentStatus' => $status,
-            'searchTerm' => $search
+            'searchTerm' => $search,
+            'currentPage' => $page,
+            'totalPages' => $totalPages,
+            'totalQuotes' => $totalQuotes,
+            'perPage' => $perPage
         ]);
     }
     

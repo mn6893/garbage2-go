@@ -63,7 +63,7 @@
                 </a>
               </div>
               <div class="col-md-2 text-end">
-                <small class="text-muted"><?= count($quotes) ?> quotes found</small>
+                <small class="text-muted"><?= $totalQuotes ?> quotes found</small>
               </div>
             </form>
           </div>
@@ -189,10 +189,55 @@
                     </tbody>
                   </table>
                 </div>
+
+                <!-- Pagination -->
+                <?php if ($totalPages > 1): ?>
+                <?php
+                $queryParams = [];
+                if (!empty($currentStatus)) $queryParams['status'] = $currentStatus;
+                if (!empty($searchTerm)) $queryParams['search'] = $searchTerm;
+                $baseQuery = !empty($queryParams) ? '&' . http_build_query($queryParams) : '';
+                $startPage = max(1, $currentPage - 2);
+                $endPage = min($totalPages, $currentPage + 2);
+                ?>
+                <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-top: 25px; padding-top: 20px; border-top: 1px solid #eee; flex-wrap: wrap;">
+                  <span style="color: #666; font-size: 13px;">Showing <?= (($currentPage - 1) * $perPage) + 1 ?>-<?= min($currentPage * $perPage, $totalQuotes) ?> of <?= $totalQuotes ?></span>
+
+                  <nav style="display: flex; align-items: center; gap: 4px;">
+                    <a href="<?= base_url('admin/quotes?page=1' . $baseQuery) ?>" class="pg-btn <?= $currentPage <= 1 ? 'disabled' : '' ?>" title="First">>><i class="icofont-rounded-double-left"></i></a>
+                    <a href="<?= base_url('admin/quotes?page=' . ($currentPage - 1) . $baseQuery) ?>" class="pg-btn <?= $currentPage <= 1 ? 'disabled' : '' ?>" title="Previous"><<<i class="icofont-rounded-left"></i></a>
+
+                    <?php if ($startPage > 1): ?>
+                      <a href="<?= base_url('admin/quotes?page=1' . $baseQuery) ?>" class="pg-btn">1</a>
+                      <?php if ($startPage > 2): ?><span class="pg-dots">...</span><?php endif; ?>
+                    <?php endif; ?>
+
+                    <?php for ($i = $startPage; $i <= $endPage; $i++): ?>
+                      <a href="<?= base_url('admin/quotes?page=' . $i . $baseQuery) ?>" class="pg-btn <?= $i === $currentPage ? 'active' : '' ?>"><?= $i ?></a>
+                    <?php endfor; ?>
+
+                    <?php if ($endPage < $totalPages): ?>
+                      <?php if ($endPage < $totalPages - 1): ?><span class="pg-dots">...</span><?php endif; ?>
+                      <a href="<?= base_url('admin/quotes?page=' . $totalPages . $baseQuery) ?>" class="pg-btn"><?= $totalPages ?></a>
+                    <?php endif; ?>
+
+                    <a href="<?= base_url('admin/quotes?page=' . ($currentPage + 1) . $baseQuery) ?>" class="pg-btn <?= $currentPage >= $totalPages ? 'disabled' : '' ?>" title="Next"><i class="icofont-rounded-right"></i></a>
+                    <a href="<?= base_url('admin/quotes?page=' . $totalPages . $baseQuery) ?>" class="pg-btn <?= $currentPage >= $totalPages ? 'disabled' : '' ?>" title="Last"><i class="icofont-rounded-double-right"></i></a>
+                  </nav>
+                </div>
+                <style>
+                  .pg-btn { display: inline-flex; align-items: center; justify-content: center; min-width: 32px; height: 32px; padding: 0 10px; border: 1px solid #ddd; border-radius: 6px; color: #555; text-decoration: none; font-size: 13px; transition: all 0.15s; background: #fff; }
+                  .pg-btn:hover:not(.disabled):not(.active) { border-color: #6366f1; color: #6366f1; background: #f8f9ff; }
+                  .pg-btn.active { background: #6366f1; border-color: #6366f1; color: #fff; font-weight: 600; }
+                  .pg-btn.disabled { opacity: 0.4; pointer-events: none; }
+                  .pg-dots { color: #999; padding: 0 5px; font-size: 12px; }
+                </style>
+                <?php endif; ?>
+
             <?php endif; ?>
           </div>
         </div>
-        
+
       </div>
     </div>
   </div>

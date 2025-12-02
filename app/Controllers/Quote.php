@@ -413,11 +413,47 @@ class Quote extends BaseController
             return view('quote/talk_to_manager', ['quote' => $quote]);
         }
 
-        // Show confirmation page
+        // For accept, process directly without confirmation
+        if ($action === 'accept') {
+            return $this->processResponseDirectly($result['quote_id'], $quote, $action);
+        }
+
+        // Show confirmation page for reject and consider
         return view('quote/response_confirm', [
             'quote' => $quote,
             'action' => $action,
             'encodedQuoteId' => $encodedQuoteId
+        ]);
+    }
+
+    /**
+     * Process response directly (for accept action)
+     */
+    private function processResponseDirectly(int $quoteId, array $quote, string $action)
+    {
+        $statusMap = [
+            'accept' => 'accepted',
+            'reject' => 'rejected',
+            'consider' => 'considering'
+        ];
+
+        $status = $statusMap[$action] ?? 'pending';
+
+        // Update the quote status
+        $this->quoteModel->update($quoteId, [
+            'status' => $status,
+            'customer_response' => $action,
+            'customer_response_date' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
+
+        // Send email notification to admin
+        $this->sendAdminNotification($quote, $action);
+
+        // Show thank you page
+        return view('quote/response_thank_you', [
+            'quote' => $quote,
+            'action' => $action
         ]);
     }
 
