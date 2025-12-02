@@ -37,7 +37,8 @@ $routes->get('quote', 'Quote::index');
 $routes->post('quote/submit', 'Quote::submit');
 $routes->get('quote/success', 'Quote::success');
 $routes->get('quote/image/(:any)', 'Quote::serveImage/$1');
-$routes->get('quote/response/(:num)/(:alpha)', 'Quote::response/$1/$2');
+$routes->get('quote/confirm/(:any)/(:alpha)', 'Quote::confirm/$1/$2');
+$routes->post('quote/response', 'Quote::processResponse');
 $routes->post('quote/talk-to-manager/submit', 'Quote::submitTalkToManager');
 
 // Gallery Routes

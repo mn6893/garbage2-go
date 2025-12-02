@@ -910,6 +910,7 @@ class Admin extends BaseController
             $email->setSubject('Thank You - Service Completed - Quote #' . $quote['id']);
 
             $emailContent = $this->generateCompletionEmailContent($quote);
+            $email->setMailType('html');
             $email->setMessage($emailContent);
 
             if ($email->send()) {
@@ -963,6 +964,7 @@ class Admin extends BaseController
                         <h3 style="margin-top: 0; color: #28a745;">Service Details</h3>
                         <p><strong>Quote Number:</strong> #' . $quote['id'] . '</p>
                         <p><strong>Service Address:</strong> ' . htmlspecialchars($quote['address']) . '</p>
+                        <p><strong>Amount Paid:</strong> $' . number_format($quote['estimated_amount'] ?? 0, 2) . '</p>
                         <p><strong>Status:</strong> Completed & Paid</p>
                     </div>
 

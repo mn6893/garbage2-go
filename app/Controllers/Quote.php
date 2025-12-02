@@ -329,20 +329,124 @@ class Quote extends BaseController
     }
 
     /**
-     * Handle quote response from customer
+     * Decode encoded quote ID and verify signature
      */
-    public function response($quoteId, $action)
+    private function decodeQuoteId(string $encodedId): ?array
     {
-        // Get quote details
-        $quote = $this->quoteModel->find($quoteId);
+        try {
+            // Decode URL-safe base64 (replace -_ back to +/ and add padding)
+            $base64 = strtr($encodedId, '-_', '+/');
+            $padLength = 4 - (strlen($base64) % 4);
+            if ($padLength < 4) {
+                $base64 .= str_repeat('=', $padLength);
+            }
+            $decoded = base64_decode($base64);
+            if ($decoded === false) {
+                return null;
+            }
 
-        if (!$quote) {
-            return redirect()->to('/')->with('error', 'Quote not found');
+            $parts = explode('|', $decoded);
+            if (count($parts) !== 2) {
+                return null;
+            }
+
+            $quoteId = (int) $parts[0];
+            $signature = $parts[1];
+
+            // Get quote to verify signature
+            $quote = $this->quoteModel->find($quoteId);
+            if (!$quote) {
+                return null;
+            }
+
+            // Verify signature
+            $expectedSignature = md5($quote['id'] . $quote['email']);
+            if ($signature !== $expectedSignature) {
+                return null;
+            }
+
+            return [
+                'quote_id' => $quoteId,
+                'quote' => $quote
+            ];
+        } catch (\Exception $e) {
+            log_message('error', 'Error decoding quote ID: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Check if quote has already been responded to
+     */
+    private function hasAlreadyResponded(array $quote): bool
+    {
+        $respondedStatuses = ['accepted', 'rejected', 'considering', 'completed', 'talk_to_manager'];
+        return in_array($quote['status'], $respondedStatuses);
+    }
+
+    /**
+     * Show confirmation page before processing response
+     */
+    public function confirm($encodedQuoteId, $action)
+    {
+        // Validate action
+        $validActions = ['accept', 'reject', 'consider'];
+        if (!in_array($action, $validActions)) {
+            return redirect()->to('/')->with('error', 'Invalid action');
+        }
+
+        // Decode and verify quote ID
+        $result = $this->decodeQuoteId($encodedQuoteId);
+        if (!$result) {
+            return redirect()->to('/')->with('error', 'Invalid or expired quote link');
+        }
+
+        $quote = $result['quote'];
+
+        // Check if already responded
+        if ($this->hasAlreadyResponded($quote)) {
+            return view('quote/already_responded', ['quote' => $quote]);
         }
 
         // For talk-to-manager, redirect to form
         if ($action === 'talk-to-manager') {
             return view('quote/talk_to_manager', ['quote' => $quote]);
+        }
+
+        // Show confirmation page
+        return view('quote/response_confirm', [
+            'quote' => $quote,
+            'action' => $action,
+            'encodedQuoteId' => $encodedQuoteId
+        ]);
+    }
+
+    /**
+     * Process the confirmed quote response
+     */
+    public function processResponse()
+    {
+        $encodedQuoteId = $this->request->getPost('encoded_quote_id');
+        $action = $this->request->getPost('action');
+
+        // Validate action
+        $validActions = ['accept', 'reject', 'consider'];
+        if (!in_array($action, $validActions)) {
+            return redirect()->to('/')->with('error', 'Invalid action');
+        }
+
+        // Decode and verify quote ID
+        $result = $this->decodeQuoteId($encodedQuoteId);
+        if (!$result) {
+            return redirect()->to('/')->with('error', 'Invalid or expired quote link');
+        }
+
+        $quote = $result['quote'];
+        $quoteId = $result['quote_id'];
+
+        // Check if already responded
+        if ($this->hasAlreadyResponded($quote)) {
+            return view('quote/already_responded', ['quote' => $quote]);
         }
 
         // Update quote status based on action

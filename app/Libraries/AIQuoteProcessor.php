@@ -589,6 +589,9 @@ class AIQuoteProcessor
                     </div>';
         }
 
+        // Encode quote ID for URL security (URL-safe base64: replace +/ with -_ and remove = padding)
+        $encodedQuoteId = rtrim(strtr(base64_encode($quote['id'] . '|' . md5($quote['id'] . $quote['email'])), '+/', '-_'), '=');
+
         $html .= '
                     <div class="quote-details">
                         <h3>How Would You Like to Proceed?</h3>
@@ -598,13 +601,13 @@ class AIQuoteProcessor
                             <table width="100%" cellpadding="10" cellspacing="0" style="margin: 20px 0;">
                                 <tr>
                                     <td style="text-align: center; padding: 10px;">
-                                        <a href="' . base_url('quote/response/' . $quote['id'] . '/accept') . '"
+                                        <a href="' . base_url('quote/confirm/' . $encodedQuoteId . '/accept') . '"
                                            style="display: inline-block; padding: 15px 30px; background: #28a745; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">
                                             ✓ Accept Quote
                                         </a>
                                     </td>
                                     <td style="text-align: center; padding: 10px;">
-                                        <a href="' . base_url('quote/response/' . $quote['id'] . '/consider') . '"
+                                        <a href="' . base_url('quote/confirm/' . $encodedQuoteId . '/consider') . '"
                                            style="display: inline-block; padding: 15px 30px; background: #ffc107; color: #212529; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">
                                             ⏰ Consider Later
                                         </a>
@@ -618,7 +621,7 @@ class AIQuoteProcessor
                                         </a>
                                     </td>
                                     <td style="text-align: center; padding: 10px;">
-                                        <a href="' . base_url('quote/response/' . $quote['id'] . '/reject') . '"
+                                        <a href="' . base_url('quote/confirm/' . $encodedQuoteId . '/reject') . '"
                                            style="display: inline-block; padding: 15px 30px; background: #dc3545; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">
                                             ✗ Decline Quote
                                         </a>
