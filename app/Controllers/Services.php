@@ -12,7 +12,7 @@ class Services extends BaseController
             'service_description' => 'Professional household junk removal services for your home',
             'hero_image' => 'household-junk.jpg'
         ];
-        return view('services/household_junk_removal', $data);
+        return view('services/household_rubbish_removal', $data);
     }
 
     public function garageJunkRemoval()

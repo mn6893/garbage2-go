@@ -8,7 +8,7 @@
                 <p class="lead">Responsible electronic waste recycling with secure data destruction and eco-friendly disposal</p>
                 <div class="mt-4">
                     <a href="<?= base_url('quote') ?>" class="btn btn-primary btn-lg me-3">Get Free Quote</a>
-                    <a href="tel:+1-800-GARBAGE" class="btn btn-secondary btn-lg">Call Now</a>
+                    <a href="tel:+16479138775" class="btn btn-secondary btn-lg">Call Now</a>
                 </div>
             </div>
             <div class="col-lg-6">
@@ -85,7 +85,7 @@
                 <div class="contact-section mb-4">
                     <h3>Get Your Free Quote</h3>
                     <p>Need electronic recycling services?</p>
-                    <a href="tel:+1-800-GARBAGE" class="phone">1-800-GARBAGE</a>
+                    <a href="tel:+16479138775" class="phone">+1 (647) 913-8775</a>
                     <div class="mt-3">
                         <a href="<?= base_url('quote') ?>" class="btn btn-primary w-100">Request Quote</a>
                     </div>

@@ -533,6 +533,86 @@
               updateFileInput();
               renderPreviews();
             };
+
+            // Time window validation based on Canada Eastern Time
+            const dateField = document.getElementById('form_preferred_date');
+            const timeField = document.getElementById('form_preferred_time');
+
+            // Time windows with their end hours (24-hour format)
+            const timeWindows = [
+              { value: '8:00 AM - 11:00 AM', endHour: 11 },
+              { value: '11:00 AM - 2:00 PM', endHour: 14 },
+              { value: '2:00 PM - 5:00 PM', endHour: 17 },
+              { value: '5:00 PM - 8:00 PM', endHour: 20 }
+            ];
+
+            function getCanadaTime() {
+              // Get current time in Canada/Eastern timezone
+              const options = { timeZone: 'America/Toronto', hour: 'numeric', minute: 'numeric', hour12: false };
+              const formatter = new Intl.DateTimeFormat('en-CA', options);
+              const parts = formatter.formatToParts(new Date());
+              const hour = parseInt(parts.find(p => p.type === 'hour').value);
+              const minute = parseInt(parts.find(p => p.type === 'minute').value);
+              return { hour, minute };
+            }
+
+            function getCanadaDate() {
+              // Get current date in Canada/Eastern timezone
+              const options = { timeZone: 'America/Toronto', year: 'numeric', month: '2-digit', day: '2-digit' };
+              const formatter = new Intl.DateTimeFormat('en-CA', options);
+              return formatter.format(new Date()); // Returns YYYY-MM-DD format
+            }
+
+            function updateTimeOptions() {
+              const selectedDate = dateField.value;
+              const todayCanada = getCanadaDate();
+              const canadaTime = getCanadaTime();
+              const currentHour = canadaTime.hour;
+
+              // Get all time options
+              const options = timeField.querySelectorAll('option');
+
+              options.forEach(option => {
+                if (option.value === '') return; // Skip placeholder
+
+                const timeWindow = timeWindows.find(tw => tw.value === option.value);
+                if (!timeWindow) return;
+
+                // If selected date is today, check if time window has passed
+                if (selectedDate === todayCanada) {
+                  if (currentHour >= timeWindow.endHour) {
+                    // Time window has passed - disable and grey out
+                    option.disabled = true;
+                    option.style.color = '#999';
+                    option.textContent = timeWindow.value + ' (Not available)';
+
+                    // If this option was selected, clear the selection
+                    if (option.selected) {
+                      timeField.value = '';
+                    }
+                  } else {
+                    // Time window is still available
+                    option.disabled = false;
+                    option.style.color = '';
+                    option.textContent = timeWindow.value;
+                  }
+                } else {
+                  // Future date - all time windows available
+                  option.disabled = false;
+                  option.style.color = '';
+                  option.textContent = timeWindow.value;
+                }
+              });
+            }
+
+            // Update time options when date changes
+            dateField.addEventListener('change', updateTimeOptions);
+
+            // Initial update on page load
+            updateTimeOptions();
+
+            // Update every minute to handle edge cases
+            setInterval(updateTimeOptions, 60000);
         });
         </script>
       </div>

@@ -8,8 +8,8 @@
                 <h1 class="service-hero-title"><?= $service_title ?></h1>
                 <p class="lead service-hero-subtitle"><?= $service_description ?></p>
                 <div class="mt-4">
-                    <a href="<?= base_url('contact') ?>" class="btn btn-primary btn-lg me-3">Get Free Quote</a>
-                    <a href="tel:+1-800-GARBAGE" class="btn btn-secondary btn-lg">Call Now</a>
+                    <a href="<?= base_url('quote') ?>" class="btn btn-primary btn-lg me-3">Get Free Quote</a>
+                    <a href="tel:+16479138775" class="btn btn-secondary btn-lg">Call Now</a>
                 </div>
             </div>
             <div class="col-lg-6">
@@ -119,9 +119,9 @@
                     <div class="contact-section">
                         <h3>Get Your Free Quote</h3>
                         <p>Ready to get started? Contact us today for a free, no-obligation quote.</p>
-                        <a href="tel:+1-800-GARBAGE" class="phone">1-800-GARBAGE</a>
+                        <a href="tel:+16479138775" class="phone">+1 (647) 913-8775</a>
                         <div class="mt-3">
-                            <a href="<?= base_url('contact') ?>" class="btn btn-primary w-100">Request Quote Online</a>
+                            <a href="<?= base_url('quote') ?>" class="btn btn-primary w-100">Request Quote Online</a>
                         </div>
                     </div>
 
