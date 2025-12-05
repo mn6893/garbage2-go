@@ -449,28 +449,35 @@ class Admin extends BaseController
     public function processQuoteAI($id)
     {
         try {
+            log_message('error', '[AI Process] Starting AI processing for quote #' . $id);
+
             $quoteModel = new \App\Models\QuoteModel();
             $quote = $quoteModel->find($id);
 
             if (!$quote) {
+                log_message('error', '[AI Process] Quote #' . $id . ' not found');
                 return redirect()->to('/admin/quotes')->with('error', 'Quote not found');
             }
 
             // Store original status to allow reprocessing regardless of current status
             $originalStatus = $quote['status'];
+            log_message('error', '[AI Process] Quote #' . $id . ' original status: ' . $originalStatus);
 
             // Temporarily set status to 'pending' to allow AI processing
             $quoteModel->update($id, [
                 'status' => 'pending',
                 'ai_processed_at' => null, // Clear previous processing timestamp
+                'ai_processing_started_at' => null, // Clear processing started timestamp
                 'processing_lock' => null, // Clear any existing locks
                 'updated_at' => date('Y-m-d H:i:s')
             ]);
 
-            log_message('info', 'Admin manually triggered AI processing for quote #' . $id . ' (original status: ' . $originalStatus . ')');
+            log_message('error', '[AI Process] Quote #' . $id . ' status reset to pending, starting processor');
 
             $processor = new \App\Libraries\AIQuoteProcessor();
             $result = $processor->processQuote($id);
+
+            log_message('error', '[AI Process] Quote #' . $id . ' processor result: ' . json_encode($result));
 
             if ($result['success']) {
                 return redirect()->to('/admin/quote/' . $id)->with('success',
@@ -481,10 +488,12 @@ class Admin extends BaseController
                     'status' => $originalStatus,
                     'updated_at' => date('Y-m-d H:i:s')
                 ]);
+                log_message('error', '[AI Process] Quote #' . $id . ' processing failed: ' . $result['error']);
                 return redirect()->to('/admin/quote/' . $id)->with('error',
                     'AI processing failed: ' . $result['error']);
             }
         } catch (\Exception $e) {
+            log_message('error', '[AI Process] Quote #' . $id . ' exception: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
             return redirect()->to('/admin/quote/' . $id)->with('error',
                 'Error triggering AI processing: ' . $e->getMessage());
         }

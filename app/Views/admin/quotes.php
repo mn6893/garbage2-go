@@ -204,7 +204,7 @@
                   <span style="color: #666; font-size: 13px;">Showing <?= (($currentPage - 1) * $perPage) + 1 ?>-<?= min($currentPage * $perPage, $totalQuotes) ?> of <?= $totalQuotes ?></span>
 
                   <nav style="display: flex; align-items: center; gap: 4px;">
-                    <a href="<?= base_url('admin/quotes?page=1' . $baseQuery) ?>" class="pg-btn <?= $currentPage <= 1 ? 'disabled' : '' ?>" title="First">>><i class="icofont-rounded-double-left"></i></a>
+                    <a href="<?= base_url('admin/quotes?page=1' . $baseQuery) ?>" class="pg-btn <?= $currentPage <= 1 ? 'disabled' : '' ?>" title="First"><<i class="icofont-rounded-double-left"></i></a>
                     <a href="<?= base_url('admin/quotes?page=' . ($currentPage - 1) . $baseQuery) ?>" class="pg-btn <?= $currentPage <= 1 ? 'disabled' : '' ?>" title="Previous"><<<i class="icofont-rounded-left"></i></a>
 
                     <?php if ($startPage > 1): ?>
@@ -221,8 +221,8 @@
                       <a href="<?= base_url('admin/quotes?page=' . $totalPages . $baseQuery) ?>" class="pg-btn"><?= $totalPages ?></a>
                     <?php endif; ?>
 
-                    <a href="<?= base_url('admin/quotes?page=' . ($currentPage + 1) . $baseQuery) ?>" class="pg-btn <?= $currentPage >= $totalPages ? 'disabled' : '' ?>" title="Next"><i class="icofont-rounded-right"></i></a>
-                    <a href="<?= base_url('admin/quotes?page=' . $totalPages . $baseQuery) ?>" class="pg-btn <?= $currentPage >= $totalPages ? 'disabled' : '' ?>" title="Last"><i class="icofont-rounded-double-right"></i></a>
+                    <a href="<?= base_url('admin/quotes?page=' . ($currentPage + 1) . $baseQuery) ?>" class="pg-btn <?= $currentPage >= $totalPages ? 'disabled' : '' ?>" title="Next">><i class="icofont-rounded-right"></i></a>
+                    <a href="<?= base_url('admin/quotes?page=' . $totalPages . $baseQuery) ?>" class="pg-btn <?= $currentPage >= $totalPages ? 'disabled' : '' ?>" title="Last">>><i class="icofont-rounded-double-right"></i></a>
                   </nav>
                 </div>
                 <style>

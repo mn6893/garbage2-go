@@ -355,9 +355,9 @@
                         <p><strong>Waste Type:</strong> <?= esc($aiAnalysis['wasteType']) ?></p>
                       <?php endif; ?>
                       
-                      <?php if (isset($aiAnalysis['volumeEstimate'])): ?>
-                        <p><strong>Volume Estimate:</strong> 
-                          <?= $aiAnalysis['volumeEstimate']['min'] ?> - <?= $aiAnalysis['volumeEstimate']['max'] ?> 
+                      <?php if (isset($aiAnalysis['volumeEstimate']) && is_array($aiAnalysis['volumeEstimate']) && isset($aiAnalysis['volumeEstimate']['min'], $aiAnalysis['volumeEstimate']['max'], $aiAnalysis['volumeEstimate']['unit'])): ?>
+                        <p><strong>Volume Estimate:</strong>
+                          <?= $aiAnalysis['volumeEstimate']['min'] ?> - <?= $aiAnalysis['volumeEstimate']['max'] ?>
                           <?= $aiAnalysis['volumeEstimate']['unit'] ?>
                         </p>
                       <?php endif; ?>
@@ -714,13 +714,13 @@
                         </div>
                       </div>
                     </div>
-                    <div class="form-check mb-15">
+                    <!-- <div class="form-check mb-15">
                       <input class="form-check-input" type="checkbox" name="process_with_ai" id="process_with_ai" value="1" checked>
                       <label class="form-check-label" for="process_with_ai">
                         <strong>Process with AI immediately after upload</strong>
                         <br><small class="text-muted">Automatically analyze images and generate/update quote</small>
                       </label>
-                    </div>
+                    </div> -->
                   </form>
 
                   <!-- Image Preview Section -->

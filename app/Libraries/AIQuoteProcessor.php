@@ -64,16 +64,24 @@ class AIQuoteProcessor
     public function processQuote(int $quoteId): array
     {
         $startTime = microtime(true);
-        
+        log_message('error', "[AIProcessor] Starting processing for quote #{$quoteId}");
+
         try {
+            // Ensure database connection before starting
+            $this->ensureDatabaseConnection();
+
             // Get quote data
             $quote = $this->quoteModel->find($quoteId);
             if (!$quote) {
+                log_message('error', "[AIProcessor] Quote #{$quoteId} not found");
                 throw new \Exception("Quote not found: {$quoteId}");
             }
-            
+
+            log_message('error', "[AIProcessor] Quote #{$quoteId} found, status: {$quote['status']}");
+
             // Only process quotes with 'pending' status
             if ($quote['status'] !== 'pending') {
+                log_message('error', "[AIProcessor] Quote #{$quoteId} status is not pending: {$quote['status']}");
                 return [
                     'success' => false,
                     'quote_id' => $quoteId,
@@ -81,9 +89,10 @@ class AIQuoteProcessor
                     'processing_time' => 0
                 ];
             }
-            
+
             // Check if already processing or processed to prevent duplicates
             if ($this->isAlreadyProcessing($quote)) {
+                log_message('error', "[AIProcessor] Quote #{$quoteId} is already being processed");
                 return [
                     'success' => false,
                     'quote_id' => $quoteId,
@@ -91,57 +100,78 @@ class AIQuoteProcessor
                     'processing_time' => 0
                 ];
             }
-            
+
+            // Ensure fresh database connection before setting lock
+            $this->ensureDatabaseConnection();
+
             // Set processing lock to prevent concurrent processing
             $processingLock = $this->setProcessingLock($quoteId);
-            
+            log_message('error', "[AIProcessor] Quote #{$quoteId} lock set, starting AI analysis");
+
             // Update status to processing
             $this->updateQuoteStatus($quoteId, 'ai_processing', 'AI analysis started');
-            
+
             // Analyze images if available
+            log_message('error', "[AIProcessor] Quote #{$quoteId} calling analyzeImages");
             $aiAnalysis = $this->analyzeImages($quote);
-            log_message('info', "AI Analysis result: " . json_encode($aiAnalysis));
-            
+            log_message('error', "[AIProcessor] Quote #{$quoteId} AI Analysis complete: " . json_encode($aiAnalysis));
+
+            // Reconnect to database after potentially long AI API call
+            $this->ensureDatabaseConnection();
+
             // Perform waste assessment
+            log_message('error', "[AIProcessor] Quote #{$quoteId} performing waste assessment");
             $wasteAssessment = $this->performWasteAssessment($aiAnalysis, $quote);
-            log_message('info', "Waste Assessment result: " . json_encode($wasteAssessment));
-            
+            log_message('error', "[AIProcessor] Quote #{$quoteId} Waste Assessment complete");
+
             // Generate quote
+            log_message('error', "[AIProcessor] Quote #{$quoteId} generating quote");
             $generatedQuote = $this->generateQuote($wasteAssessment, $quote);
-            log_message('info', "Generated Quote result: " . json_encode($generatedQuote));
-            
+            log_message('error', "[AIProcessor] Quote #{$quoteId} Quote generated");
+
+            // Reconnect to database before saving results
+            $this->ensureDatabaseConnection();
+
             // Format quote according to standardized structure
+            log_message('error', "[AIProcessor] Quote #{$quoteId} formatting quote result");
             $formattedQuote = $this->formatQuoteResult($quoteId, $generatedQuote, $wasteAssessment);
-            log_message('info', "Formatted Quote result: " . json_encode($formattedQuote));
-            
+
             // Save results
+            log_message('error', "[AIProcessor] Quote #{$quoteId} saving results to database");
             $this->saveQuoteResults($quoteId, $aiAnalysis, $wasteAssessment, $generatedQuote);
-            
+
             // Send email notifications with proper error handling (use formatted quote)
+            log_message('error', "[AIProcessor] Quote #{$quoteId} sending email notifications");
             $emailResults = $this->sendQuoteNotifications($quote, $formattedQuote);
-            
+
             // Clear processing lock
             $this->clearProcessingLock($quoteId);
-            
+
             // Track analytics
             $processingTime = microtime(true) - $startTime;
             $this->trackAnalytics($quoteId, 'success', $processingTime, $aiAnalysis, $formattedQuote);
-            
+
+            $quoteAmount = $formattedQuote['breakdown']['total'] ?? $formattedQuote['estimatedCost']['max'] ?? 0;
+            log_message('error', "[AIProcessor] Quote #{$quoteId} completed successfully. Amount: \${$quoteAmount}, Time: {$processingTime}s");
+
             return [
                 'success' => true,
                 'quote_id' => $quoteId,
                 'processing_time' => $processingTime,
-                'quote_amount' => $formattedQuote['breakdown']['total'] ?? $formattedQuote['estimatedCost']['max'] ?? 0,
+                'quote_amount' => $quoteAmount,
                 'email_results' => $emailResults,
                 'formatted_quote' => $formattedQuote
             ];
             
         } catch (\Exception $e) {
             $processingTime = microtime(true) - $startTime;
-            
+
+            // Ensure database connection for error handling
+            $this->ensureDatabaseConnection();
+
             // Clear processing lock on error
             $this->clearProcessingLock($quoteId);
-            
+
             // Update status to error
             $this->updateQuoteStatus($quoteId, 'ai_error', 'AI processing failed: ' . $e->getMessage());
             
