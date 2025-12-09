@@ -4,8 +4,43 @@ namespace App\Controllers;
 
 class Home extends BaseController
 {
+    /**
+     * Get visitor information for logging
+     */
+    private function getVisitorInfo(): array
+    {
+        $request = \Config\Services::request();
+        return [
+            'ip' => $request->getIPAddress(),
+            'user_agent' => $request->getUserAgent()->getAgentString(),
+            'referrer' => $request->getHeaderLine('Referer') ?: 'Direct',
+            'timestamp' => date('Y-m-d H:i:s')
+        ];
+    }
+
+    /**
+     * Log page visit
+     */
+    private function logPageVisit(string $page): void
+    {
+        $visitor = $this->getVisitorInfo();
+        log_message('info', "[PAGE_VISIT] Page: {$page} | IP: {$visitor['ip']} | User-Agent: {$visitor['user_agent']} | Referrer: {$visitor['referrer']}");
+    }
+
+    /**
+     * Log form submission
+     */
+    private function logFormSubmission(string $form, string $email, bool $success, ?string $details = null): void
+    {
+        $visitor = $this->getVisitorInfo();
+        $status = $success ? 'SUCCESS' : 'FAILED';
+        $detailStr = $details ? " | Details: {$details}" : '';
+        log_message('info', "[FORM_SUBMIT] Form: {$form} | Status: {$status} | Email: {$email} | IP: {$visitor['ip']} | User-Agent: {$visitor['user_agent']}{$detailStr}");
+    }
+
     public function index(): string
     {
+        $this->logPageVisit('home');
         return view('index');
     }
 
@@ -108,16 +143,22 @@ class Home extends BaseController
             $db = \Config\Database::connect();
             $builder = $db->table('contacts');
             $builder->insert($contactData);
-            
+
+            // Log successful contact form submission
+            $this->logFormSubmission('contact', $contactData['email'], true);
+
             // Send email notification (optional)
             $this->sendContactEmail($contactData);
-            
+
             // Set success message
             session()->setFlashdata('success', 'Thank you for contacting us! We will get back to you within 24 hours.');
-            
+
             return redirect()->to('/contact#contact-success');
-            
+
         } catch (\Exception $e) {
+            // Log failed contact form submission
+            $this->logFormSubmission('contact', $this->request->getPost('email') ?? 'unknown', false, $e->getMessage());
+
             // Set error message
             session()->setFlashdata('error', 'There was an error processing your request. Please try again or call us directly.');
             

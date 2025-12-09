@@ -14,14 +14,14 @@
             Our Last Option Will Be Landfill
           </p>
         </div>
-        <a href="#portfolio" class="btn btn-l btn-default scroll">Request a Quote </a>
+        <a href="#get-quote" class="btn btn-l btn-default scroll">Request a Quote </a>
       </div>
       <!-- /.container -->
       <div class="divider"><svg xmlns="http://www.w3.org/2000/svg" class="fill-light-wrapper" preserveAspectRatio="none" viewBox="0 0 1070 20.98">
           <path d="M0,0V21H1070V0A6830.24,6830.24,0,0,1,0,0Z" /></svg></div>
     </div>
     <!-- /.wrapper -->
-    <div class="wrapper light-wrapper" id="portfolio">
+    <div class="wrapper light-wrapper" id="get-quote">
       <div class="container inner">
         <h1 class="section-title text-uppercase mb-20 text-center color-default" style="font-size: 1.5rem;">Request a Quote</h1>
         <p class="lead larger text-center">Get a free quote for your junk removal needs <br class="d-none d-lg-block" />anywhere in Canada.</p>

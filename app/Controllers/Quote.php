@@ -14,10 +14,45 @@ class Quote extends BaseController
     }
 
     /**
+     * Get visitor information for logging
+     */
+    private function getVisitorInfo(): array
+    {
+        $request = \Config\Services::request();
+        return [
+            'ip' => $request->getIPAddress(),
+            'user_agent' => $request->getUserAgent()->getAgentString(),
+            'referrer' => $request->getHeaderLine('Referer') ?: 'Direct',
+            'timestamp' => date('Y-m-d H:i:s')
+        ];
+    }
+
+    /**
+     * Log page visit
+     */
+    private function logPageVisit(string $page): void
+    {
+        $visitor = $this->getVisitorInfo();
+        log_message('info', "[PAGE_VISIT] Page: {$page} | IP: {$visitor['ip']} | User-Agent: {$visitor['user_agent']} | Referrer: {$visitor['referrer']}");
+    }
+
+    /**
+     * Log form submission
+     */
+    private function logFormSubmission(string $form, string $email, bool $success, ?string $details = null): void
+    {
+        $visitor = $this->getVisitorInfo();
+        $status = $success ? 'SUCCESS' : 'FAILED';
+        $detailStr = $details ? " | Details: {$details}" : '';
+        log_message('info', "[FORM_SUBMIT] Form: {$form} | Status: {$status} | Email: {$email} | IP: {$visitor['ip']} | User-Agent: {$visitor['user_agent']}{$detailStr}");
+    }
+
+    /**
      * Display the quote request form
      */
     public function index(): string
     {
+        $this->logPageVisit('quote');
         return view('quote/request_form');
     }
 
@@ -186,6 +221,9 @@ class Quote extends BaseController
         try {
             $quoteId = $this->quoteModel->insert($data);
 
+            // Log successful quote submission
+            $this->logFormSubmission('quote', $data['email'], true, "Quote ID: {$quoteId}");
+
             // Send notification email to admin about new quote
             $data['id'] = $quoteId;
             $this->sendNewQuoteNotification($data);
@@ -196,7 +234,7 @@ class Quote extends BaseController
             } else {
                 $successMessage = 'Your quote request has been submitted successfully! We will contact you soon with a detailed quote.';
             }
-            
+
             // Check if this is an AJAX request
             if ($this->request->isAJAX()) {
                 return $this->response->setJSON([
@@ -205,10 +243,12 @@ class Quote extends BaseController
                     'quote_id' => $quoteId
                 ]);
             }
-            
+
             session()->setFlashdata('success', $successMessage);
             return redirect()->to('/quote/success');
         } catch (\Exception $e) {
+            // Log failed quote submission
+            $this->logFormSubmission('quote', $this->request->getPost('email') ?? 'unknown', false, $e->getMessage());
             log_message('error', 'Quote submission error: ' . $e->getMessage());
             
             // Check if this is an AJAX request
