@@ -3,10 +3,10 @@
 <!-- Service Hero Section -->
 <div class="service-hero">
     <div class="container">
-        <div class="row align-items-center min-vh-50">
+        <div class="row align-items-center">
             <div class="col-lg-6">
-                <h1 class="service-hero-title">Household Junk Removal</h1>
-                <p class="lead service-hero-subtitle">Professional household junk removal services for your home</p>
+                <h1>Household Junk Removal</h1>
+                <p class="lead">Professional household junk removal services for your home</p>
                 <div class="mt-4">
                     <a href="<?= base_url('quote') ?>" class="btn btn-primary btn-lg me-3">Get Free Quote</a>
                     <a href="tel:+16479138775" class="btn btn-secondary btn-lg">Call Now</a>
@@ -113,8 +113,7 @@
 
 <style>
 .service-hero {
-    background: linear-gradient(135deg, rgba(var(--rgb-secondary), 0.95), rgba(var(--rgb-dark), 0.8));
-    color: var(--color-white);
+    background: linear-gradient(135deg, rgba(0, 31, 63, 0.95), rgba(17, 17, 17, 0.8));    color: var(--color-white);
     padding: 100px 0;
     position: relative;
     overflow: hidden;

@@ -134,7 +134,7 @@
 
 <style>
 .service-hero {
-    background: linear-gradient(135deg, rgba(var(--rgb-secondary), 0.95), rgba(var(--rgb-dark), 0.8));
+    background: linear-gradient(135deg, rgba(0, 31, 63, 0.95), rgba(17, 17, 17, 0.8));
     color: var(--color-white);
     padding: 100px 0;
     position: relative;
