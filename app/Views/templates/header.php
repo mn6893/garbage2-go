@@ -53,6 +53,29 @@
       box-shadow: 0 6px 20px rgba(40, 167, 69, 0.5) !important;
       color: #fff !important;
     }
+
+    /* Phone icon ring animation - like a bell */
+    @keyframes phone-ring {
+      0% { transform: rotate(0deg); }
+      5% { transform: rotate(-15deg); }
+      10% { transform: rotate(15deg); }
+      15% { transform: rotate(-15deg); }
+      20% { transform: rotate(15deg); }
+      25% { transform: rotate(-10deg); }
+      30% { transform: rotate(10deg); }
+      35% { transform: rotate(0deg); }
+      100% { transform: rotate(0deg); }
+    }
+
+    .phone-icon-animated {
+      display: inline-block;
+      transform-origin: center center;
+      animation: phone-ring 2s ease-in-out infinite;
+    }
+
+    .header-call-btn:hover .phone-icon-animated {
+      animation: phone-ring 1s ease-in-out infinite;
+    }
   </style>
 </head>
 <body>
@@ -74,7 +97,9 @@
 
             <li class="nav-item">
               <a href="tel:+16479138775" onclick="return gtagTrackCall('tel:+16479138775');" class="header-call-btn" style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #014144 0%, #00294a 100%); color: #fff; padding: 10px 20px; border-radius: 50px; font-weight: 600; font-size: 14px; text-decoration: none; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4); transition: all 0.3s ease;">
-                <i class="jam jam-phone" style="font-size: 18px;"></i>
+                <svg class="phone-icon-animated" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="display: inline-block;">
+                  <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
+                </svg>
                 <span class="d-none d-md-inline">Call Now</span>
               </a>
             </li>
